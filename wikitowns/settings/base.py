@@ -133,4 +133,4 @@ STATICFILES_DIRS = (
 
 #print(BASE_DIR)
 #print(SITE_ROOT)
-print(PROJECT_ROOT)
+#print(PROJECT_ROOT)
