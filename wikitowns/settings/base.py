@@ -130,7 +130,6 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
 
-
 #print(BASE_DIR)
 #print(SITE_ROOT)
-print(STATICFILES_DIRS)
+print(STATIC_ROOT)
