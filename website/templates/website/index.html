@@ -6,8 +6,10 @@
 
 {% block body_block %}
 
-  <h1>Hi there!</h1>
-  <p>It's alive!</p>
-  <img src="{% static "/website/rango.jpg" %}" alt="poopie"/>
+  <div class="container-fluid">
+    <h1 class="display-3 text-center">Hi there!</h1>
+    <p class="lead text-center">It's alive!</p>
+    <img src="{% static "/website/rango.jpg" %}" alt="poopie" class="img-fluid" alt="Responsive image"/>
+  </div>
 
 {% endblock %}
