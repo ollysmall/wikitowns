@@ -1,19 +1,13 @@
+{% extends 'website/base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
+{% block title %}noobhub{% endblock %}
 
-  <html>
-      <head>
-          <title>Wikitowns</title>
-          <link rel="stylesheet" href="{% static '/css/main.css' %}"></link>
-      </head>
-      <body>
-          <p>Hi there!</p>
-          <p>It works thank god!</p>
-          <p>This is a load of rubbish</p>
-          <img src="{% static "/website/tango.jpg" %}" alt="My image"/>
+{% block body_block %}
 
+  <h1>Hi there!</h1>
+  <p>It's alive!</p>
+  <img src="{% static "/website/rango.jpg" %}" alt="poopie"/>
 
-
-      </body>
-  </html>
+{% endblock %}
