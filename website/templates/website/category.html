@@ -9,6 +9,21 @@
   {% if category %}
 
   <h1>{{ category_name }}</h1>
+    {% if subcategory %}
+
+      <div class="row">
+
+      {% for subcategory in subcategory %}
+          <div class="col-sm-6 col-md-4 top-buffer">
+          <a href="{% url 'subcategory' category.slug subcategory.slug %}" class="btn btn-outline-info btn-lg btn-block">{{ subcategory.name }}</a>
+          </div>
+      {% endfor %}
+
+      </div>
+
+    {% else %}
+      <strong>No subcategory currently in category.</strong>
+    {% endif %}
 
   {% else %}
     The specified category {{ category_name }} does not exist!

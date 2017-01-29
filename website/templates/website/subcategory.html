@@ -1,0 +1,17 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+{% block title %}noobhub - category {% endblock %}
+
+{% block body_block %}
+
+  {% if subcategory %}
+
+  <h1>{{ subcategory_name }}</h1>
+
+  {% else %}
+    The specified category {{ subcategory_name }} does not exist!
+  {% endif %}
+
+{% endblock %}
