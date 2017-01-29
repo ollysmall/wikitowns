@@ -10,6 +10,32 @@
 
   <h1>{{ subcategory_name }}</h1>
 
+  <p></p>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs nav-fill justify-content-center" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#websites" role="tab">Websites</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#forums" role="tab">Forums</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#books" role="tab">Books</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
+    </li>
+  </ul>
+
+<!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="websites" role="tabpanel"><p></p>Suggested websites</div>
+    <div class="tab-pane" id="forums" role="tabpanel"><p></p>Suggested forums</div>
+    <div class="tab-pane" id="books" role="tabpanel"><p></p>Suggested books</div>
+    <div class="tab-pane" id="videos" role="tabpanel"><p></p>Suggested videos</div>
+  </div>
+
   {% else %}
     The specified category {{ subcategory_name }} does not exist!
   {% endif %}
