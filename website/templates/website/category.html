@@ -6,6 +6,8 @@
 
 {% block body_block %}
 
+<div class="container top-padding bottom-padding">
+
   {% if category %}
 
   <h1>{{ category_name }}</h1>
@@ -28,5 +30,7 @@
   {% else %}
     The specified category {{ category_name }} does not exist!
   {% endif %}
+
+</div>
 
 {% endblock %}

@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField()
+    category_img = models.ImageField(upload_to='category_images', blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

@@ -4,7 +4,8 @@ from website.models import Category, SubCategory
 
 def index(request):
     category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+    category_img = Category.category_img
+    context_dict = {'categories': category_list, 'category_img': category_img}
     return render(request, 'website/index.html', context_dict)
 
 def category(request, category_name_slug):
