@@ -41,11 +41,11 @@
   {% if categories %}
     {% for category in categories %}
 
-    <div class="col-6 col-sm-4 col-md-3 top-buffer">
+    <div class="col-6 col-sm-4 col-md-3 top-buffer mx-auto">
       <a href="{% url 'category' category.slug %}">
 
       {% if category.category_img %}
-        <img src="{{ category.category_img.url }}" class="img-fluid" alt="Category image"/>
+        <img src="{{ category.category_img.url }}" class="img-fluid rounded category-shadow grow" alt="Category image"/>
       {% endif %}
 
       </a>
