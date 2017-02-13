@@ -33,27 +33,28 @@
 
   <div class="container bottom-padding">
 
+    <div class="row">
 
-  <div class="card-deck">
+
+
 
   {% if categories %}
     {% for category in categories %}
 
-    <div class="card top-buffer">
+    <div class="col-6 col-sm-4 col-md-3 top-buffer">
       <a href="{% url 'category' category.slug %}">
 
       {% if category.category_img %}
-        <img src="{{ category.category_img.url }}" class="card-img-top img-fluid" alt="Category image"/>
+        <img src="{{ category.category_img.url }}" class="img-fluid" alt="Category image"/>
       {% endif %}
-      <div class="card-block">
-        <h4 class="card-title"> {{category.name}} </h4>
-      </div>
+
       </a>
     </div>
 
     {% endfor %}
-
   </div>
+
+
 </div>
 
   {% else %}
