@@ -3,6 +3,8 @@
 
 .top-buffer { margin-top:20px; }
 
+.card-top-buffer { margin-top:15px; }
+
 .top-padding { padding-top: 45px; }
 
 .bottom-padding { padding-bottom: 45px; }
@@ -17,7 +19,30 @@
 img.category-shadow {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+.rec-shadow {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.11);
+}
 
 /* button zoom on hover over */
 .grow { transition: all .2s ease-in-out; }
 .grow:hover { transform: scale(1.1); }
+
+a, a:link {
+  color:inherit;
+  text-decoration: none;
+ }
+
+.hover-colour:hover {
+  color: #43b1b0;
+  text-decoration: none;
+}
+
+.card-footer {
+  padding: .45rem 1.25rem;
+  background-color: #fff;
+  border-top: 1px solid #e5e5e5;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
