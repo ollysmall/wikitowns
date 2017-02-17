@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from website.models import Category, SubCategory
+from website.models import Category, SubCategory, WebsiteRecommendation
 
 def index(request):
     category_list = Category.objects.order_by('name')
@@ -28,9 +28,12 @@ def subcategory(request, category_name_slug, subcategory_name_slug):
     context_dict = {'categories': category_list}
 
     try:
-        subcategory = SubCategory.objects.get(slug=subcategory_name_slug)
+        category = Category.objects.get(slug=category_name_slug)
+        subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
         context_dict['subcategory_name'] = subcategory.name
         context_dict['subcategory'] = subcategory
+        website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory).order_by('-created_date')
+        context_dict['websites'] = website_list
     except SubCategory.DoesNotExist:
         pass
 

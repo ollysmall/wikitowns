@@ -6,36 +6,83 @@
 
 {% block body_block %}
 
-<div class="container top-padding">
+<div class="top-padding bottom-padding test-this">
 
   {% if subcategory %}
 
-  <h1>{{ subcategory_name }}</h1>
+  <h1 class="display-4 text-center" style="color:white;">{{ subcategory_name }}</h1>
+
+</div>
+
+<div class="container">
 
   <p></p>
 
   <!-- Nav tabs -->
-  <ul class="nav nav-tabs nav-fill justify-content-center" role="tablist">
+  <ul class="nav justify-content-center" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#websites" role="tab">Websites</a>
+      <a class="nav-link active hover-colour" data-toggle="tab" href="#websites" role="tab"><i class="fa fa-globe fa-2x" aria-hidden="true"></i></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#forums" role="tab">Forums</a>
+      <a class="nav-link hover-colour" data-toggle="tab" href="#books" role="tab"><i class="fa fa-book fa-2x" aria-hidden="true"></i></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#books" role="tab">Books</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
+      <a class="nav-link hover-colour" data-toggle="tab" href="#videos" role="tab"><i class="fa fa-film fa-2x" aria-hidden="true"></i></a>
     </li>
   </ul>
 
 <!-- Tab panes -->
   <div class="tab-content">
-    <div class="tab-pane active" id="websites" role="tabpanel"><p></p>Suggested websites</div>
-    <div class="tab-pane" id="forums" role="tabpanel"><p></p>Suggested forums</div>
-    <div class="tab-pane" id="books" role="tabpanel"><p></p>Suggested books</div>
-    <div class="tab-pane" id="videos" role="tabpanel"><p></p>Suggested videos</div>
+    <div class="tab-pane active" id="websites" role="tabpanel">
+
+      {% if websites %}
+
+        <div class="bottom-padding">
+
+        {% for website in websites %}
+
+            <div class="card card-top-buffer hover-colour rec-shadow">
+              <a href="{{ website.url }}">
+              <div class="card-block">
+                <h4 class="card-title suggestion-title">{{ website.title }}</h4>
+                <p class="card-text">{{ website.description }}</p>
+              </div>
+
+              <div class="card-footer text-muted">
+                <i class="fa fa-arrow-up" aria-hidden="true">&nbsp;</i>
+                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                <i class="fa fa-bookmark-o pull-right" aria-hidden="true"></i>
+                <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+
+              </div>
+
+            </div>
+            </a>
+
+        {% endfor %}
+
+        </div>
+
+      {% else %}
+        <strong>No websites have been recommended yet. Why not recommend one now!</strong>
+      {% endif %}
+
+
+
+
+
+
+    </div>
+    <div class="tab-pane" id="books" role="tabpanel">
+
+      <p>Suggested books</p>
+    </div>
+
+    <div class="tab-pane" id="videos" role="tabpanel">
+
+      <p>Suggested videos</p>
+    </div>
+
   </div>
 
   {% else %}
