@@ -53,11 +53,14 @@
 
             </div>
           </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">{{ user.username }}</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Sign up</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
+          {% endif %}
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search">
-          <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form>
       </div>
     </nav>
 
