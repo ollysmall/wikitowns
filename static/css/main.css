@@ -1,4 +1,8 @@
 
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
 .test-this {background-color: #ff574a; }
 
 .top-buffer { margin-top:20px; }
@@ -49,8 +53,4 @@ a, a:link {
   margin-top:10px;
   border: 0px
 
-}
-
-body {
-  font-family: 'Open Sans', sans-serif;
 }
