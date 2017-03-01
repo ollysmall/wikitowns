@@ -1,4 +1,8 @@
 
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
 .test-this {background-color: #ff574a; }
 
 .top-buffer { margin-top:20px; }
@@ -43,6 +47,10 @@ a, a:link {
   border-top: 1px solid #e5e5e5;
 }
 
-body {
-  font-family: 'Open Sans', sans-serif;
+.card {
+  max-width: 700px;
+  margin: auto;
+  margin-top:10px;
+  border: 0px
+
 }
