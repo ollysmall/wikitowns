@@ -31,6 +31,7 @@ class SubCategory(models.Model):
         return self.name
 
 class WebsiteRecommendation(models.Model):
+    website_author = models.ForeignKey(User)
     category = models.ForeignKey(Category)
     subcategory = models.ForeignKey(SubCategory)
     title = models.CharField(max_length=128)

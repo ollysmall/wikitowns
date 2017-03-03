@@ -31,16 +31,6 @@ img.category-shadow {
 .grow { transition: all .2s ease-in-out; }
 .grow:hover { transform: scale(1.1); }
 
-a, a:link {
-  color:inherit;
-  text-decoration: none;
- }
-
-.hover-colour:hover {
-  color: #43b1b0;
-  text-decoration: none;
-}
-
 .card-footer {
   padding: .45rem 1.25rem;
   background-color: #fff;

@@ -21,13 +21,13 @@
   <!-- Nav tabs -->
   <ul class="nav justify-content-center" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active hover-colour" data-toggle="tab" href="#websites" role="tab"><i class="fa fa-globe fa-2x" aria-hidden="true"></i></a>
+      <a class="nav-link active" style="color: black;" data-toggle="tab" href="#websites" role="tab"><i class="fa fa-globe fa-2x" aria-hidden="true"></i></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link hover-colour" data-toggle="tab" href="#books" role="tab"><i class="fa fa-book fa-2x" aria-hidden="true"></i></a>
+      <a class="nav-link" style="color: black;" data-toggle="tab" href="#books" role="tab"><i class="fa fa-book fa-2x" aria-hidden="true"></i></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link hover-colour" data-toggle="tab" href="#videos" role="tab"><i class="fa fa-film fa-2x" aria-hidden="true"></i></a>
+      <a class="nav-link" style="color: black;" data-toggle="tab" href="#videos" role="tab"><i class="fa fa-film fa-2x" aria-hidden="true"></i></a>
     </li>
   </ul>
 
@@ -35,17 +35,29 @@
   <div class="tab-content">
     <div class="tab-pane active" id="websites" role="tabpanel">
 
+      <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_website' category.slug subcategory.slug %}">New website</a></p>
+
+
+
       {% if websites %}
 
         <div class="bottom-padding">
 
         {% for website in websites %}
 
-            <div class="card card-top-buffer hover-colour rec-shadow">
-              <a href="{{ website.url }}">
+            <div class="card card-top-buffer card-link-text rec-shadow">
+              <a href="{{ website.url }}" style="color: black;">
               <div class="card-block">
                 <h4 class="card-title">{{ website.title }}</h4>
                 <p class="card-text">{{ website.description }}</p>
+                <p></p>
+                <p class="card-text"><small class="text-muted">Shared by {{ website.website_author }}</small>
+                  {% if user.is_authenticated %}
+                  {% if website.website_author.pk == user.pk %}
+                    <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_website' website.pk %}">Delete</a>
+                  {% endif %}
+                  {% endif %}
+                </p>
               </div>
 
               <div class="card-footer text-muted">
