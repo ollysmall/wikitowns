@@ -31,6 +31,10 @@ img.category-shadow {
 .grow { transition: all .2s ease-in-out; }
 .grow:hover { transform: scale(1.1); }
 
+a, a:link, a:hover {
+  text-decoration: none;
+ }
+
 .card-footer {
   padding: .45rem 1.25rem;
   background-color: #fff;
@@ -43,4 +47,12 @@ img.category-shadow {
   margin-top:10px;
   border: 0px
 
+}
+
+i:hover {
+ cursor:pointer;
+}
+
+.clicked-button {
+  color: red;
 }
