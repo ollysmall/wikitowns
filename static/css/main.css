@@ -48,3 +48,11 @@ a, a:link, a:hover {
   border: 0px
 
 }
+
+i:hover {
+ cursor:pointer;
+}
+
+.clicked-button {
+  color: red;
+}

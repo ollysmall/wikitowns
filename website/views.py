@@ -4,6 +4,12 @@ from website.models import Category, SubCategory, WebsiteRecommendation
 from website.forms import WebsiteForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt #get rid of this
+from django.db.models import Count
 
 def index(request):
     category_list = Category.objects.order_by('name')
@@ -30,13 +36,16 @@ def subcategory(request, category_name_slug, subcategory_name_slug):
     category_list = Category.objects.order_by('name')
     context_dict = {'categories': category_list}
 
+
+
     try:
+        user = request.user
         category = Category.objects.get(slug=category_name_slug)
         context_dict['category'] = category
         subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
         context_dict['subcategory_name'] = subcategory.name
         context_dict['subcategory'] = subcategory
-        website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory).order_by('-created_date')
+        website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
         context_dict['websites'] = website_list
 
     except SubCategory.DoesNotExist:
@@ -75,3 +84,61 @@ class DeleteWebsiteRecommendation(DeleteView):
         category_slug = self.object.category.slug
         subcategory_slug = self.object.subcategory.slug
         return reverse('subcategory', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug})
+
+def profile_page(request, username):
+    category_list = Category.objects.order_by('name')
+    context_dict = {'categories': category_list}
+
+    user = get_object_or_404(User, username=username)
+    context_dict['profile_user'] = user
+    website_recommendations = WebsiteRecommendation.objects.filter(website_author=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
+    context_dict['website_recommendations'] = website_recommendations
+    return render(request, 'website/profile.html', context_dict)
+
+@login_required
+@require_POST #check if this is needed - I think the if statement below makes it redundant
+def upvote_website(request):
+
+    if request.method == 'POST':
+        user = request.user
+        websiteid = request.POST.get('websiteid')
+        website = WebsiteRecommendation.objects.get(id=int(websiteid))
+
+        if website.upvote.filter(id=user.id).exists():
+            # user has already upvoted this website
+            # remove upvote
+            website.upvote.remove(user)
+
+        else:
+            # add a new upvote for this website
+            website.upvote.add(user)
+            if website.downvote.filter(id=user.id).exists():
+                website.downvote.remove(user)
+
+
+
+    ctx = {'total_website_votes': website.total_votes,}
+    return HttpResponse(website.total_votes)
+
+@login_required
+@require_POST
+def downvote_website(request):
+
+    if request.method == 'POST':
+        user = request.user
+        websiteid = request.POST.get('websiteid')
+        website = WebsiteRecommendation.objects.get(id=int(websiteid))
+
+        if website.downvote.filter(id=user.id).exists():
+            # user has already upvoted this website
+            # remove upvote
+            website.downvote.remove(user)
+
+        else:
+            # add a new upvote for this website
+            website.downvote.add(user)
+            if website.upvote.filter(id=user.id).exists():
+                website.upvote.remove(user)
+
+    ctx = {'total_website_votes': website.total_votes}
+    return HttpResponse(website.total_votes)

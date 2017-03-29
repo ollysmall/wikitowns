@@ -39,6 +39,17 @@ class WebsiteRecommendation(models.Model):
     url = models.URLField()
     created_date = models.DateTimeField(
             default=timezone.now)
+    upvote = models.ManyToManyField(User, related_name='website_upvote')
+    downvote = models.ManyToManyField(User, related_name='website_downvote')
+
+    @property
+    def total_votes(self):
+        total_upvotes = self.upvote.count()
+        total_downvotes = self.downvote.count()
+
+        return total_upvotes - total_downvotes
+
+
 
     class Meta:
        unique_together = (("category", "subcategory", "url"),)

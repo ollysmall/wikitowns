@@ -54,7 +54,7 @@
             </div>
           </li>
           {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">{{ user.username }}</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/">Logout</a></li>
           {% else %}
             <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Sign up</a></li>
@@ -82,5 +82,13 @@
     <script src="{% static '/js/bootstrap.min.js' %}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- Ajax -->
+    <script src="{% static "js/noobhub-ajax.js" %}"></script>
+
+    <!-- Jquery - maybe download and put in static instead of link-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
   </body>
 </html>
