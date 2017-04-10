@@ -41,6 +41,7 @@ class WebsiteRecommendation(models.Model):
             default=timezone.now)
     upvote = models.ManyToManyField(User, related_name='website_upvote')
     downvote = models.ManyToManyField(User, related_name='website_downvote')
+    bookmark = models.ManyToManyField(User, related_name='bookmark')
 
     @property
     def total_votes(self):
@@ -56,3 +57,12 @@ class WebsiteRecommendation(models.Model):
 
     def __str__(self):
         return self.title
+
+class WebsiteComment(models.Model):
+    website = models.ForeignKey(WebsiteRecommendation, related_name='comments')
+    author = models.ForeignKey(User)
+    text = models.TextField(max_length=2000) #check this length is ok
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.text

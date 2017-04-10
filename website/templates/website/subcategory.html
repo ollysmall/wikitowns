@@ -74,15 +74,28 @@
                 {% endif %}
 
                 <small class="vote_total" data-websiteid="{{ website.id }}">{{ website.total_votes }}&nbsp;</small>
-                
+
                 {% if user in website.downvote.all %}
                 <i class="fa fa-arrow-down downvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
                 {% else %}
                 <i class="fa fa-arrow-down downvote_website" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
                 {% endif %}
 
-                <i class="fa fa-bookmark-o pull-right" aria-hidden="true"></i>
-                <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+                {% if user in website.bookmark.all %}
+                <i class="fa fa-bookmark-o pull-right bookmark_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+                {% else %}
+                <i class="fa fa-bookmark-o pull-right bookmark_website" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+                {% endif %}
+
+                {% if website.comments.count > 0 %}
+                  <small class="pull-right">{{ website.comments.count }}&nbsp;</small>
+                {% endif %}
+
+                <a href="{% url 'website_comment' category.slug subcategory.slug website.pk %}" class="text-muted">
+                  <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+                </a>
+
+
 
               </div>
 

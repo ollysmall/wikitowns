@@ -56,3 +56,9 @@ i:hover {
 .clicked-button {
   color: red;
 }
+
+.comment-textbox {
+  width: 100%;
+  margin: auto;
+  margin-top:10px;
+}

@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^delete_website/(?P<pk>\d+)/$', login_required(views.DeleteWebsiteRecommendation.as_view()), name='delete_website'),
     url(r'^upvote_website/$', views.upvote_website, name='upvote_website'),
     url(r'^downvote_website/$', views.downvote_website, name='downvote_website'),
+    url(r'^bookmark_website/$', views.bookmark_website, name='bookmark_website'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/comments/$', views.website_comment, name='website_comment'),
 ]

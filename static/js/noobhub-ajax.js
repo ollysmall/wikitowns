@@ -54,6 +54,26 @@ $('.downvote_website').click(function(){
           });
     })
 
+$('.bookmark_website').click(function(){
+  $(this).toggleClass("clicked-button");
+  var websiteid = $(this).attr('data-websiteid');
+
+  $.ajax({
+             type: "POST",
+             url: '/bookmark_website/',
+             data: {'websiteid': websiteid},
+             dataType: "json",
+
+             success: function(response){
+
+
+              },
+              error: function(response) {
+                     window.location.href = '/accounts/login/';
+              }
+        });
+  })
+
 //gets the csrf token
 function getCookie(name) {
     var cookieValue = null;

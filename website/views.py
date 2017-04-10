@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from website.models import Category, SubCategory, WebsiteRecommendation
-from website.forms import WebsiteForm
+from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment
+from website.forms import WebsiteForm, WebsiteCommentForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -93,6 +93,8 @@ def profile_page(request, username):
     context_dict['profile_user'] = user
     website_recommendations = WebsiteRecommendation.objects.filter(website_author=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
     context_dict['website_recommendations'] = website_recommendations
+    website_bookmarks = WebsiteRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
+    context_dict['website_bookmarks'] = website_bookmarks
     return render(request, 'website/profile.html', context_dict)
 
 @login_required
@@ -130,15 +132,64 @@ def downvote_website(request):
         website = WebsiteRecommendation.objects.get(id=int(websiteid))
 
         if website.downvote.filter(id=user.id).exists():
-            # user has already upvoted this website
-            # remove upvote
+            # user has already downvoted this website
+            # remove downvote
             website.downvote.remove(user)
 
         else:
-            # add a new upvote for this website
+            # add a new downvote for this website
             website.downvote.add(user)
             if website.upvote.filter(id=user.id).exists():
                 website.upvote.remove(user)
 
     ctx = {'total_website_votes': website.total_votes}
     return HttpResponse(website.total_votes)
+
+@login_required
+@require_POST
+def bookmark_website(request):
+
+    if request.method == 'POST':
+        user = request.user
+        websiteid = request.POST.get('websiteid')
+        website = WebsiteRecommendation.objects.get(id=int(websiteid))
+
+        if website.bookmark.filter(id=user.id).exists():
+            # user has already bookmarked this website
+            # remove bookmark
+            website.bookmark.remove(user)
+
+        else:
+            # add a new bookmark for this website
+            website.bookmark.add(user)
+
+    return HttpResponse(website.total_votes) #this should be changed - it doesnt need to respond with total votes
+
+def website_comment(request, category_name_slug, subcategory_name_slug, pk):
+    category_list = Category.objects.order_by('name')
+    context_dict = {'categories': category_list}
+    user = request.user
+    category = Category.objects.get(slug=category_name_slug)
+    context_dict['category'] = category
+    subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
+    context_dict['subcategory'] = subcategory
+    website = get_object_or_404(WebsiteRecommendation, id=pk)
+    context_dict['website'] = website
+    comments = WebsiteComment.objects.filter(website=website).order_by('created_date')[:100] #change the 100 so you can show unlimited comments
+    context_dict['comments'] = comments
+
+
+    if request.method == "POST" and request.user.is_authenticated:
+        form = WebsiteCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.website = website
+            comment.author = user
+            comment.save()
+            return redirect('website_comment', category_name_slug=website.category.slug, subcategory_name_slug=website.subcategory.slug, pk=website.pk)
+
+    else:
+        form = WebsiteCommentForm()
+        context_dict['form'] = form
+
+        return render(request, 'website/website_comment.html', context_dict)
