@@ -175,7 +175,7 @@ def website_comment(request, category_name_slug, subcategory_name_slug, pk):
     context_dict['subcategory'] = subcategory
     website = get_object_or_404(WebsiteRecommendation, id=pk)
     context_dict['website'] = website
-    comments = WebsiteComment.objects.filter(website=website).order_by('created_date')[:100] #change the 100 so you can show unlimited comments
+    comments = WebsiteComment.objects.filter(website=website).order_by('-created_date')[:100] #change the 100 so you can show unlimited comments
     context_dict['comments'] = comments
 
 
@@ -193,3 +193,36 @@ def website_comment(request, category_name_slug, subcategory_name_slug, pk):
         context_dict['form'] = form
 
         return render(request, 'website/website_comment.html', context_dict)
+
+class EditWebsiteComment(UpdateView):
+    model = WebsiteComment
+    form_class = WebsiteCommentForm
+    template_name = 'website/edit_website_comment.html'
+
+    def get_object(self, queryset=None):
+        obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
+        if obj.author != self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        category_slug = self.object.website.category.slug
+        subcategory_slug = self.object.website.subcategory.slug
+        pk = self.object.website.pk
+        return reverse('website_comment', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug, 'pk': pk})
+
+class DeleteWebsiteComment(DeleteView):
+    model = WebsiteComment
+    template_name = 'website/delete_website_comment.html'
+
+    def get_object(self, queryset=None):
+        obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
+        if obj.author != self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        category_slug = self.object.website.category.slug
+        subcategory_slug = self.object.website.subcategory.slug
+        pk = self.object.website.pk
+        return reverse('website_comment', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug, 'pk': pk})

@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load noobhub_filters %}
+
 {% block title %}noobhub - comments {% endblock %}
 
 {% block body_block %}
@@ -18,7 +20,7 @@
     <p></p>
     <p class="card-text">
       <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
-        <small class="text-muted">Shared by {{ website.website_author }}</small>
+        <small class="text-muted">{{ website.website_author }} - {{ website.created_date|timesince|upto:',' }} ago</small>
       </a>
       {% if user.is_authenticated %}
       {% if website.website_author.pk == user.pk %}
@@ -83,10 +85,19 @@
 
   {% for comment in comments %}
     <hr>
-    <p class="card-text">
+    <div class="card-text">
       <a href="{% url 'user_profile' comment.author %}">
       <strong>{{ comment.author }}</strong></a>
-      &nbsp; {{ comment.text }}</p>
+      &nbsp; {{ comment.text }}
+      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small></p>
+      {% if user.is_authenticated %}
+      {% if comment.author.pk == user.pk %}
+        <p><a class="btn btn-outline-danger btn-sm " href="{% url 'delete_website_comment' comment.pk %}">Delete</a>
+          <a class="btn btn-outline-danger btn-sm " href="{% url 'edit_website_comment' comment.pk %}">Edit</a>
+        </p>
+      {% endif %}
+      {% endif %}
+    </div>
 
 
 

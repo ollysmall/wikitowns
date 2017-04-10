@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load noobhub_filters %}
+
 {% block title %}noobhub - category {% endblock %}
 
 {% block body_block %}
@@ -55,7 +57,7 @@
                 <p></p>
                 <p class="card-text">
                   <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
-                    <small class="text-muted">Shared by {{ website.website_author }}</small>
+                    <small class="text-muted">{{ website.website_author }} - {{ website.created_date|timesince|upto:',' }} ago</small>
                   </a>
                   {% if user.is_authenticated %}
                   {% if website.website_author.pk == user.pk %}
