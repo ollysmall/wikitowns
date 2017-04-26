@@ -79,7 +79,10 @@ class BookRecommendation(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     book_url = models.URLField(max_length=2000) #this will be a link to the book on amazon
     book_image_url = models.URLField(max_length=500) #check length is ok
+    book_publish_date = models.DateField()
 
+    class Meta:
+       unique_together = (("category", "subcategory", "isbn"),)
 
     def __str__(self):
         return self.title

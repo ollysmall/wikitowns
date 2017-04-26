@@ -252,15 +252,8 @@ def create_book_recommendation(request, category_name_slug, subcategory_name_slu
     Parser=lambda text: BeautifulSoup(text, 'xml')
     )
 
-
-
-
-
     if request.method == "POST":
         form = BookForm(request.POST)
-        #title = "test"
-
-
         if form.is_valid():
             isbn = (form.cleaned_data['isbn'])
             book = form.save(commit=False)
@@ -268,6 +261,7 @@ def create_book_recommendation(request, category_name_slug, subcategory_name_slu
             results = amazon.ItemLookup(ItemId=isbn, ResponseGroup="Medium",
                 SearchIndex="Books", IdType="ISBN")
 
+            book.book_publish_date = results.find('PublicationDate').string
             book.book_image_url = results.find('LargeImage').text[:-6] # review this - dont think it is a good way of doing it
             book.recommended_by = user
             book.category = category
@@ -291,3 +285,18 @@ def create_book_recommendation(request, category_name_slug, subcategory_name_slu
         context_dict['form'] = form
 
         return render(request, 'website/create_book.html', context_dict)
+
+class DeleteBookRecommendation(DeleteView):
+    model = BookRecommendation
+    template_name = 'website/delete_book.html'
+
+    def get_object(self, queryset=None):
+        obj = BookRecommendation.objects.get(pk=self.kwargs['pk'])
+        if obj.recommended_by != self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        category_slug = self.object.category.slug
+        subcategory_slug = self.object.subcategory.slug
+        return reverse('subcategory', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug})

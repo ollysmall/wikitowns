@@ -57,7 +57,7 @@
                 <p></p>
                 <p class="card-text">
                   <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
-                    <small class="text-muted">{{ website.website_author }} - {{ website.created_date|timesince|upto:',' }} ago</small>
+                    <small class="text-muted">{{ website.website_author }} · {{ website.created_date|timesince|upto:',' }} ago</small>
                   </a>
                   {% if user.is_authenticated %}
                   {% if website.website_author.pk == user.pk %}
@@ -120,8 +120,6 @@
     </div>
     <div class="tab-pane" id="books" role="tabpanel">
 
-      <p>Suggested books</p>
-
       <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_book' category.slug subcategory.slug %}">New Book</a></p>
 
       {% if books %}
@@ -133,28 +131,44 @@
             <div class="card card-top-buffer card-link-text rec-shadow">
 
               <div class="card-block">
-                <a href="{{ book.book_url }}" style="color: black;">
 
-                <h4 class="card-title">{{ book.title }}</h4>
-
-                </a>
-
-                <p></p>
 
                 <div class="row">
-                <div class="col-sm-4 ">
+                <div class="col-5 col-md-3 text-center">
+                <a href="{{ book.book_url }}">
+                <img src="{{ book.book_image_url }}" width = 100% height = "auto"  />
+                </a>
+                <p></p>
+                <p></p>
 
-                <img src="{{ book.book_image_url }}" width = "auto" height = 200px  />
+                <p class="card-text pull-left">
+                  <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+                    <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
+                  </a>
+                </p>
+
+
+
                 </div>
-                <div class="col-sm-8">
+                <div class="col-7 col-md-9">
+
+                  <a href="{{ book.book_url }}" style="color: black;">
+
+                  <h5 class="card-title">{{ book.title }}</h5>
+
+                  </a>
+
 
                 <p></p>
-                <p class="card-text">Author: {{ book.book_author }}</p>
-                <p></p>
+                <p class="card-text"><small><strong>Author:</strong> {{ book.book_author }}</small></p>
+
+                <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
+
+                <p class="card-text"><small><strong>ISBN:</strong> {{ book.isbn }}</small></p>
 
                 <p>
-                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
-                  Read description
+                  <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
+                  Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
                   </button>
                 </p>
                 </div>
@@ -165,12 +179,20 @@
                 {{ book.book_description|safe }}
                 </div>
 
-                <p></p>
-                <p class="card-text">
-                  <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
-                    <small class="text-muted">{{ book.recommended_by }} - {{ book.created_date|timesince|upto:',' }} ago</small>
-                  </a>
-                </p>
+                {% if user.is_authenticated %}
+                {% if book.recommended_by.pk == user.pk %}
+                  <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_book' book.pk %}">Delete</a>
+                {% endif %}
+                {% endif %}
+
+
+
+              </div>
+
+              <div class="card-footer text-muted">
+
+                <i class="fa fa-bookmark-o pull-right" aria-hidden="true"></i>
+
               </div>
 
 
