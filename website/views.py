@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment
-from website.forms import WebsiteForm, WebsiteCommentForm
+from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation
+from website.forms import WebsiteForm, WebsiteCommentForm, BookForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
@@ -10,6 +10,10 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt #get rid of this
 from django.db.models import Count
+
+import os
+import bottlenose
+from bs4 import BeautifulSoup
 
 def index(request):
     category_list = Category.objects.order_by('name')
@@ -47,6 +51,8 @@ def subcategory(request, category_name_slug, subcategory_name_slug):
         context_dict['subcategory'] = subcategory
         website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
         context_dict['websites'] = website_list
+        book_list = BookRecommendation.objects.filter(subcategory=subcategory)
+        context_dict['books'] = book_list
 
     except SubCategory.DoesNotExist:
         pass
@@ -226,3 +232,62 @@ class DeleteWebsiteComment(DeleteView):
         subcategory_slug = self.object.website.subcategory.slug
         pk = self.object.website.pk
         return reverse('website_comment', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug, 'pk': pk})
+
+@login_required
+def create_book_recommendation(request, category_name_slug, subcategory_name_slug):
+    category_list = Category.objects.order_by('name')
+    context_dict = {'categories': category_list}
+    user = request.user
+    category = Category.objects.get(slug=category_name_slug)
+    context_dict['category'] = category
+    subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
+    context_dict['subcategory'] = subcategory
+
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    AWS_ASSOCIATE_TAG = os.environ['AWS_ASSOCIATE_TAG']
+
+    amazon = bottlenose.Amazon(
+    AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_ASSOCIATE_TAG,
+    Parser=lambda text: BeautifulSoup(text, 'xml')
+    )
+
+
+
+
+
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        #title = "test"
+
+
+        if form.is_valid():
+            isbn = (form.cleaned_data['isbn'])
+            book = form.save(commit=False)
+
+            results = amazon.ItemLookup(ItemId=isbn, ResponseGroup="Medium",
+                SearchIndex="Books", IdType="ISBN")
+
+            book.book_image_url = results.find('LargeImage').text[:-6] # review this - dont think it is a good way of doing it
+            book.recommended_by = user
+            book.category = category
+            book.subcategory = subcategory
+            book.title = results.find('Title').string
+            book.book_author = results.find('Author').string
+            book.book_description = results.find('Content').string
+            book.book_url = results.find('DetailPageURL').string
+            book.save()
+            return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
+        else:
+            #need to add proper handling of errors if they enter the wrong isbn
+            # got a service unavailable message whilst requesting amazon info - need fallback for this
+            form = BookForm()
+            context_dict['form'] = form
+            return render(request, 'website/create_book.html', context_dict)
+
+
+    else:
+        form = BookForm()
+        context_dict['form'] = form
+
+        return render(request, 'website/create_book.html', context_dict)

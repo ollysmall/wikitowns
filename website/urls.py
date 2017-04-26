@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/comments/$', views.website_comment, name='website_comment'),
     url(r'^delete_website_comment/(?P<pk>\d+)/$', login_required(views.DeleteWebsiteComment.as_view()), name='delete_website_comment'),
     url(r'^edit_website_comment/(?P<pk>\d+)/$', login_required(views.EditWebsiteComment.as_view()), name='edit_website_comment'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/new_book/$', views.create_book_recommendation, name='create_book'),
 ]

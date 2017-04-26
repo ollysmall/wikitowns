@@ -121,6 +121,72 @@
     <div class="tab-pane" id="books" role="tabpanel">
 
       <p>Suggested books</p>
+
+      <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_book' category.slug subcategory.slug %}">New Book</a></p>
+
+      {% if books %}
+
+        <div class="bottom-padding">
+
+        {% for book in books %}
+
+            <div class="card card-top-buffer card-link-text rec-shadow">
+
+              <div class="card-block">
+                <a href="{{ book.book_url }}" style="color: black;">
+
+                <h4 class="card-title">{{ book.title }}</h4>
+
+                </a>
+
+                <p></p>
+
+                <div class="row">
+                <div class="col-sm-4 ">
+
+                <img src="{{ book.book_image_url }}" width = "auto" height = 200px  />
+                </div>
+                <div class="col-sm-8">
+
+                <p></p>
+                <p class="card-text">Author: {{ book.book_author }}</p>
+                <p></p>
+
+                <p>
+                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
+                  Read description
+                  </button>
+                </p>
+                </div>
+                </div>
+
+                <div class="card-text collapse" id="{{ book.id }}">
+                <p></p>
+                {{ book.book_description|safe }}
+                </div>
+
+                <p></p>
+                <p class="card-text">
+                  <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+                    <small class="text-muted">{{ book.recommended_by }} - {{ book.created_date|timesince|upto:',' }} ago</small>
+                  </a>
+                </p>
+              </div>
+
+
+
+            </div>
+
+
+        {% endfor %}
+
+        </div>
+
+      {% else %}
+        <strong>No books have been recommended yet. Why not recommend one now!</strong>
+      {% endif %}
+
+
     </div>
 
     <div class="tab-pane" id="videos" role="tabpanel">

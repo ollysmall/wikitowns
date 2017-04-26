@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils import timezone
+from isbn_field import ISBNField
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
@@ -66,3 +67,19 @@ class WebsiteComment(models.Model):
 
     def __str__(self):
         return self.text
+
+class BookRecommendation(models.Model):
+    isbn = ISBNField()
+    title = models.CharField(max_length=128)
+    recommended_by = models.ForeignKey(User)
+    category = models.ForeignKey(Category)
+    subcategory = models.ForeignKey(SubCategory)
+    book_author = models.CharField(max_length=128)
+    book_description = models.CharField(max_length=10000) #check length is ok
+    created_date = models.DateTimeField(default=timezone.now)
+    book_url = models.URLField(max_length=2000) #this will be a link to the book on amazon
+    book_image_url = models.URLField(max_length=500) #check length is ok
+
+
+    def __str__(self):
+        return self.title

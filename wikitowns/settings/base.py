@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'storages',
     'website',
     'registration',
+    'isbn_field',
 ]
 
 MIDDLEWARE = [

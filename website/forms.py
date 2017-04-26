@@ -1,5 +1,6 @@
 from django import forms
-from website.models import WebsiteRecommendation, WebsiteComment
+from website.models import WebsiteRecommendation, WebsiteComment, BookRecommendation
+
 
 class WebsiteForm(forms.ModelForm):
 
@@ -19,3 +20,9 @@ class WebsiteCommentForm(forms.ModelForm):
         widgets = {
           'text': forms.Textarea(attrs={'rows':2, 'cols':30, 'class': 'comment-textbox'}),
         }
+
+class BookForm(forms.ModelForm):
+
+    class Meta:
+        model = BookRecommendation
+        fields = ('isbn', )
