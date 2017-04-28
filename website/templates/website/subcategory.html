@@ -191,7 +191,26 @@
 
               <div class="card-footer text-muted">
 
-                <i class="fa fa-bookmark-o pull-right" aria-hidden="true"></i>
+                {% if user in book.upvote.all %}
+                  <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+                {% else %}
+                  <i class="fa fa-arrow-up upvote_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+                {% endif %}
+
+                <small class="vote_total" data-bookid="{{ book.id }}">{{ book.total_votes }}&nbsp;</small>
+
+                {% if user in book.downvote.all %}
+                <i class="fa fa-arrow-down downvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+                {% else %}
+                <i class="fa fa-arrow-down downvote_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+                {% endif %}
+
+                {% if user in book.bookmark.all %}
+                <i class="fa fa-bookmark-o pull-right bookmark_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+                {% else %}
+                <i class="fa fa-bookmark-o pull-right bookmark_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+                {% endif %}
+
 
               </div>
 

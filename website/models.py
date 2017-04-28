@@ -80,6 +80,16 @@ class BookRecommendation(models.Model):
     book_url = models.URLField(max_length=2000) #this will be a link to the book on amazon
     book_image_url = models.URLField(max_length=500) #check length is ok
     book_publish_date = models.DateField()
+    upvote = models.ManyToManyField(User, related_name='book_upvote')
+    downvote = models.ManyToManyField(User, related_name='book_downvote')
+    bookmark = models.ManyToManyField(User, related_name='book_bookmark')
+
+    @property
+    def total_votes(self):
+        total_upvotes = self.upvote.count()
+        total_downvotes = self.downvote.count()
+
+        return total_upvotes - total_downvotes
 
     class Meta:
        unique_together = (("category", "subcategory", "isbn"),)

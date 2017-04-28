@@ -51,7 +51,7 @@ def subcategory(request, category_name_slug, subcategory_name_slug):
         context_dict['subcategory'] = subcategory
         website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
         context_dict['websites'] = website_list
-        book_list = BookRecommendation.objects.filter(subcategory=subcategory)
+        book_list = BookRecommendation.objects.filter(subcategory=subcategory).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
         context_dict['books'] = book_list
 
     except SubCategory.DoesNotExist:
@@ -300,3 +300,71 @@ class DeleteBookRecommendation(DeleteView):
         category_slug = self.object.category.slug
         subcategory_slug = self.object.subcategory.slug
         return reverse('subcategory', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug})
+
+@login_required
+@require_POST #check if this is needed - I think the if statement below makes it redundant
+def upvote_book(request):
+
+    if request.method == 'POST':
+        user = request.user
+        bookid = request.POST.get('bookid')
+        book = BookRecommendation.objects.get(id=int(bookid))
+
+        if book.upvote.filter(id=user.id).exists():
+            # user has already upvoted this book
+            # remove upvote
+            book.upvote.remove(user)
+
+        else:
+            # add a new upvote for this website
+            book.upvote.add(user)
+            if book.downvote.filter(id=user.id).exists():
+                book.downvote.remove(user)
+
+
+
+    ctx = {'total_book_votes': book.total_votes,}
+    return HttpResponse(book.total_votes)
+
+@login_required
+@require_POST
+def downvote_book(request):
+
+    if request.method == 'POST':
+        user = request.user
+        bookid = request.POST.get('bookid')
+        book = BookRecommendation.objects.get(id=int(bookid))
+
+        if book.downvote.filter(id=user.id).exists():
+            # user has already downvoted this book
+            # remove downvote
+            book.downvote.remove(user)
+
+        else:
+            # add a new downvote for this website
+            book.downvote.add(user)
+            if book.upvote.filter(id=user.id).exists():
+                book.upvote.remove(user)
+
+    ctx = {'total_book_votes': book.total_votes}
+    return HttpResponse(book.total_votes)
+
+@login_required
+@require_POST
+def bookmark_book(request): #does this need to be ajax?
+
+    if request.method == 'POST':
+        user = request.user
+        bookid = request.POST.get('bookid')
+        book = BookRecommendation.objects.get(id=int(bookid))
+
+        if book.bookmark.filter(id=user.id).exists():
+            # user has already bookmarked this website
+            # remove bookmark
+            book.bookmark.remove(user)
+
+        else:
+            # add a new bookmark for this website
+            book.bookmark.add(user)
+
+    return HttpResponse(book.total_votes) #this should be changed - it doesnt need to respond with total votes

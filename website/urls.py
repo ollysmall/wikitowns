@@ -17,4 +17,7 @@ urlpatterns = [
     url(r'^edit_website_comment/(?P<pk>\d+)/$', login_required(views.EditWebsiteComment.as_view()), name='edit_website_comment'),
     url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/new_book/$', views.create_book_recommendation, name='create_book'),
     url(r'^delete_book/(?P<pk>\d+)/$', login_required(views.DeleteBookRecommendation.as_view()), name='delete_book'),
+    url(r'^upvote_book/$', views.upvote_book, name='upvote_book'),
+    url(r'^downvote_book/$', views.downvote_book, name='downvote_book'),
+    url(r'^bookmark_book/$', views.bookmark_book, name='bookmark_book'),
 ]
