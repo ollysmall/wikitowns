@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation
-from website.forms import WebsiteForm, WebsiteCommentForm, BookForm
+from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment
+from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
@@ -368,3 +368,67 @@ def bookmark_book(request): #does this need to be ajax?
             book.bookmark.add(user)
 
     return HttpResponse(book.total_votes) #this should be changed - it doesnt need to respond with total votes
+
+def book_comment(request, category_name_slug, subcategory_name_slug, pk):
+    category_list = Category.objects.order_by('name')
+    context_dict = {'categories': category_list}
+    user = request.user
+    category = Category.objects.get(slug=category_name_slug)
+    context_dict['category'] = category
+    subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
+    context_dict['subcategory'] = subcategory
+    book = get_object_or_404(BookRecommendation, id=pk)
+    context_dict['book'] = book
+    comments = BookComment.objects.filter(book=book).order_by('-created_date')[:100] #change the 100 so you can show unlimited comments
+    context_dict['comments'] = comments
+
+
+    if request.method == "POST" and request.user.is_authenticated:
+        form = BookCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.book = book
+            comment.author = user
+            comment.save()
+            return redirect('book_comment', category_name_slug=book.category.slug, subcategory_name_slug=book.subcategory.slug, pk=book.pk)
+
+            #need an else here incase form is not valid
+
+    else:
+        form = BookCommentForm()
+        context_dict['form'] = form
+
+        return render(request, 'website/book_comment.html', context_dict)
+
+class EditBookComment(UpdateView):
+    model = BookComment
+    form_class = BookCommentForm
+    template_name = 'website/edit_book_comment.html'
+
+    def get_object(self, queryset=None):
+        obj = BookComment.objects.get(pk=self.kwargs['pk'])
+        if obj.author != self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        category_slug = self.object.book.category.slug
+        subcategory_slug = self.object.book.subcategory.slug
+        pk = self.object.book.pk
+        return reverse('book_comment', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug, 'pk': pk})
+
+class DeleteBookComment(DeleteView):
+    model = BookComment
+    template_name = 'website/delete_book_comment.html'
+
+    def get_object(self, queryset=None):
+        obj = BookComment.objects.get(pk=self.kwargs['pk'])
+        if obj.author != self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        category_slug = self.object.book.category.slug
+        subcategory_slug = self.object.book.subcategory.slug
+        pk = self.object.book.pk
+        return reverse('book_comment', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug, 'pk': pk})

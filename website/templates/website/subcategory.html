@@ -211,6 +211,14 @@
                 <i class="fa fa-bookmark-o pull-right bookmark_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
                 {% endif %}
 
+                {% if book.book_comments.count > 0 %}
+                  <small class="pull-right">{{ book.book_comments.count }}&nbsp;</small>
+                {% endif %}
+
+                <a href="{% url 'book_comment' category.slug subcategory.slug book.pk %}" class="text-muted">
+                  <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+                </a>
+
 
               </div>
 

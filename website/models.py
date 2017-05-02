@@ -96,3 +96,12 @@ class BookRecommendation(models.Model):
 
     def __str__(self):
         return self.title
+
+class BookComment(models.Model):
+    book = models.ForeignKey(BookRecommendation, related_name='book_comments')
+    author = models.ForeignKey(User)
+    text = models.TextField(max_length=2000) #check this length is ok
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.text

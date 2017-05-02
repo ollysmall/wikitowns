@@ -20,4 +20,7 @@ urlpatterns = [
     url(r'^upvote_book/$', views.upvote_book, name='upvote_book'),
     url(r'^downvote_book/$', views.downvote_book, name='downvote_book'),
     url(r'^bookmark_book/$', views.bookmark_book, name='bookmark_book'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/book_comments/$', views.book_comment, name='book_comment'),
+    url(r'^delete_book_comment/(?P<pk>\d+)/$', login_required(views.DeleteBookComment.as_view()), name='delete_book_comment'),
+    url(r'^edit_book_comment/(?P<pk>\d+)/$', login_required(views.EditBookComment.as_view()), name='edit_book_comment'),
 ]
