@@ -1,0 +1,156 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+{% load noobhub_filters %}
+
+{% block title %}noobhub - comments {% endblock %}
+
+{% block body_block %}
+
+<div class="container bottom-padding">
+
+  <div class="card card-top-buffer card-link-text rec-shadow">
+
+    <div class="card-block">
+
+
+      <div class="row">
+      <div class="col-5 col-md-4 text-center">
+      <a href="{{ video.video_url }}">
+      <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
+      </a>
+      <p></p>
+      <p></p>
+
+      <p class="card-text pull-left">
+        <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
+          <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
+        </a>
+      </p>
+
+
+
+      </div>
+      <div class="col-7 col-md-8">
+
+        <a href="{{ video.video_url }}" style="color: black;">
+
+        <h5 class="card-title">{{ video.title }}</h5>
+
+        </a>
+
+
+      <p></p>
+
+      <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+
+
+      <p>
+        <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
+        Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+      </p>
+      </div>
+      </div>
+
+      <div class="card-text collapse" id="{{ video.id }}">
+      <p></p>
+      {{ video.video_description| linebreaks }}
+      </div>
+
+      {% if user.is_authenticated %}
+      {% if video.recommended_by.pk == user.pk %}
+        <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_video' video.pk %}">Delete</a>
+      {% endif %}
+      {% endif %}
+
+
+
+    </div>
+
+    <div class="card-footer text-muted">
+
+      {% if user in video.upvote.all %}
+        <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+      {% else %}
+        <i class="fa fa-arrow-up upvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+      {% endif %}
+
+      <small class="vote_total" data-videoid="{{ video.id }}">{{ video.total_votes }}&nbsp;</small>
+
+      {% if user in video.downvote.all %}
+      <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+      {% else %}
+      <i class="fa fa-arrow-down downvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+      {% endif %}
+
+      {% if user in video.bookmark.all %}
+      <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+      {% else %}
+      <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+      {% endif %}
+
+      {% if video.video_comments.count > 0 %}
+        <small class="pull-right">{{ video.video_comments.count }}&nbsp;</small>
+      {% endif %}
+
+      <a href="{% url 'video_comment' category.slug subcategory.slug video.pk %}" class="text-muted">
+        <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+      </a>
+
+    </div>
+
+
+
+  </div>
+
+
+
+<div class="card card-top-buffer rec-shadow">
+  <div class="card-block">
+
+    {% if user.is_authenticated %}
+    <div class="bottom-padding">
+      <form enctype="multipart/form-data" id="VideoCommentForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary btn-sm pull-right" type="submit" name="submit" value="Post" />
+      </form>
+    </div>
+    {% endif %}
+
+<strong>Comments</strong>
+
+{% if comments %}
+
+  {% for comment in comments %}
+    <hr>
+    <div class="card-text">
+      <a href="{% url 'user_profile' comment.author %}">
+      <strong>{{ comment.author }}</strong></a>
+      &nbsp; {{ comment.text }}
+      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small></p>
+      {% if user.is_authenticated %}
+      {% if comment.author.pk == user.pk %}
+        <p><a class="btn btn-outline-danger btn-sm " href="{% url 'delete_video_comment' comment.pk %}">Delete</a>
+          <a class="btn btn-outline-danger btn-sm " href="{% url 'edit_video_comment' comment.pk %}">Edit</a>
+        </p>
+      {% endif %}
+      {% endif %}
+    </div>
+
+
+
+  {% endfor %}
+{% else %}
+<hr>
+<small>No comments have been made yet.</small>
+{% endif %}
+
+</div>
+</div>
+
+</div>
+
+{% endblock %}

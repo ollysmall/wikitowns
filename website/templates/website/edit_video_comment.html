@@ -1,0 +1,19 @@
+{% extends 'website/base.html' %}
+
+{% load static %}
+
+{% block title %}noobhub{% endblock %}
+
+{% block body_block %}
+<div>
+  <h1>Edit comment</h1>
+
+  <form enctype="multipart/form-data" id="VideoCommentForm" method="post" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn btn-primary" type="submit" name="submit" value="Update" />
+  </form>
+
+</div>
+
+{% endblock %}

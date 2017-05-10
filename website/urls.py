@@ -23,4 +23,12 @@ urlpatterns = [
     url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/book_comments/$', views.book_comment, name='book_comment'),
     url(r'^delete_book_comment/(?P<pk>\d+)/$', login_required(views.DeleteBookComment.as_view()), name='delete_book_comment'),
     url(r'^edit_book_comment/(?P<pk>\d+)/$', login_required(views.EditBookComment.as_view()), name='edit_book_comment'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/new_video/$', views.create_video_recommendation, name='create_video'),
+    url(r'^delete_video/(?P<pk>\d+)/$', login_required(views.DeleteVideoRecommendation.as_view()), name='delete_video'),
+    url(r'^upvote_video/$', views.upvote_video, name='upvote_video'),
+    url(r'^downvote_video/$', views.downvote_video, name='downvote_video'),
+    url(r'^bookmark_video/$', views.bookmark_video, name='bookmark_video'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/video_comments/$', views.video_comment, name='video_comment'),
+    url(r'^delete_video_comment/(?P<pk>\d+)/$', login_required(views.DeleteVideoComment.as_view()), name='delete_video_comment'),
+    url(r'^edit_video_comment/(?P<pk>\d+)/$', login_required(views.EditVideoComment.as_view()), name='edit_video_comment'),
 ]

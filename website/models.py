@@ -105,3 +105,40 @@ class BookComment(models.Model):
 
     def __str__(self):
         return self.text
+
+class VideoRecommendation(models.Model):
+    title = models.CharField(max_length=128)
+    recommended_by = models.ForeignKey(User)
+    category = models.ForeignKey(Category)
+    subcategory = models.ForeignKey(SubCategory)
+    video_description = models.CharField(max_length=10000) #check length is ok
+    created_date = models.DateTimeField(default=timezone.now)
+    video_publish_date = models.DateTimeField()
+    video_url = models.URLField(max_length=2000) #change length?
+    video_image_url = models.URLField(max_length=500) #check length is ok
+    video_id = models.CharField(max_length=128) #change length?
+    upvote = models.ManyToManyField(User, related_name='video_upvote')
+    downvote = models.ManyToManyField(User, related_name='video_downvote')
+    bookmark = models.ManyToManyField(User, related_name='video_bookmark')
+
+    @property
+    def total_votes(self):
+        total_upvotes = self.upvote.count()
+        total_downvotes = self.downvote.count()
+
+        return total_upvotes - total_downvotes
+
+    class Meta:
+       unique_together = (("category", "subcategory", "video_id"),)
+
+    def __str__(self):
+        return self.title
+
+class VideoComment(models.Model):
+    video = models.ForeignKey(VideoRecommendation, related_name='video_comments')
+    author = models.ForeignKey(User)
+    text = models.TextField(max_length=2000) #check this length is ok
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.text

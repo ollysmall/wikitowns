@@ -1,5 +1,5 @@
 from django import forms
-from website.models import WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment
+from website.models import WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment, VideoRecommendation, VideoComment
 
 
 class WebsiteForm(forms.ModelForm):
@@ -33,6 +33,23 @@ class BookCommentForm(forms.ModelForm):
 
     class Meta:
         model = BookComment
+        fields = ('text',)
+        widgets = {
+          'text': forms.Textarea(attrs={'rows':2, 'cols':30, 'class': 'comment-textbox'}),
+        }
+
+class VideoForm(forms.ModelForm):
+
+    class Meta:
+        model = VideoRecommendation
+        fields = ('video_url', )
+
+class VideoCommentForm(forms.ModelForm):
+
+    text = forms.CharField(label='', widget=forms.Textarea(attrs={'cols': 30, 'rows': 2, 'class': 'comment-textbox, form-control', 'placeholder': ' Write a comment...'}))
+
+    class Meta:
+        model = VideoComment
         fields = ('text',)
         widgets = {
           'text': forms.Textarea(attrs={'rows':2, 'cols':30, 'class': 'comment-textbox'}),

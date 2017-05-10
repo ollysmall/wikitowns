@@ -148,6 +148,80 @@ $('.bookmark_book').click(function(){
         });
   })
 
+$('.upvote_video').click(function(){
+  $(this).toggleClass("clicked-button");
+  var videoid = $(this).attr('data-videoid');
+  var vote_total = $('.vote_total[data-videoid=' + videoid + ']');
+  var downvote_button = $('.downvote_video[data-videoid=' + videoid + ']');
+
+  if (downvote_button.hasClass("clicked-button")){
+    downvote_button.toggleClass("clicked-button");
+  }
+
+  $.ajax({
+
+               type: "POST",
+               url: '/upvote_video/',
+               data: {'videoid': videoid},
+               dataType: "json",
+
+               success: function(response){
+                                   vote_total.html(response + '&nbsp;');
+
+
+                },
+                error: function(response) {
+                       window.location.href = '/accounts/login/';
+                }
+          });
+    })
+
+$('.downvote_video').click(function(){
+  $(this).toggleClass("clicked-button");
+  var videoid = $(this).attr('data-videoid');
+  var vote_total = $('.vote_total[data-videoid=' + videoid + ']');
+  var upvote_button = $('.upvote_video[data-videoid=' + videoid + ']');
+
+  if (upvote_button.hasClass("clicked-button")){
+    upvote_button.toggleClass("clicked-button");
+  }
+
+
+  $.ajax({
+               type: "POST",
+               url: '/downvote_video/',
+               data: {'videoid': videoid},
+               dataType: "json",
+
+               success: function(response){
+                                   vote_total.html(response + '&nbsp;');
+                },
+                error: function(response) {
+                       window.location.href = '/accounts/login/';
+                }
+          });
+    })
+
+$('.bookmark_video').click(function(){
+  $(this).toggleClass("clicked-button");
+  var videoid = $(this).attr('data-videoid');
+
+  $.ajax({
+             type: "POST",
+             url: '/bookmark_video/',
+             data: {'videoid': videoid},
+             dataType: "json",
+
+             success: function(response){
+
+
+              },
+              error: function(response) {
+                     window.location.href = '/accounts/login/';
+              }
+        });
+  })
+
 //gets the csrf token
 function getCookie(name) {
     var cookieValue = null;

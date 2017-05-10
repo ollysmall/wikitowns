@@ -1,5 +1,5 @@
 from django.contrib import admin
-from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment
+from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment, VideoRecommendation
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('name',)}
@@ -13,3 +13,4 @@ admin.site.register(WebsiteRecommendation)
 admin.site.register(WebsiteComment)
 admin.site.register(BookRecommendation)
 admin.site.register(BookComment)
+admin.site.register(VideoRecommendation)
