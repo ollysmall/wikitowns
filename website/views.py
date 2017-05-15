@@ -107,8 +107,16 @@ def profile_page(request, username):
     context_dict['profile_user'] = user
     website_recommendations = WebsiteRecommendation.objects.filter(website_author=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
     context_dict['website_recommendations'] = website_recommendations
+    book_recommendations = BookRecommendation.objects.filter(recommended_by=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
+    context_dict['book_recommendations'] = book_recommendations
+    video_recommendations = VideoRecommendation.objects.filter(recommended_by=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
+    context_dict['video_recommendations'] = video_recommendations
     website_bookmarks = WebsiteRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
     context_dict['website_bookmarks'] = website_bookmarks
+    book_bookmarks = BookRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
+    context_dict['book_bookmarks'] = book_bookmarks
+    video_bookmarks = VideoRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
+    context_dict['video_bookmarks'] = video_bookmarks
     return render(request, 'website/profile.html', context_dict)
 
 @login_required

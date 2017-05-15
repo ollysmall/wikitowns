@@ -3,7 +3,7 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-.test-this {background-color: #ff574a; }
+.test-this {background-color: #8CE8CA; }
 
 .top-buffer { margin-top:20px; }
 
@@ -54,7 +54,7 @@ i:hover {
 }
 
 .clicked-button {
-  color: red;
+  color: #FFA7D0;
 }
 
 .comment-textbox {

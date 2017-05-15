@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load noobhub_filters %}
+
 {% block title %}noobhub{% endblock %}
 
 {% block body_block %}
@@ -12,7 +14,25 @@
 
 </div>
 
-<div class="container">
+<div class="container bottom-padding">
+  <p></p>
+
+  <ul class="nav justify-content-center nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#bookmarks" role="tab" href="#" style="color: black;">Bookmarks</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#recommendations" role="tab" style="color: black;">Recommendtions</a>
+  </li>
+  </ul>
+  <p></p>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+  <div class="tab-pane" id="recommendations" role="tabpanel">
+
+  <p></p>
+  <div>
 
   {% if website_recommendations %}
 
@@ -26,38 +46,304 @@
         </a>
         <p class="card-text">{{ website.description }}</p>
         <p></p>
+        <p class="card-text">
+          <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
+            <small class="text-muted">{{ website.website_author }} · {{ website.created_date|timesince|upto:',' }} ago</small>
+          </a>
           {% if user.is_authenticated %}
           {% if website.website_author.pk == user.pk %}
             <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_website' website.pk %}">Delete</a>
           {% endif %}
           {% endif %}
+
         </p>
       </div>
 
       <div class="card-footer text-muted">
-        <i class="fa fa-arrow-up" aria-hidden="true">&nbsp;</i>
-        <i class="fa fa-arrow-down" aria-hidden="true">&nbsp;</i>
+        {% if user in website.upvote.all %}
+          <i class="fa fa-arrow-up upvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% else %}
+          <i class="fa fa-arrow-up upvote_website" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% endif %}
+
+        <small class="vote_total" data-websiteid="{{ website.id }}">{{ website.total_votes }}&nbsp;</small>
+
+        {% if user in website.downvote.all %}
+        <i class="fa fa-arrow-down downvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true">&nbsp;</i>
+        {% else %}
+        <i class="fa fa-arrow-down downvote_website" data-websiteid="{{ website.id }}" aria-hidden="true">&nbsp;</i>
+        {% endif %}
+
         <a href="{% url 'category' website.category.slug %}">
         <span class="badge badge-pill badge-info">{{ website.category }}</span>
         </a>
         <a href="{% url 'subcategory' website.category.slug website.subcategory.slug %}">
         <span class="badge badge-pill badge-info">{{ website.subcategory }}</span>
         </a>
-        <i class="fa fa-bookmark-o pull-right" aria-hidden="true"></i>
-        <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+
+        {% if user in website.bookmark.all %}
+        <i class="fa fa-bookmark-o pull-right bookmark_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% else %}
+        <i class="fa fa-bookmark-o pull-right bookmark_website" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% endif %}
+
+        {% if website.comments.count > 0 %}
+          <small class="pull-right">{{ website.comments.count }}&nbsp;</small>
+        {% endif %}
+
+        <a href="{% url 'website_comment' website.category.slug website.subcategory.slug website.pk %}" class="text-muted">
+          <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+        </a>
+
+
 
       </div>
 
     </div>
 
+    {% endfor %}
+
+  {% endif %}
+
+  {% if book_recommendations %}
+
+    {% for book in book_recommendations %}
+
+        <div class="card card-top-buffer card-link-text rec-shadow">
+
+          <div class="card-block">
+
+
+            <div class="row">
+            <div class="col-5 col-md-3 text-center">
+            <a href="{{ book.book_url }}">
+            <img src="{{ book.book_image_url }}" width = 100% height = "auto"  />
+            </a>
+            <p></p>
+            <p></p>
+
+            <p class="card-text pull-left">
+              <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+
+
+
+            </div>
+            <div class="col-7 col-md-9">
+
+              <a href="{{ book.book_url }}" style="color: black;">
+
+              <h5 class="card-title">{{ book.title }}</h5>
+
+              </a>
+
+
+            <p></p>
+            <p class="card-text"><small><strong>Author:</strong> {{ book.book_author }}</small></p>
+
+            <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
+
+            <p class="card-text"><small><strong>ISBN:</strong> {{ book.isbn }}</small></p>
+
+            <p>
+              <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
+              Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
+              </button>
+            </p>
+            </div>
+            </div>
+
+            <div class="card-text collapse" id="{{ book.id }}">
+            <p></p>
+            {{ book.book_description|safe }}
+            </div>
+
+            {% if user.is_authenticated %}
+            {% if book.recommended_by.pk == user.pk %}
+              <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_book' book.pk %}">Delete</a>
+            {% endif %}
+            {% endif %}
+
+
+
+          </div>
+
+          <div class="card-footer text-muted">
+
+            {% if user in book.upvote.all %}
+              <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% else %}
+              <i class="fa fa-arrow-up upvote_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            <small class="vote_total" data-bookid="{{ book.id }}">{{ book.total_votes }}&nbsp;</small>
+
+            {% if user in book.downvote.all %}
+            <i class="fa fa-arrow-down downvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true">&nbsp;</i>
+            {% else %}
+            <i class="fa fa-arrow-down downvote_book" data-bookid="{{ book.id }}" aria-hidden="true">&nbsp;</i>
+            {% endif %}
+
+            <a href="{% url 'category' book.category.slug %}">
+            <span class="badge badge-pill badge-info">{{ book.category }}</span>
+            </a>
+            <a href="{% url 'subcategory' book.category.slug book.subcategory.slug %}">
+            <span class="badge badge-pill badge-info">{{ book.subcategory }}</span>
+            </a>
+
+            {% if user in book.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            {% if book.book_comments.count > 0 %}
+              <small class="pull-right">{{ book.book_comments.count }}&nbsp;</small>
+            {% endif %}
+
+            <a href="{% url 'book_comment' book.category.slug book.subcategory.slug book.pk %}" class="text-muted">
+              <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+            </a>
+
+
+          </div>
+
+
+
+        </div>
+
 
     {% endfor %}
 
-  {% else %}
-    <strong>No recomendations have been made yet.</strong>
   {% endif %}
 
-  <h4>Bookmarks</h4>
+  {% if video_recommendations %}
+
+    {% for video in video_recommendations %}
+
+        <div class="card card-top-buffer card-link-text rec-shadow">
+
+          <div class="card-block">
+
+
+            <div class="row">
+            <div class="col-5 col-md-4 text-center">
+            <a href="{{ video.video_url }}">
+            <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
+            </a>
+            <p></p>
+            <p></p>
+
+            <p class="card-text pull-left">
+              <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+
+
+
+            </div>
+            <div class="col-7 col-md-8">
+
+              <a href="{{ video.video_url }}" style="color: black;">
+
+              <h5 class="card-title">{{ video.title }}</h5>
+
+              </a>
+
+
+            <p></p>
+
+            <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+
+
+            <p>
+              <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
+              Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
+              </button>
+            </p>
+            </div>
+            </div>
+
+            <div class="card-text collapse" id="{{ video.id }}">
+            <p></p>
+            {{ video.video_description| linebreaks }}
+            </div>
+
+            {% if user.is_authenticated %}
+            {% if video.recommended_by.pk == user.pk %}
+              <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_video' video.pk %}">Delete</a>
+            {% endif %}
+            {% endif %}
+
+
+
+          </div>
+
+          <div class="card-footer text-muted">
+
+            {% if user in video.upvote.all %}
+              <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% else %}
+              <i class="fa fa-arrow-up upvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            <small class="vote_total" data-videoid="{{ video.id }}">{{ video.total_votes }}&nbsp;</small>
+
+            {% if user in video.downvote.all %}
+            <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true">&nbsp;</i>
+            {% else %}
+            <i class="fa fa-arrow-down downvote_video" data-videoid="{{ video.id }}" aria-hidden="true">&nbsp;</i>
+            {% endif %}
+
+            <a href="{% url 'category' video.category.slug %}">
+            <span class="badge badge-pill badge-info">{{ video.category }}</span>
+            </a>
+            <a href="{% url 'subcategory' video.category.slug video.subcategory.slug %}">
+            <span class="badge badge-pill badge-info">{{ video.subcategory }}</span>
+            </a>
+
+            {% if user in video.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            {% if video.video_comments.count > 0 %}
+              <small class="pull-right">{{ video.video_comments.count }}&nbsp;</small>
+            {% endif %}
+
+            <a href="{% url 'video_comment' video.category.slug video.subcategory.slug video.pk %}" class="text-muted">
+              <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+            </a>
+
+          </div>
+
+
+
+        </div>
+
+
+    {% endfor %}
+
+
+
+  {% endif %}
+
+  {% if not website_recommendations and not book_recommendations and not video_recommendations %}
+  No bookmarks have been made yet.
+  {% endif %}
+</div>
+
+</div>
+
+<div class="tab-pane active" id="bookmarks" role="tabpanel">
+
+  <div>
+
+  <p></p>
 
   {% if website_bookmarks %}
 
@@ -71,36 +357,300 @@
         </a>
         <p class="card-text">{{ website.description }}</p>
         <p></p>
+        <p class="card-text">
+          <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
+            <small class="text-muted">{{ website.website_author }} · {{ website.created_date|timesince|upto:',' }} ago</small>
+          </a>
           {% if user.is_authenticated %}
           {% if website.website_author.pk == user.pk %}
             <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_website' website.pk %}">Delete</a>
           {% endif %}
           {% endif %}
+
         </p>
       </div>
 
       <div class="card-footer text-muted">
-        <i class="fa fa-arrow-up" aria-hidden="true">&nbsp;</i>
-        <i class="fa fa-arrow-down" aria-hidden="true">&nbsp;</i>
+        {% if user in website.upvote.all %}
+          <i class="fa fa-arrow-up upvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% else %}
+          <i class="fa fa-arrow-up upvote_website" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% endif %}
+
+        <small class="vote_total" data-websiteid="{{ website.id }}">{{ website.total_votes }}&nbsp;</small>
+
+        {% if user in website.downvote.all %}
+        <i class="fa fa-arrow-down downvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true">&nbsp;</i>
+        {% else %}
+        <i class="fa fa-arrow-down downvote_website" data-websiteid="{{ website.id }}" aria-hidden="true">&nbsp;</i>
+        {% endif %}
+
         <a href="{% url 'category' website.category.slug %}">
         <span class="badge badge-pill badge-info">{{ website.category }}</span>
         </a>
         <a href="{% url 'subcategory' website.category.slug website.subcategory.slug %}">
         <span class="badge badge-pill badge-info">{{ website.subcategory }}</span>
         </a>
-        <i class="fa fa-bookmark-o pull-right" aria-hidden="true"></i>
-        <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+
+        {% if user in website.bookmark.all %}
+        <i class="fa fa-bookmark-o pull-right bookmark_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% else %}
+        <i class="fa fa-bookmark-o pull-right bookmark_website" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
+        {% endif %}
+
+        {% if website.comments.count > 0 %}
+          <small class="pull-right">{{ website.comments.count }}&nbsp;</small>
+        {% endif %}
+
+        <a href="{% url 'website_comment' website.category.slug website.subcategory.slug website.pk %}" class="text-muted">
+          <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+        </a>
+
+
 
       </div>
 
     </div>
 
+
+
     {% endfor %}
 
-  {% else %}
-    <strong>No bookmarks have been made yet.</strong>
   {% endif %}
 
+  {% if book_bookmarks %}
+
+    {% for book in book_bookmarks %}
+
+        <div class="card card-top-buffer card-link-text rec-shadow">
+
+          <div class="card-block">
+
+
+            <div class="row">
+            <div class="col-5 col-md-3 text-center">
+            <a href="{{ book.book_url }}">
+            <img src="{{ book.book_image_url }}" width = 100% height = "auto"  />
+            </a>
+            <p></p>
+            <p></p>
+
+            <p class="card-text pull-left">
+              <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+
+
+
+            </div>
+            <div class="col-7 col-md-9">
+
+              <a href="{{ book.book_url }}" style="color: black;">
+
+              <h5 class="card-title">{{ book.title }}</h5>
+
+              </a>
+
+
+            <p></p>
+            <p class="card-text"><small><strong>Author:</strong> {{ book.book_author }}</small></p>
+
+            <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
+
+            <p class="card-text"><small><strong>ISBN:</strong> {{ book.isbn }}</small></p>
+
+            <p>
+              <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
+              Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
+              </button>
+            </p>
+            </div>
+            </div>
+
+            <div class="card-text collapse" id="{{ book.id }}">
+            <p></p>
+            {{ book.book_description|safe }}
+            </div>
+
+            {% if user.is_authenticated %}
+            {% if book.recommended_by.pk == user.pk %}
+              <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_book' book.pk %}">Delete</a>
+            {% endif %}
+            {% endif %}
+
+
+
+          </div>
+
+          <div class="card-footer text-muted">
+
+            {% if user in book.upvote.all %}
+              <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% else %}
+              <i class="fa fa-arrow-up upvote_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            <small class="vote_total" data-bookid="{{ book.id }}">{{ book.total_votes }}&nbsp;</small>
+
+            {% if user in book.downvote.all %}
+            <i class="fa fa-arrow-down downvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true">&nbsp;</i>
+            {% else %}
+            <i class="fa fa-arrow-down downvote_book" data-bookid="{{ book.id }}" aria-hidden="true">&nbsp;</i>
+            {% endif %}
+
+            <a href="{% url 'category' book.category.slug %}">
+            <span class="badge badge-pill badge-info">{{ book.category }}</span>
+            </a>
+            <a href="{% url 'subcategory' book.category.slug book.subcategory.slug %}">
+            <span class="badge badge-pill badge-info">{{ book.subcategory }}</span>
+            </a>
+
+            {% if user in book.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_book" data-bookid="{{ book.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            {% if book.book_comments.count > 0 %}
+              <small class="pull-right">{{ book.book_comments.count }}&nbsp;</small>
+            {% endif %}
+
+            <a href="{% url 'book_comment' book.category.slug book.subcategory.slug book.pk %}" class="text-muted">
+              <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+            </a>
+
+
+          </div>
+
+
+
+        </div>
+
+
+    {% endfor %}
+
+  {% endif %}
+
+  {% if video_bookmarks %}
+
+    {% for video in video_bookmarks %}
+
+        <div class="card card-top-buffer card-link-text rec-shadow">
+
+          <div class="card-block">
+
+
+            <div class="row">
+            <div class="col-5 col-md-4 text-center">
+            <a href="{{ video.video_url }}">
+            <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
+            </a>
+            <p></p>
+            <p></p>
+
+            <p class="card-text pull-left">
+              <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+
+
+
+            </div>
+            <div class="col-7 col-md-8">
+
+              <a href="{{ video.video_url }}" style="color: black;">
+
+              <h5 class="card-title">{{ video.title }}</h5>
+
+              </a>
+
+
+            <p></p>
+
+            <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+
+
+            <p>
+              <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
+              Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
+              </button>
+            </p>
+            </div>
+            </div>
+
+            <div class="card-text collapse" id="{{ video.id }}">
+            <p></p>
+            {{ video.video_description| linebreaks }}
+            </div>
+
+            {% if user.is_authenticated %}
+            {% if video.recommended_by.pk == user.pk %}
+              <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_video' video.pk %}">Delete</a>
+            {% endif %}
+            {% endif %}
+
+
+
+          </div>
+
+          <div class="card-footer text-muted">
+
+            {% if user in video.upvote.all %}
+              <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% else %}
+              <i class="fa fa-arrow-up upvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            <small class="vote_total" data-videoid="{{ video.id }}">{{ video.total_votes }}&nbsp;</small>
+
+            {% if user in video.downvote.all %}
+            <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true">&nbsp;</i>
+            {% else %}
+            <i class="fa fa-arrow-down downvote_video" data-videoid="{{ video.id }}" aria-hidden="true">&nbsp;</i>
+            {% endif %}
+
+            <a href="{% url 'category' video.category.slug %}">
+            <span class="badge badge-pill badge-info">{{ video.category }}</span>
+            </a>
+            <a href="{% url 'subcategory' video.category.slug video.subcategory.slug %}">
+            <span class="badge badge-pill badge-info">{{ video.subcategory }}</span>
+            </a>
+
+            {% if user in video.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+            {% endif %}
+
+            {% if video.video_comments.count > 0 %}
+              <small class="pull-right">{{ video.video_comments.count }}&nbsp;</small>
+            {% endif %}
+
+            <a href="{% url 'video_comment' video.category.slug video.subcategory.slug video.pk %}" class="text-muted">
+              <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+            </a>
+
+          </div>
+
+
+
+        </div>
+
+
+    {% endfor %}
+
+
+
+  {% endif %}
+  {% if not website_bookmarks and not book_bookmarks and not video_bookmarks %}
+  No bookmarks have been made yet.
+  {% endif %}
+</div>
+  </div>
+
+</div>
 </div>
 
 {% endblock %}
