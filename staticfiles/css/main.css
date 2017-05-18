@@ -62,3 +62,8 @@ i:hover {
   margin: auto;
   margin-top:10px;
 }
+
+/* remove arrow to drop downs */
+.dropdown-toggle::after {
+    display:none
+}

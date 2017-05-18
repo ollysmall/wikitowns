@@ -14,6 +14,31 @@
 
     <div class="card-block">
 
+      <div class="row card-title">
+
+        <div class="col-11">
+
+        <a href="{{ book.book_url }}" style="color: black;">
+        <h5 >{{ book.title }}</h5>
+        </a>
+
+      </div>
+        <div class="col-1">
+          <div class="dropdown"
+          <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
+
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            {% if user.is_authenticated %}
+            {% if book.recommended_by.pk == user.pk %}
+              <a class="dropdown-item" href="{% url 'delete_book' book.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
+            {% endif %}
+            {% endif %}
+          <a class="dropdown-item" href="#"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+          </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="row">
       <div class="col-5 col-md-3 text-center">
@@ -32,16 +57,9 @@
 
 
       </div>
+
       <div class="col-7 col-md-9">
 
-        <a href="{{ book.book_url }}" style="color: black;">
-
-        <h5 class="card-title">{{ book.title }}</h5>
-
-        </a>
-
-
-      <p></p>
       <p class="card-text"><small><strong>Author:</strong> {{ book.book_author }}</small></p>
 
       <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
@@ -60,14 +78,6 @@
       <p></p>
       {{ book.book_description|safe }}
       </div>
-
-      {% if user.is_authenticated %}
-      {% if book.recommended_by.pk == user.pk %}
-        <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_book' book.pk %}">Delete</a>
-      {% endif %}
-      {% endif %}
-
-
 
     </div>
 
@@ -132,14 +142,14 @@
       <a href="{% url 'user_profile' comment.author %}">
       <strong>{{ comment.author }}</strong></a>
       &nbsp; {{ comment.text }}
-      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small></p>
+      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small>
       {% if user.is_authenticated %}
       {% if comment.author.pk == user.pk %}
-        <p><a class="btn btn-outline-danger btn-sm " href="{% url 'delete_book_comment' comment.pk %}">Delete</a>
-          <a class="btn btn-outline-danger btn-sm " href="{% url 'edit_book_comment' comment.pk %}">Edit</a>
-        </p>
+        <a class="text-muted" href="{% url 'delete_book_comment' comment.pk %}"><small>&nbsp;·&nbsp; Delete &nbsp;·&nbsp;</small></a>
+        <a class="text-muted" href="{% url 'edit_book_comment' comment.pk %}"><small>Edit</small></a>
       {% endif %}
       {% endif %}
+      </p>
     </div>
 
 

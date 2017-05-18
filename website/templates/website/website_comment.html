@@ -10,26 +10,42 @@
 
 <div class="container bottom-padding">
 
-<div class="card card-top-buffer card-link-text rec-shadow">
+  <div class="card card-top-buffer card-link-text rec-shadow">
 
-  <div class="card-block">
-    <a href="{{ website.url }}" style="color: black;">
-    <h4 class="card-title">{{ website.title }}</h4>
-    </a>
-    <p class="card-text">{{ website.description }}</p>
-    <p></p>
-    <p class="card-text">
-      <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
-        <small class="text-muted">{{ website.website_author }} - {{ website.created_date|timesince|upto:',' }} ago</small>
+    <div class="card-block">
+
+      <div class="row">
+      <div class="col-11">
+
+      <a href="{{ website.url }}" style="color: black;">
+      <h4 class="card-title">{{ website.title }}</h4>
       </a>
-      {% if user.is_authenticated %}
-      {% if website.website_author.pk == user.pk %}
-        <a class="btn btn-outline-danger btn-sm pull-right" href="{% url 'delete_website' website.pk %}">Delete</a>
-      {% endif %}
-      {% endif %}
+    </div>
+      <div class="col-1">
+        <div class="dropdown"
+        <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
 
-    </p>
-  </div>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+          {% if user.is_authenticated %}
+          {% if website.website_author.pk == user.pk %}
+            <a class="dropdown-item" href="{% url 'delete_website' website.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
+          {% endif %}
+          {% endif %}
+        <a class="dropdown-item" href="#"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+        </div>
+        </div>
+      </div>
+    </div>
+
+
+      <p class="card-text">{{ website.description }}</p>
+      <p></p>
+      <p class="card-text">
+        <a href="{% url 'user_profile' website.website_author %}" style="color: black;">
+          <small class="text-muted">{{ website.website_author }} · {{ website.created_date|timesince|upto:',' }} ago</small>
+        </a>
+      </p>
+    </div>
 
   <div class="card-footer text-muted">
     {% if user in website.upvote.all %}
@@ -89,14 +105,14 @@
       <a href="{% url 'user_profile' comment.author %}">
       <strong>{{ comment.author }}</strong></a>
       &nbsp; {{ comment.text }}
-      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small></p>
+      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small>
       {% if user.is_authenticated %}
       {% if comment.author.pk == user.pk %}
-        <p><a class="btn btn-outline-danger btn-sm " href="{% url 'delete_website_comment' comment.pk %}">Delete</a>
-          <a class="btn btn-outline-danger btn-sm " href="{% url 'edit_website_comment' comment.pk %}">Edit</a>
-        </p>
+        <a class="text-muted" href="{% url 'delete_website_comment' comment.pk %}"><small>&nbsp;·&nbsp; Delete &nbsp;·&nbsp;</small></a>
+        <a class="text-muted" href="{% url 'edit_website_comment' comment.pk %}"><small>Edit</small></a>
       {% endif %}
       {% endif %}
+      </p>
     </div>
 
 
