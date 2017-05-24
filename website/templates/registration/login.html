@@ -1,14 +1,37 @@
 {% extends "website/base.html" %}
 
 {% block body_block %}
-<h1>Login</h1>
-        <form method="post" action=".">
-                {% csrf_token %}
-                {{ form.as_p }}
 
-                <input type="submit" value="Log in" />
-                <input type="hidden" name="next" value="{{ next }}" />
-                </form>
 
-        <p>Not  a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+
+
+<div class="container bottom-padding top-padding">
+
+  <div class="card card-top-buffer card-link-text rec-shadow login-width">
+
+    <div class="card-block">
+
+      <h3>Login</h3>
+      <p></p>
+
+      {% if form.errors %}
+      <p>Please check your username and password and try again.</p>
+      {% endif %}
+
+
+      <form role="form" method="post" action=".">
+        {% csrf_token %}
+
+        <label for="inputUsername" class="sr-only">Username</label>
+        <p><input type="text" id="id_username" class="form-control" name="username" placeholder="Username" required autofocus></p>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <p><input type="password" id="id_password" class="form-control" name="password" placeholder="Password" required></p>
+        <button class="btn btn-success" type="submit" value="Submit" />Sign in</button>
+        <input type="hidden" name="next" value="{{ next }}" />
+        <small class="pull-right">Not a member? <a href="{% url 'registration_register' %}">Register here</a>!</small>
+      </form>
+
+      </div>
+    </div>
+  </div>
 {% endblock %}

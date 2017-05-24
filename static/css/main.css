@@ -67,3 +67,7 @@ i:hover {
 .dropdown-toggle::after {
     display:none
 }
+
+.login-width {
+  max-width: 500px;
+}

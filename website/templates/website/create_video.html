@@ -6,12 +6,29 @@
 
 {% block body_block %}
 
-<div>
-  <form enctype="multipart/form-data" id="VideoForm" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input class="btn btn-outline-success" type="submit" name="submit" value="Create" />
-  </form>
+<div class="container bottom-padding top-padding">
+
+  <div class="card card-top-buffer card-link-text rec-shadow login-width">
+
+    <div class="card-block">
+
+      <h3>Recommend a YouTube video</h3>
+      <p></p>
+
+      <p>Please enter the URL of the YouTube video you would like to recommend.</p>
+
+      <div>
+        <form enctype="multipart/form-data" id="VideoForm" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <p><small class="text-muted"> URL must start with http:// or https://</small><p>
+          <input class="btn btn-outline-success" type="submit" name="submit" value="Submit" />
+        </form>
+
+      </div>
+
+      </div>
+    </div>
 </div>
 
 

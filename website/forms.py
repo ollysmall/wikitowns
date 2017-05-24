@@ -4,11 +4,16 @@ from website.models import WebsiteRecommendation, WebsiteComment, BookRecommenda
 
 class WebsiteForm(forms.ModelForm):
 
-    url = forms.URLField(max_length=200, initial='http://')
+    url = forms.URLField(max_length=200, initial='http://', widget=forms.TextInput( attrs={ 'class': 'form-control', 'required': True, } ))
 
     class Meta:
         model = WebsiteRecommendation
         fields = ('title', 'description', 'url')
+        widgets = {
+            'title': forms.TextInput( attrs={ 'class': 'form-control', 'required': True, } ),
+            'description': forms.Textarea( attrs={'cols': 30, 'rows': 4, 'class': 'form-control', 'required': True, } ),
+        }
+
 
 class WebsiteCommentForm(forms.ModelForm):
 
@@ -25,7 +30,10 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = BookRecommendation
-        fields = ('isbn', )
+        fields = ('isbn',)
+        widgets = {
+            'isbn': forms.TextInput( attrs={ 'class': 'form-control', 'required': True, } ),
+        }
 
 class BookCommentForm(forms.ModelForm):
 
@@ -39,6 +47,8 @@ class BookCommentForm(forms.ModelForm):
         }
 
 class VideoForm(forms.ModelForm):
+
+    video_url = forms.URLField(max_length=200, initial='http://', widget=forms.TextInput( attrs={ 'class': 'form-control', 'required': True, } ))
 
     class Meta:
         model = VideoRecommendation

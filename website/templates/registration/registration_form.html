@@ -2,11 +2,38 @@
 
 
 {% block body_block %}
-<h1>Register Here</h1>
-        <form method="post" action=".">
-                {% csrf_token %}
-                {{ form.as_p }}
 
-                <input type="submit" value="Submit" />
-        </form>
+<div class="container bottom-padding top-padding">
+
+  <div class="card card-top-buffer card-link-text rec-shadow login-width">
+
+    <div class="card-block">
+
+
+      <h3>Sign up</h3>
+      <p></p>
+      <form role="form"  method="post" action=".">
+        {% csrf_token %}
+        <div class="form-group" >
+        <p class="required"><label class="required" for="id_username">Username:</label>
+            <input class="form-control" id="id_username" maxlength="30" name="username" type="text" />
+            <span class="helptext">Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+        </p>
+            <p class="required"><label class="required" for="id_email">E-mail:</label>
+                <input class="form-control" id="id_email" name="email" type="email" />
+            </p>
+        <p class="required"><label class="required" for="id_password1">Password:</label>
+            <input class="form-control" id="id_password1" name="password1" type="password" />
+        </p>
+        <p class="required"><label class="required" for="id_password2">Password confirmation:</label>
+            <input class="form-control" id="id_password2" name="password2" type="password" />
+        </p>
+
+      </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+      </form>
+      </div>
+      </div>
+      </div>
+
 {% endblock %}
