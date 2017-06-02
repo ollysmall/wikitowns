@@ -72,6 +72,11 @@ class CreateWebsiteRecommendation(CreateView):
     form_class = WebsiteForm
     template_name = 'website/create_website.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(CreateWebsiteRecommendation, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
+
     def form_valid(self, form):
         form.instance.category = Category.objects.get(slug=self.kwargs["category_name_slug"])
         form.instance.subcategory = SubCategory.objects.get(slug=self.kwargs["subcategory_name_slug"])
@@ -87,6 +92,11 @@ class CreateWebsiteRecommendation(CreateView):
 class DeleteWebsiteRecommendation(DeleteView):
     model = WebsiteRecommendation
     template_name = 'website/delete_website.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteWebsiteRecommendation, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
 
     def get_object(self, queryset=None):
         obj = WebsiteRecommendation.objects.get(pk=self.kwargs['pk'])
@@ -221,6 +231,11 @@ class EditWebsiteComment(UpdateView):
     form_class = WebsiteCommentForm
     template_name = 'website/edit_website_comment.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(EditWebsiteComment, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
+
     def get_object(self, queryset=None):
         obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -236,6 +251,11 @@ class EditWebsiteComment(UpdateView):
 class DeleteWebsiteComment(DeleteView):
     model = WebsiteComment
     template_name = 'website/delete_website_comment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteWebsiteComment, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
 
     def get_object(self, queryset=None):
         obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
@@ -305,6 +325,11 @@ def create_book_recommendation(request, category_name_slug, subcategory_name_slu
 class DeleteBookRecommendation(DeleteView):
     model = BookRecommendation
     template_name = 'website/delete_book.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteBookRecommendation, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
 
     def get_object(self, queryset=None):
         obj = BookRecommendation.objects.get(pk=self.kwargs['pk'])
@@ -421,6 +446,11 @@ class EditBookComment(UpdateView):
     form_class = BookCommentForm
     template_name = 'website/edit_book_comment.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(EditBookComment, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
+
     def get_object(self, queryset=None):
         obj = BookComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -436,6 +466,11 @@ class EditBookComment(UpdateView):
 class DeleteBookComment(DeleteView):
     model = BookComment
     template_name = 'website/delete_book_comment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteBookComment, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
 
     def get_object(self, queryset=None):
         obj = BookComment.objects.get(pk=self.kwargs['pk'])
@@ -524,6 +559,11 @@ def create_video_recommendation(request, category_name_slug, subcategory_name_sl
 class DeleteVideoRecommendation(DeleteView):
     model = VideoRecommendation
     template_name = 'website/delete_video.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteVideoRecommendation, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
 
     def get_object(self, queryset=None):
         obj = VideoRecommendation.objects.get(pk=self.kwargs['pk'])
@@ -640,6 +680,11 @@ class EditVideoComment(UpdateView):
     form_class = VideoCommentForm
     template_name = 'website/edit_video_comment.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(EditVideoComment, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
+
     def get_object(self, queryset=None):
         obj = VideoComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -655,6 +700,11 @@ class EditVideoComment(UpdateView):
 class DeleteVideoComment(DeleteView):
     model = VideoComment
     template_name = 'website/delete_video_comment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteVideoComment, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.order_by('name')
+        return context
 
     def get_object(self, queryset=None):
         obj = VideoComment.objects.get(pk=self.kwargs['pk'])

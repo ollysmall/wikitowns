@@ -6,11 +6,19 @@
 
 {% block body_block %}
 
-<div class="container top-padding bottom-padding">
+
 
   {% if category %}
 
-  <h1>{{ category_name }}</h1>
+  <div class="top-padding bottom-padding test-this">
+
+  <h1 class="display-4 text-center" style="color:white;">{{ category_name }}</h1>
+
+</div>
+
+<div class="container top-padding bottom-padding">
+
+
     {% if subcategory %}
 
       <div class="row">

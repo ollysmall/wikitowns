@@ -3,7 +3,7 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-.test-this {background-color: #8CE8CA; }
+.test-this {background-color: #00d1b2; }
 
 .top-buffer { margin-top:20px; }
 
@@ -45,7 +45,7 @@ a, a:link, a:hover {
   max-width: 700px;
   margin: auto;
   margin-top:10px;
-  border: 0px
+  border: 0px;
 
 }
 
