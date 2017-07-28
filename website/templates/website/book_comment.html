@@ -19,7 +19,7 @@
         <div class="col-10">
 
         <a href="{{ book.book_url }}" style="color: black;">
-        <h5 >{{ book.title }}</h5>
+        <h4 class="card-title">{{ book.title }}</h4>
         </a>
 
       </div>
@@ -45,16 +45,6 @@
       <a href="{{ book.book_url }}">
       <img src="{{ book.book_image_url }}" width = 100% height = "auto"  />
       </a>
-      <p></p>
-      <p></p>
-
-      <p class="card-text pull-left">
-        <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
-          <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
-        </a>
-      </p>
-
-
 
       </div>
 
@@ -64,7 +54,11 @@
 
       <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
 
-      <p class="card-text"><small><strong>ISBN:</strong> {{ book.isbn }}</small></p>
+      <p class="card-text">
+        <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+          <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
+        </a>
+      </p>
 
       <p>
         <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
@@ -82,6 +76,7 @@
     </div>
 
     <div class="card-footer text-muted">
+      <div class="book-footer-top-boarder">
 
       {% if user in book.upvote.all %}
         <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
@@ -111,7 +106,7 @@
         <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
       </a>
 
-
+      </div>
     </div>
 
 

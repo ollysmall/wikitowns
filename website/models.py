@@ -4,6 +4,12 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from isbn_field import ISBNField
 
+
+
+
+
+
+
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField()
@@ -133,6 +139,9 @@ class VideoRecommendation(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
 
 class VideoComment(models.Model):
     video = models.ForeignKey(VideoRecommendation, related_name='video_comments')

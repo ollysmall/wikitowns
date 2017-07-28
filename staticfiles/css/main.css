@@ -1,6 +1,6 @@
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .test-this {background-color: #00d1b2; }
@@ -24,7 +24,9 @@ img.category-shadow {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .rec-shadow {
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.11);
+  -webkit-box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
+-moz-box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
+box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
 }
 
 /* button zoom on hover over */
@@ -36,15 +38,16 @@ a, a:link, a:hover {
  }
 
 .card-footer {
-  padding: .45rem 1.25rem;
+  padding: 0rem 1.25rem;
   background-color: #fff;
-  border-top: 1px solid #e5e5e5;
+  border-top: 0px solid #37abf2;
 }
 
 .card {
   max-width: 700px;
+  min-width: 250px;
   margin: auto;
-  margin-top:10px;
+  margin-top:20px;
   border: 0px;
 
 }
@@ -70,4 +73,69 @@ i:hover {
 
 .login-width {
   max-width: 500px;
+}
+
+.nav-tabs {
+  border-bottom: 0px solid #ddd;
+}
+
+.nav-tabs .nav-link {
+  border: 0px solid transparent;
+  border-top-right-radius: 0.25rem;
+  border-top-left-radius: 0.25rem;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  color: #464a4c;
+  background-color: #fafafa;
+}
+
+.nav-tabs > li > a {
+  color: white;
+}
+
+.card-title {
+  font-weight: 900;
+}
+
+.book-footer-top-boarder {
+  padding: .45rem;
+  border-top: 1px solid 	#31c1fa;
+}
+
+.video-footer-top-boarder {
+  padding: .45rem;
+  border-top: 1px solid #f45494;
+}
+
+.website-footer-top-boarder {
+  padding: .45rem;
+  border-top: 1px solid #F7B141;
+}
+
+.category-card {
+  height: 100px;
+  padding: 30px;
+  background-color: #ffb3ba;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+
+}
+
+/* style for form errors */
+.errorlist {
+  list-style-type: none;
+  padding: 0;
+  color: red;
+
+}
+
+/* customise select list for date filter */
+.custom-select {
+  -webkit-appearance: none;
+  background: #fff url("../website/arrow.png") no-repeat right 0.5rem center;
+  background-size: 10%;
+
 }

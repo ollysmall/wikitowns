@@ -8,31 +8,36 @@
 
 {% block body_block %}
 
-<div class="top-padding bottom-padding test-this">
+<div class="top-padding test-this">
+  <div class="bottom-padding">
 
   <h1 class="display-4 text-center" style="color:white;">{{ profile_user }}</h1>
 
-</div>
-
-<div class="container bottom-padding">
   <p></p>
+  </div>
 
   <ul class="nav justify-content-center nav-tabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#bookmarks" role="tab" href="#" style="color: black;">Bookmarks</a>
+    <a class="nav-link active" data-toggle="tab" href="#bookmarks" role="tab" href="#">Bookmarks</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#recommendations" role="tab" style="color: black;">Recommendations</a>
+    <a class="nav-link" data-toggle="tab" href="#recommendations" role="tab">Recommendations</a>
   </li>
   </ul>
   <p></p>
+
+  </div>
+
+  <div class="container">
 
   <!-- Tab panes -->
   <div class="tab-content">
   <div class="tab-pane" id="recommendations" role="tabpanel">
 
   <p></p>
-  <div>
+  <div class="bottom-padding">
+
+
 
   {% if website_recommendations %}
 
@@ -76,6 +81,8 @@
       </div>
 
       <div class="card-footer text-muted">
+        <div class="website-footer-top-boarder">
+
         {% if user in website.upvote.all %}
           <i class="fa fa-arrow-up upvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
         {% else %}
@@ -112,7 +119,7 @@
         </a>
 
 
-
+      </div>
       </div>
 
     </div>
@@ -134,7 +141,7 @@
           <div class="col-10">
 
           <a href="{{ book.book_url }}" style="color: black;">
-          <h5 >{{ book.title }}</h5>
+          <h4 class="card-title">{{ book.title }}</h4>
           </a>
 
         </div>
@@ -160,16 +167,6 @@
         <a href="{{ book.book_url }}">
         <img src="{{ book.book_image_url }}" width = 100% height = "auto"  />
         </a>
-        <p></p>
-        <p></p>
-
-        <p class="card-text pull-left">
-          <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
-            <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
-          </a>
-        </p>
-
-
 
         </div>
 
@@ -179,7 +176,11 @@
 
         <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
 
-        <p class="card-text"><small><strong>ISBN:</strong> {{ book.isbn }}</small></p>
+        <p class="card-text">
+          <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+            <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
+          </a>
+        </p>
 
         <p>
           <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ book.id }}" aria-expanded="false" aria-controls="{{ book.id }}">
@@ -197,6 +198,7 @@
       </div>
 
           <div class="card-footer text-muted">
+            <div class="book-footer-top-boarder">
 
             {% if user in book.upvote.all %}
               <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
@@ -233,7 +235,7 @@
               <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
             </a>
 
-
+            </div>
           </div>
 
 
@@ -256,7 +258,7 @@
         <div class="row card-title">
           <div class="col-10">
             <a href="{{ video.video_url }}" style="color: black;">
-            <h5>{{ video.title }}</h5>
+            <h4 class="card-title">{{ video.title }}</h4>
             </a>
           </div>
           <div class="col-2">
@@ -278,26 +280,22 @@
 
 
         <div class="row">
-        <div class="col-5 col-md-4 text-center">
+        <div class="col-6 col-md-4 text-center">
         <a href="{{ video.video_url }}">
         <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
         </a>
-        <p></p>
-        <p></p>
 
-        <p class="card-text pull-left">
+        </div>
+        <div class="col-6 col-md-8">
+
+
+        <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+
+        <p class="card-text">
           <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
             <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
           </a>
         </p>
-
-
-
-        </div>
-        <div class="col-7 col-md-8">
-
-
-        <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
 
 
         <p>
@@ -316,6 +314,7 @@
       </div>
 
           <div class="card-footer text-muted">
+            <div class="video-footer-top-boarder">
 
             {% if user in video.upvote.all %}
               <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
@@ -351,7 +350,7 @@
             <a href="{% url 'video_comment' video.category.slug video.subcategory.slug video.pk %}" class="text-muted">
               <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
             </a>
-
+            </div>
           </div>
 
 
@@ -374,7 +373,7 @@
 
 <div class="tab-pane active" id="bookmarks" role="tabpanel">
 
-  <div>
+  <div class="bottom-padding">
 
   <p></p>
 
@@ -420,6 +419,9 @@
       </div>
 
       <div class="card-footer text-muted">
+        <div class="website-footer-top-boarder">
+
+
         {% if user in website.upvote.all %}
           <i class="fa fa-arrow-up upvote_website clicked-button" data-websiteid="{{ website.id }}" aria-hidden="true"></i>
         {% else %}
@@ -456,7 +458,7 @@
         </a>
 
 
-
+        </div>
       </div>
 
     </div>
@@ -480,7 +482,7 @@
           <div class="col-10">
 
           <a href="{{ book.book_url }}" style="color: black;">
-          <h5 >{{ book.title }}</h5>
+          <h4 class="card-title">{{ book.title }}</h4>
           </a>
 
         </div>
@@ -506,16 +508,6 @@
         <a href="{{ book.book_url }}">
         <img src="{{ book.book_image_url }}" width = 100% height = "auto"  />
         </a>
-        <p></p>
-        <p></p>
-
-        <p class="card-text pull-left">
-          <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
-            <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
-          </a>
-        </p>
-
-
 
         </div>
 
@@ -525,7 +517,11 @@
 
         <p class="card-text"><small><strong>Published:</strong> {{ book.book_publish_date }}</small></p>
 
-        <p class="card-text"><small><strong>ISBN:</strong> {{ book.isbn }}</small></p>
+        <p class="card-text">
+          <a href="{% url 'user_profile' book.recommended_by %}" style="color: black;">
+            <small class="text-muted">{{ book.recommended_by }} · {{ book.created_date|timesince|upto:',' }} ago</small>
+          </a>
+        </p>
 
         <p>
           <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#bookmark{{ book.id }}" aria-expanded="false" aria-controls="bookmark{{ book.id }}">
@@ -543,6 +539,7 @@
       </div>
 
           <div class="card-footer text-muted">
+            <div class="book-footer-top-boarder">
 
             {% if user in book.upvote.all %}
               <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ book.id }}" aria-hidden="true"></i>
@@ -579,7 +576,7 @@
               <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
             </a>
 
-
+            </div>
           </div>
 
 
@@ -602,7 +599,7 @@
         <div class="row card-title">
           <div class="col-10">
             <a href="{{ video.video_url }}" style="color: black;">
-            <h5>{{ video.title }}</h5>
+            <h4 class="card-title">{{ video.title }}</h4>
             </a>
           </div>
           <div class="col-2">
@@ -624,26 +621,22 @@
 
 
         <div class="row">
-        <div class="col-5 col-md-4 text-center">
+        <div class="col-6 col-md-4 text-center">
         <a href="{{ video.video_url }}">
         <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
         </a>
-        <p></p>
-        <p></p>
 
-        <p class="card-text pull-left">
+        </div>
+        <div class="col-6 col-md-8">
+
+
+        <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+
+        <p class="card-text">
           <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
             <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
           </a>
         </p>
-
-
-
-        </div>
-        <div class="col-7 col-md-8">
-
-
-        <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
 
 
         <p>
@@ -662,6 +655,7 @@
       </div>
 
           <div class="card-footer text-muted">
+            <div class="video-footer-top-boarder">
 
             {% if user in video.upvote.all %}
               <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
@@ -697,7 +691,7 @@
             <a href="{% url 'video_comment' video.category.slug video.subcategory.slug video.pk %}" class="text-muted">
               <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
             </a>
-
+            </div>
           </div>
 
 

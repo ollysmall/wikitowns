@@ -12,7 +12,7 @@
 
     <div class="card-block">
 
-      <h3>Recommend a YouTube video</h3>
+      <h3 class="card-title">Recommend a YouTube video</h3>
       <p></p>
 
       <p>Please enter the URL of the YouTube video you would like to recommend.</p>
@@ -20,8 +20,15 @@
       <div>
         <form enctype="multipart/form-data" id="VideoForm" method="post">
           {% csrf_token %}
+
+          {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
           {{ form.as_p }}
-          <p><small class="text-muted"> URL must start with http:// or https://</small><p>
+
           <input class="btn btn-outline-success" type="submit" name="submit" value="Submit" />
         </form>
 

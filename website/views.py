@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment, VideoRecommendation, VideoComment
-from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm, VideoForm, VideoCommentForm
+from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm, VideoForm, VideoCommentForm, DateFilterForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
@@ -10,6 +10,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt #get rid of this
 from django.db.models import Count
+from django.contrib import messages
+from datetime import date
 
 #for amazon book info
 import os
@@ -21,15 +23,16 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from urllib.parse import urlparse, parse_qs
 
+
 def index(request):
-    category_list = Category.objects.order_by('name')
+
     category_img = Category.category_img
-    context_dict = {'categories': category_list, 'category_img': category_img}
+    context_dict = {'category_img': category_img}
     return render(request, 'website/index.html', context_dict)
 
 def category(request, category_name_slug):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+
+    context_dict = {}
 
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -43,10 +46,13 @@ def category(request, category_name_slug):
     return render(request, 'website/category.html', context_dict)
 
 def subcategory(request, category_name_slug, subcategory_name_slug):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
 
-
+    context_dict = {}
+    #set the initial using what was sent in the get request
+    form = DateFilterForm(initial=request.GET)
+    context_dict['form'] = form
+    #get todays date for filtering recommendations by
+    today = date.today()
 
     try:
         user = request.user
@@ -65,6 +71,35 @@ def subcategory(request, category_name_slug, subcategory_name_slug):
     except SubCategory.DoesNotExist:
         pass
 
+    if request.method == 'GET':
+
+        form = DateFilterForm(request.GET)
+        if form.is_valid():
+            filter_type = (form.cleaned_data['time_filter'])
+            print(filter_type)
+
+            if filter_type == 'newest':
+                website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory).order_by('-created_date')
+                context_dict['websites'] = website_list
+                book_list = BookRecommendation.objects.filter(subcategory=subcategory).order_by('-created_date')
+                context_dict['books'] = book_list
+                video_list = VideoRecommendation.objects.filter(subcategory=subcategory).order_by('-created_date')
+                context_dict['videos'] = video_list
+            elif filter_type == 'best-of-year':
+                website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['websites'] = website_list
+                book_list = BookRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['books'] = book_list
+                video_list = VideoRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['videos'] = video_list
+            elif filter_type == 'best-of-month':
+                website_list = WebsiteRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year, created_date__month=today.month).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['websites'] = website_list
+                book_list = BookRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year, created_date__month=today.month).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['books'] = book_list
+                video_list = VideoRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year, created_date__month=today.month).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['videos'] = video_list
+
     return render(request, 'website/subcategory.html', context_dict)
 
 class CreateWebsiteRecommendation(CreateView):
@@ -72,16 +107,23 @@ class CreateWebsiteRecommendation(CreateView):
     form_class = WebsiteForm
     template_name = 'website/create_website.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CreateWebsiteRecommendation, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
+    def get_form_kwargs(self):
+        """This method is what injects forms with their keyword
+            arguments."""
+        # grab the current set of form #kwargs
+        kwargs = super(CreateWebsiteRecommendation, self).get_form_kwargs()
+        # Update the kwargs with the user_id
+        kwargs['category'] = Category.objects.get(slug=self.kwargs["category_name_slug"])
+        kwargs['subcategory'] = SubCategory.objects.get(slug=self.kwargs["subcategory_name_slug"])
+        print(kwargs)
+        return kwargs
+
+
 
     def form_valid(self, form):
         form.instance.category = Category.objects.get(slug=self.kwargs["category_name_slug"])
         form.instance.subcategory = SubCategory.objects.get(slug=self.kwargs["subcategory_name_slug"])
         form.instance.website_author = self.request.user
-
         return super(CreateWebsiteRecommendation, self).form_valid(form)
 
     def get_success_url(self):
@@ -92,11 +134,6 @@ class CreateWebsiteRecommendation(CreateView):
 class DeleteWebsiteRecommendation(DeleteView):
     model = WebsiteRecommendation
     template_name = 'website/delete_website.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DeleteWebsiteRecommendation, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
 
     def get_object(self, queryset=None):
         obj = WebsiteRecommendation.objects.get(pk=self.kwargs['pk'])
@@ -110,8 +147,8 @@ class DeleteWebsiteRecommendation(DeleteView):
         return reverse('subcategory', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug})
 
 def profile_page(request, username):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+
+    context_dict = {}
 
     user = get_object_or_404(User, username=username)
     context_dict['profile_user'] = user
@@ -198,8 +235,8 @@ def bookmark_website(request):
     return HttpResponse(website.total_votes) #this should be changed - it doesnt need to respond with total votes
 
 def website_comment(request, category_name_slug, subcategory_name_slug, pk):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+
+    context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
     context_dict['category'] = category
@@ -231,11 +268,6 @@ class EditWebsiteComment(UpdateView):
     form_class = WebsiteCommentForm
     template_name = 'website/edit_website_comment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(EditWebsiteComment, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
-
     def get_object(self, queryset=None):
         obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -252,11 +284,6 @@ class DeleteWebsiteComment(DeleteView):
     model = WebsiteComment
     template_name = 'website/delete_website_comment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(DeleteWebsiteComment, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
-
     def get_object(self, queryset=None):
         obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -271,13 +298,13 @@ class DeleteWebsiteComment(DeleteView):
 
 @login_required
 def create_book_recommendation(request, category_name_slug, subcategory_name_slug):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+    context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
     context_dict['category'] = category
     subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
     context_dict['subcategory'] = subcategory
+    form = BookForm(category=category, subcategory=subcategory)
 
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
@@ -289,7 +316,7 @@ def create_book_recommendation(request, category_name_slug, subcategory_name_slu
     )
 
     if request.method == "POST":
-        form = BookForm(request.POST)
+        form = BookForm(request.POST, category=category, subcategory=subcategory)
         if form.is_valid():
             isbn = (form.cleaned_data['isbn'])
             book = form.save(commit=False)
@@ -309,27 +336,21 @@ def create_book_recommendation(request, category_name_slug, subcategory_name_slu
             book.save()
             return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
         else:
-            #need to add proper handling of errors if they enter the wrong isbn
+            #Do I need the context dict and return render parts?
             # got a service unavailable message whilst requesting amazon info - need fallback for this
-            form = BookForm()
+            print(form.errors)
             context_dict['form'] = form
             return render(request, 'website/create_book.html', context_dict)
 
 
     else:
-        form = BookForm()
-        context_dict['form'] = form
 
+        context_dict['form'] = form
         return render(request, 'website/create_book.html', context_dict)
 
 class DeleteBookRecommendation(DeleteView):
     model = BookRecommendation
     template_name = 'website/delete_book.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DeleteBookRecommendation, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
 
     def get_object(self, queryset=None):
         obj = BookRecommendation.objects.get(pk=self.kwargs['pk'])
@@ -411,8 +432,7 @@ def bookmark_book(request): #does this need to be ajax?
     return HttpResponse(book.total_votes) #this should be changed - it doesnt need to respond with total votes
 
 def book_comment(request, category_name_slug, subcategory_name_slug, pk):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+    context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
     context_dict['category'] = category
@@ -446,11 +466,6 @@ class EditBookComment(UpdateView):
     form_class = BookCommentForm
     template_name = 'website/edit_book_comment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(EditBookComment, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
-
     def get_object(self, queryset=None):
         obj = BookComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -467,11 +482,6 @@ class DeleteBookComment(DeleteView):
     model = BookComment
     template_name = 'website/delete_book_comment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(DeleteBookComment, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
-
     def get_object(self, queryset=None):
         obj = BookComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -486,16 +496,17 @@ class DeleteBookComment(DeleteView):
 
 @login_required
 def create_video_recommendation(request, category_name_slug, subcategory_name_slug):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+    context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
     context_dict['category'] = category
     subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
     context_dict['subcategory'] = subcategory
+    form = VideoForm(category=category, subcategory=subcategory)
 
     if request.method == "POST":
-        form = VideoForm(request.POST)
+        #pass the category and subcategory to the form to enable validation on duplicates
+        form = VideoForm(request.POST, category=category, subcategory=subcategory)
         if form.is_valid():
             url = (form.cleaned_data['video_url'])
             video = form.save(commit=False)
@@ -527,43 +538,39 @@ def create_video_recommendation(request, category_name_slug, subcategory_name_sl
               part='snippet'
             ).execute()
 
-            for item in search_response["items"]:
-                title = item["snippet"]["title"]
-                description = item["snippet"]["description"]
-                thumbnail = item["snippet"]["thumbnails"]["standard"]["url"]
-                publish_date = item["snippet"]["publishedAt"]
+            #check that a video has been found by seing if the results returned is greater than 0
+            if search_response["pageInfo"]["totalResults"] > 0:
+                for item in search_response["items"]:
+                    title = item["snippet"]["title"]
+                    description = item["snippet"]["description"]
+                    thumbnail = item["snippet"]["thumbnails"]["standard"]["url"]
+                    publish_date = item["snippet"]["publishedAt"]
 
-            video.category = category
-            video.subcategory = subcategory
-            video.title = title
-            video.recommended_by = user
-            video.video_description = description
-            video.video_publish_date = publish_date
-            video.video_image_url = thumbnail
-            video.video_id = video_id
+                video.category = category
+                video.subcategory = subcategory
+                video.title = title
+                video.recommended_by = user
+                video.video_description = description
+                video.video_publish_date = publish_date
+                video.video_image_url = thumbnail
+                video.video_id = video_id
 
-            video.save()
-            return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
+                video.save()
+                return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
+
+            else:
+                messages.error(request, "The Video does not seem to exist! Please check the URL and try again.")
+
         else:
-            #need to add proper handling of errors if they enter the wrong video url
-            form = VideoForm()
-            context_dict['form'] = form
-            return render(request, 'website/create_video.html', context_dict)
+            print(form.errors)
 
-    else:
-        form = VideoForm()
-        context_dict['form'] = form
+    context_dict['form'] = form
 
-        return render(request, 'website/create_video.html', context_dict)
+    return render(request, 'website/create_video.html', context_dict)
 
 class DeleteVideoRecommendation(DeleteView):
     model = VideoRecommendation
     template_name = 'website/delete_video.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DeleteVideoRecommendation, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
 
     def get_object(self, queryset=None):
         obj = VideoRecommendation.objects.get(pk=self.kwargs['pk'])
@@ -645,8 +652,7 @@ def bookmark_video(request): #does this need to be ajax?
     return HttpResponse(video.total_votes) #this should be changed - it doesnt need to respond with total votes
 
 def video_comment(request, category_name_slug, subcategory_name_slug, pk):
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+    context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
     context_dict['category'] = category
@@ -680,11 +686,6 @@ class EditVideoComment(UpdateView):
     form_class = VideoCommentForm
     template_name = 'website/edit_video_comment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(EditVideoComment, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
-
     def get_object(self, queryset=None):
         obj = VideoComment.objects.get(pk=self.kwargs['pk'])
         if obj.author != self.request.user:
@@ -700,11 +701,6 @@ class EditVideoComment(UpdateView):
 class DeleteVideoComment(DeleteView):
     model = VideoComment
     template_name = 'website/delete_video_comment.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DeleteVideoComment, self).get_context_data(**kwargs)
-        context['categories'] = Category.objects.order_by('name')
-        return context
 
     def get_object(self, queryset=None):
         obj = VideoComment.objects.get(pk=self.kwargs['pk'])

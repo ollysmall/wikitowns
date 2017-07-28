@@ -17,7 +17,7 @@
       <div class="row card-title">
         <div class="col-10">
           <a href="{{ video.video_url }}" style="color: black;">
-          <h5>{{ video.title }}</h5>
+          <h4 class="card-title">{{ video.title }}</h4>
           </a>
         </div>
         <div class="col-2">
@@ -43,22 +43,18 @@
       <a href="{{ video.video_url }}">
       <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
       </a>
-      <p></p>
-      <p></p>
-
-      <p class="card-text pull-left">
-        <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
-          <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
-        </a>
-      </p>
-
-
 
       </div>
       <div class="col-7 col-md-8">
 
 
       <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+
+      <p class="card-text">
+        <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
+          <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
+        </a>
+      </p>
 
 
       <p>
@@ -77,6 +73,7 @@
     </div>
 
     <div class="card-footer text-muted">
+      <div class="video-footer-top-boarder">
 
       {% if user in video.upvote.all %}
         <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
@@ -105,7 +102,7 @@
       <a href="{% url 'video_comment' category.slug subcategory.slug video.pk %}" class="text-muted">
         <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
       </a>
-
+      </div>
     </div>
 
 

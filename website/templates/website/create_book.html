@@ -12,11 +12,14 @@
 
     <div class="card-block">
 
-      <h3>Recommend a book</h3>
+      <h3 class="card-title">Recommend a book</h3>
       <p></p>
 
       <p>Please enter the 10 digit ISBN number of the book you would like to recommend.</p>
 
+      {% for error in form.non_field_errors %}
+    {{error}}
+{% endfor %}
 
       <div>
         <form enctype="multipart/form-data" id="BookForm" method="post">

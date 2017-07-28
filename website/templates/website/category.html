@@ -16,7 +16,7 @@
 
 </div>
 
-<div class="container top-padding bottom-padding">
+<div class="container bottom-padding">
 
 
     {% if subcategory %}
@@ -24,8 +24,8 @@
       <div class="row">
 
       {% for subcategory in subcategory %}
-          <div class="col-sm-6 col-md-4 top-buffer">
-          <a href="{% url 'subcategory' category.slug subcategory.slug %}" class="btn btn-outline-info btn-lg btn-block">{{ subcategory.name }}</a>
+          <div class="col-sm-6 col-md-6 col-lg-4 container grow card-top-buffer">
+          <a href="{% url 'subcategory' category.slug subcategory.slug %}" class="card text-center category-card"><h4 style="color: white;">{{ subcategory.name }}</h4></a>
           </div>
       {% endfor %}
 
