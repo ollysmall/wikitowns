@@ -139,3 +139,9 @@ i:hover {
   background-size: 10%;
 
 }
+
+/* loading sign for endless scroll pagination */
+.endless_loading{
+  text-align: center;
+  margin-top:20px;
+}

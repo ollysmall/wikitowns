@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-$('.upvote_website').click(function(){
+$(document).on("click", '.upvote_website', function(e){
   $(this).toggleClass("clicked-button");
   var websiteid = $(this).attr('data-websiteid');
   var vote_total = $('.vote_total[data-websiteid=' + websiteid + ']');
@@ -28,7 +28,7 @@ $('.upvote_website').click(function(){
           });
     })
 
-$('.downvote_website').click(function(){
+$(document).on("click", '.downvote_website', function(e){
   $(this).toggleClass("clicked-button");
   var websiteid = $(this).attr('data-websiteid');
   var vote_total = $('.vote_total[data-websiteid=' + websiteid + ']');
@@ -54,7 +54,7 @@ $('.downvote_website').click(function(){
           });
     })
 
-$('.bookmark_website').click(function(){
+$(document).on("click", '.bookmark_website', function(e){
   $(this).toggleClass("clicked-button");
   var websiteid = $(this).attr('data-websiteid');
 
@@ -74,7 +74,8 @@ $('.bookmark_website').click(function(){
         });
   })
 
-$('.upvote_book').click(function(){
+
+$(document).on("click", '.upvote_book', function(e){
   $(this).toggleClass("clicked-button");
   var bookid = $(this).attr('data-bookid');
   var vote_total = $('.vote_total[data-bookid=' + bookid + ']');
@@ -102,7 +103,7 @@ $('.upvote_book').click(function(){
           });
     })
 
-$('.downvote_book').click(function(){
+$(document).on("click", '.downvote_book', function(e){
   $(this).toggleClass("clicked-button");
   var bookid = $(this).attr('data-bookid');
   var vote_total = $('.vote_total[data-bookid=' + bookid + ']');
@@ -128,7 +129,7 @@ $('.downvote_book').click(function(){
           });
     })
 
-$('.bookmark_book').click(function(){
+$(document).on("click", '.bookmark_book', function(e){
   $(this).toggleClass("clicked-button");
   var bookid = $(this).attr('data-bookid');
 
@@ -148,7 +149,7 @@ $('.bookmark_book').click(function(){
         });
   })
 
-$('.upvote_video').click(function(){
+$(document).on("click", '.upvote_video', function(e){
   $(this).toggleClass("clicked-button");
   var videoid = $(this).attr('data-videoid');
   var vote_total = $('.vote_total[data-videoid=' + videoid + ']');
@@ -176,7 +177,7 @@ $('.upvote_video').click(function(){
           });
     })
 
-$('.downvote_video').click(function(){
+$(document).on("click", '.downvote_video', function(e){
   $(this).toggleClass("clicked-button");
   var videoid = $(this).attr('data-videoid');
   var vote_total = $('.vote_total[data-videoid=' + videoid + ']');
@@ -202,7 +203,7 @@ $('.downvote_video').click(function(){
           });
     })
 
-$('.bookmark_video').click(function(){
+$(document).on("click", '.bookmark_video', function(e){
   $(this).toggleClass("clicked-button");
   var videoid = $(this).attr('data-videoid');
 
@@ -238,5 +239,19 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 
 });

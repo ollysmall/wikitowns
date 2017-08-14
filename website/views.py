@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt #get rid of this
 from django.db.models import Count
 from django.contrib import messages
 from datetime import date
+from itertools import chain
+from operator import attrgetter
 
 #for amazon book info
 import os
@@ -22,6 +24,9 @@ from bs4 import BeautifulSoup
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from urllib.parse import urlparse, parse_qs
+
+#unlimted scroll pagination
+from el_pagination.decorators import page_templates
 
 
 def index(request):
@@ -45,7 +50,12 @@ def category(request, category_name_slug):
 
     return render(request, 'website/category.html', context_dict)
 
-def subcategory(request, category_name_slug, subcategory_name_slug):
+@page_templates({
+    'website/subcategory_website_page.html': None,
+    'website/subcategory_book_page.html': 'other_entries_page',
+    'website/subcategory_video_page.html': 'other_entries_page2',
+})
+def subcategory(request, category_name_slug, subcategory_name_slug, template='website/subcategory.html', extra_context=None):
 
     context_dict = {}
     #set the initial using what was sent in the get request
@@ -100,7 +110,10 @@ def subcategory(request, category_name_slug, subcategory_name_slug):
                 video_list = VideoRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year, created_date__month=today.month).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
                 context_dict['videos'] = video_list
 
-    return render(request, 'website/subcategory.html', context_dict)
+    if extra_context is not None:
+        context_dict.update(extra_context)
+
+    return render(request, template, context_dict)
 
 class CreateWebsiteRecommendation(CreateView):
     model = WebsiteRecommendation
@@ -146,25 +159,35 @@ class DeleteWebsiteRecommendation(DeleteView):
         subcategory_slug = self.object.subcategory.slug
         return reverse('subcategory', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug})
 
-def profile_page(request, username):
+@page_templates({
+    'website/profile_bookmarks_page.html': None,
+    'website/profile_recommendations_page.html': 'other_entries_page',
+
+})
+def profile_page(request, username, template='website/profile.html', extra_context=None):
 
     context_dict = {}
 
     user = get_object_or_404(User, username=username)
     context_dict['profile_user'] = user
-    website_recommendations = WebsiteRecommendation.objects.filter(website_author=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
-    context_dict['website_recommendations'] = website_recommendations
-    book_recommendations = BookRecommendation.objects.filter(recommended_by=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
-    context_dict['book_recommendations'] = book_recommendations
-    video_recommendations = VideoRecommendation.objects.filter(recommended_by=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
-    context_dict['video_recommendations'] = video_recommendations
-    website_bookmarks = WebsiteRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
-    context_dict['website_bookmarks'] = website_bookmarks
-    book_bookmarks = BookRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
-    context_dict['book_bookmarks'] = book_bookmarks
-    video_bookmarks = VideoRecommendation.objects.filter(bookmark=user).order_by('-created_date')[:100] #change the 100 so you can show unlimited recomendations
-    context_dict['video_bookmarks'] = video_bookmarks
-    return render(request, 'website/profile.html', context_dict)
+    website_recommendations = WebsiteRecommendation.objects.filter(website_author=user)
+    book_recommendations = BookRecommendation.objects.filter(recommended_by=user)
+    video_recommendations = VideoRecommendation.objects.filter(recommended_by=user)
+
+    recommendations_list = sorted(chain(website_recommendations, book_recommendations, video_recommendations), key=attrgetter('created_date'), reverse=True)
+    context_dict['recommendations_list'] = recommendations_list
+
+    website_bookmarks = WebsiteRecommendation.objects.filter(bookmark=user)
+    book_bookmarks = BookRecommendation.objects.filter(bookmark=user)
+    video_bookmarks = VideoRecommendation.objects.filter(bookmark=user)
+
+    bookmark_list = sorted(chain(website_bookmarks, book_bookmarks, video_bookmarks), key=attrgetter('created_date'), reverse=True)
+    context_dict['bookmark_list'] = bookmark_list
+
+    if extra_context is not None:
+        context_dict.update(extra_context)
+
+    return render(request, template, context_dict)
 
 @login_required
 @require_POST #check if this is needed - I think the if statement below makes it redundant

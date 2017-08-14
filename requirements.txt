@@ -6,6 +6,7 @@ bottlenose==1.1.2
 colorama==0.3.7
 dj-database-url==0.4.2
 Django==1.10.5
+django-el-pagination==3.1.0
 django-isbn-field==0.3
 django-registration-redux==1.4
 django-storages==1.5.2

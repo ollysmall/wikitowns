@@ -8,3 +8,8 @@ register = template.Library()
 def upto(value, delimiter=None):
     return value.split(delimiter)[0]
 upto.is_safe = True
+
+#used to get the class name of models 
+@register.filter
+def classname(obj):
+    return obj.__class__.__name__
