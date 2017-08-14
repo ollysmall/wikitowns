@@ -145,3 +145,9 @@ i:hover {
   text-align: center;
   margin-top:20px;
 }
+
+/* more sign for endless scroll pagination */
+.endless_more{
+  text-align: center;
+  margin-top:20px;
+}
