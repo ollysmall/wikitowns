@@ -1,0 +1,23 @@
+{% load el_pagination_tags %}
+{% load noobhub_filters %}
+
+{% paginate comments %}
+
+  {% for comment in comments %}
+    <hr>
+    <div class="card-text">
+      <a href="{% url 'user_profile' comment.author %}">
+      <strong>{{ comment.author }}</strong></a>
+      &nbsp; {{ comment.text }}
+      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small>
+      {% if user.is_authenticated %}
+      {% if comment.author.pk == user.pk %}
+        <a class="text-muted" href="{% url 'delete_book_comment' comment.pk %}"><small>&nbsp;·&nbsp; Delete &nbsp;·&nbsp;</small></a>
+        <a class="text-muted" href="{% url 'edit_book_comment' comment.pk %}"><small>Edit</small></a>
+      {% endif %}
+      {% endif %}
+      </p>
+    </div>
+  {% endfor %}
+
+{% show_more %}

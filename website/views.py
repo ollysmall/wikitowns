@@ -26,7 +26,7 @@ from apiclient.errors import HttpError
 from urllib.parse import urlparse, parse_qs
 
 #unlimted scroll pagination
-from el_pagination.decorators import page_templates
+from el_pagination.decorators import page_templates, page_template
 
 
 def index(request):
@@ -257,7 +257,8 @@ def bookmark_website(request):
 
     return HttpResponse(website.total_votes) #this should be changed - it doesnt need to respond with total votes
 
-def website_comment(request, category_name_slug, subcategory_name_slug, pk):
+@page_template('website/website_comment_page.html')
+def website_comment(request, category_name_slug, subcategory_name_slug, pk, template='website/website_comment.html', extra_context=None):
 
     context_dict = {}
     user = request.user
@@ -280,11 +281,13 @@ def website_comment(request, category_name_slug, subcategory_name_slug, pk):
             comment.save()
             return redirect('website_comment', category_name_slug=website.category.slug, subcategory_name_slug=website.subcategory.slug, pk=website.pk)
 
-    else:
-        form = WebsiteCommentForm()
-        context_dict['form'] = form
 
-        return render(request, 'website/website_comment.html', context_dict)
+    form = WebsiteCommentForm()
+    context_dict['form'] = form
+    if extra_context is not None:
+        context_dict.update(extra_context)
+
+    return render(request, template, context_dict)
 
 class EditWebsiteComment(UpdateView):
     model = WebsiteComment
@@ -454,7 +457,8 @@ def bookmark_book(request): #does this need to be ajax?
 
     return HttpResponse(book.total_votes) #this should be changed - it doesnt need to respond with total votes
 
-def book_comment(request, category_name_slug, subcategory_name_slug, pk):
+@page_template('website/book_comment_page.html')
+def book_comment(request, category_name_slug, subcategory_name_slug, pk, template='website/book_comment.html', extra_context=None):
     context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
@@ -478,11 +482,13 @@ def book_comment(request, category_name_slug, subcategory_name_slug, pk):
 
             #need an else here incase form is not valid
 
-    else:
-        form = BookCommentForm()
-        context_dict['form'] = form
 
-        return render(request, 'website/book_comment.html', context_dict)
+    form = BookCommentForm()
+    context_dict['form'] = form
+    if extra_context is not None:
+        context_dict.update(extra_context)
+    
+    return render(request, template, context_dict)
 
 class EditBookComment(UpdateView):
     model = BookComment
@@ -674,7 +680,8 @@ def bookmark_video(request): #does this need to be ajax?
 
     return HttpResponse(video.total_votes) #this should be changed - it doesnt need to respond with total votes
 
-def video_comment(request, category_name_slug, subcategory_name_slug, pk):
+@page_template('website/video_comment_page.html')
+def video_comment(request, category_name_slug, subcategory_name_slug, pk, template='website/video_comment.html', extra_context=None):
     context_dict = {}
     user = request.user
     category = Category.objects.get(slug=category_name_slug)
@@ -683,7 +690,7 @@ def video_comment(request, category_name_slug, subcategory_name_slug, pk):
     context_dict['subcategory'] = subcategory
     video = get_object_or_404(VideoRecommendation, id=pk)
     context_dict['video'] = video
-    comments = VideoComment.objects.filter(video=video).order_by('-created_date')[:100] #change the 100 so you can show unlimited comments
+    comments = VideoComment.objects.filter(video=video).order_by('-created_date')
     context_dict['comments'] = comments
 
 
@@ -698,11 +705,14 @@ def video_comment(request, category_name_slug, subcategory_name_slug, pk):
 
             #need an else here incase form is not valid
 
-    else:
-        form = VideoCommentForm()
-        context_dict['form'] = form
 
-        return render(request, 'website/video_comment.html', context_dict)
+    form = VideoCommentForm()
+    context_dict['form'] = form
+
+    if extra_context is not None:
+        context_dict.update(extra_context)
+
+    return render(request, template, context_dict)
 
 class EditVideoComment(UpdateView):
     model = VideoComment

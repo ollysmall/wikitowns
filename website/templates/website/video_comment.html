@@ -21,7 +21,7 @@
           </a>
         </div>
         <div class="col-2">
-        <div class="dropdown"
+        <div class="dropdown pull-right"
         <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
 
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -58,8 +58,8 @@
 
 
       <p>
-        <button class="btn btn-outline-info btn-sm" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
-        Show description <i class="fa fa-caret-down" aria-hidden="true"></i>
+        <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
+        View description <i class="fa fa-caret-down" aria-hidden="true"></i>
         </button>
       </p>
       </div>
@@ -128,25 +128,12 @@
 
 {% if comments %}
 
-  {% for comment in comments %}
-    <hr>
-    <div class="card-text">
-      <a href="{% url 'user_profile' comment.author %}">
-      <strong>{{ comment.author }}</strong></a>
-      &nbsp; {{ comment.text }}
-      <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small>
-      {% if user.is_authenticated %}
-      {% if comment.author.pk == user.pk %}
-        <a class="text-muted" href="{% url 'delete_video_comment' comment.pk %}"><small>&nbsp;·&nbsp; Delete &nbsp;·&nbsp;</small></a>
-        <a class="text-muted" href="{% url 'edit_video_comment' comment.pk %}"><small>Edit</small></a>
-      {% endif %}
-      {% endif %}
-      </p>
-    </div>
+  <div class="endless_page_template">
 
+  {% include "website/video_comment_page.html" %}
 
+  </div>
 
-  {% endfor %}
 {% else %}
 <hr>
 <small>No comments have been made yet.</small>
