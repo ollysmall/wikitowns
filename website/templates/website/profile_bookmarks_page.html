@@ -143,14 +143,14 @@
         </p>
 
         <p>
-          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookmark1{{ bookmark.id }}" aria-expanded="false" aria-controls="bookmark1{{ bookmark.id }}">
+          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookmarker{{ bookmark.id }}" aria-expanded="false" aria-controls="bookmarker{{ bookmark.id }}">
           View description <i class="fa fa-caret-down" aria-hidden="true"></i>
           </button>
         </p>
         </div>
         </div>
 
-        <div class="card-text collapse" id="bookmark1{{ bookmark.id }}">
+        <div class="card-text collapse" id="bookmarker{{ bookmark.id }}">
         <p></p>
         {{ bookmark.book_description|safe }}
         </div>
@@ -252,14 +252,14 @@
 
 
         <p>
-          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookmark{{ bookmark.id }}" aria-expanded="false" aria-controls="bookmark{{ bookmark.id }}">
+          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookmarkers{{ bookmark.id }}" aria-expanded="false" aria-controls="bookmarkers{{ bookmark.id }}">
           View description <i class="fa fa-caret-down" aria-hidden="true"></i>
           </button>
         </p>
         </div>
         </div>
 
-        <div class="card-text collapse" id="bookmark{{ bookmark.id }}">
+        <div class="card-text collapse" id="bookmarkers{{ bookmark.id }}">
         <p></p>
         {{ bookmark.video_description| linebreaks }}
         </div>
