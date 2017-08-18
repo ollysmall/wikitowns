@@ -50,7 +50,7 @@
         </p>
 
 
-          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
+          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#video_desc{{ video.id }}" aria-expanded="false" aria-controls="video_desc{{ video.id }}">
           View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
           </button>
 
@@ -59,7 +59,7 @@
 
 
 
-        <div class="card-text collapse" id="{{ video.id }}">
+        <div class="card-text collapse" id="video_desc{{ video.id }}">
         <p></p>
         {{ video.video_description| linebreaks }}
         </div>
