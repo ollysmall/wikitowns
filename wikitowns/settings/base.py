@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'registration',
     'isbn_field',
     'el_pagination',
+    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [

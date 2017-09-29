@@ -30,12 +30,29 @@
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" style="color:white;" onclick="ShowSearch()"><i class="fa fa-search" aria-hidden="true"></i></a>
+    </li>
   </ul>
   <p></p>
 
 </div>
 
 <div class="container" style="max-width: 730px;">
+
+<div id="SearchFormDiv" style="display: none">
+
+      <form enctype="multipart/form-data" id="SearchForm" method="get" class="input-group">
+        {{ search_form.search_box }}
+
+        <span class="input-group-btn">
+          <button class="btn btn-secondary" type="submit">Go!</button>
+        </span>
+
+      </form>
+
+    <p></p>
+</div>
 
 <!-- Tab panes -->
   <div class="tab-content">
@@ -60,6 +77,10 @@
 
         <div class="bottom-padding">
 
+          {% if search_keywords %}
+              Websites matching your search - "{{ search_keywords }}"
+          {% endif %}
+
         <div class="endless_page_template">
 
         {% include "website/subcategory_website_page.html" %}
@@ -69,7 +90,11 @@
         </div>
 
       {% else %}
-        <strong>No websites have been recommended yet. Why not recommend one now!</strong>
+          {% if search_keywords %}
+              <strong>No websites matched your search - "{{ search_keywords }}"</strong>
+          {% else %}
+              <strong>No websites have been recommended yet. Why not recommend one now!</strong>
+          {% endif %}
       {% endif %}
 
     </div>
@@ -95,6 +120,10 @@
 
       {% if books %}
 
+      {% if search_keywords %}
+          Books matching your search - "{{ search_keywords }}"
+      {% endif %}
+
       <div class="endless_page_template">
 
       {% include "website/subcategory_book_page.html" %}
@@ -102,7 +131,11 @@
       </div>
 
       {% else %}
-        <strong>No books have been recommended yet. Why not recommend one now!</strong>
+          {% if search_keywords %}
+              <strong>No books matched your search - "{{ search_keywords }}"</strong>
+          {% else %}
+              <strong>No books have been recommended yet. Why not recommend one now!</strong>
+          {% endif %}
       {% endif %}
 
     </div>
@@ -127,6 +160,10 @@
 
         <div class="bottom-padding">
 
+          {% if search_keywords %}
+              Videos matching your search - "{{ search_keywords }}"
+          {% endif %}
+
           <div class="endless_page_template">
 
           {% include "website/subcategory_video_page.html" %}
@@ -136,7 +173,11 @@
         </div>
 
       {% else %}
-        <strong>No videos have been recommended yet. Why not recommend one now!</strong>
+        {% if search_keywords %}
+            <strong>No videos matched your search - "{{ search_keywords }}"</strong>
+        {% else %}
+            <strong>No videos have been recommended yet. Why not recommend one now!</strong>
+        {% endif %}
       {% endif %}
 
 

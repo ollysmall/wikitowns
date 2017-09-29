@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment, VideoRecommendation, VideoComment
-from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm, VideoForm, VideoCommentForm, DateFilterForm
+from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm, VideoForm, VideoCommentForm, DateFilterForm, SearchForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
@@ -14,6 +14,7 @@ from django.contrib import messages
 from datetime import date
 from itertools import chain
 from operator import attrgetter
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 
 #for amazon book info
 import os
@@ -61,6 +62,8 @@ def subcategory(request, category_name_slug, subcategory_name_slug, template='we
     #set the initial using what was sent in the get request
     form = DateFilterForm(initial=request.GET)
     context_dict['form'] = form
+    search_form = SearchForm(initial=request.GET)
+    context_dict['search_form'] = search_form
     #get todays date for filtering recommendations by
     today = date.today()
 
@@ -108,6 +111,24 @@ def subcategory(request, category_name_slug, subcategory_name_slug, template='we
                 book_list = BookRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year, created_date__month=today.month).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
                 context_dict['books'] = book_list
                 video_list = VideoRecommendation.objects.filter(subcategory=subcategory, created_date__year=today.year, created_date__month=today.month).annotate(totalvotes=Count('upvote') - Count('downvote')).order_by('-totalvotes')
+                context_dict['videos'] = video_list
+
+        search_form = SearchForm(request.GET)
+        if search_form.is_valid():
+            search_keywords = (search_form.cleaned_data['search_box'])
+            context_dict['search_keywords'] = search_keywords
+
+            print(search_keywords)
+
+            if search_keywords != '':
+
+                #add weighting to gear more towards title?
+
+                website_list = WebsiteRecommendation.objects.annotate(search=SearchVector('title', 'description'),).filter(subcategory=subcategory, search=SearchQuery(search_keywords))
+                context_dict['websites'] = website_list
+                book_list = BookRecommendation.objects.annotate(search=SearchVector('title', 'book_description'),).filter(subcategory=subcategory, search=SearchQuery(search_keywords))
+                context_dict['books'] = book_list
+                video_list = VideoRecommendation.objects.annotate(search=SearchVector('title', 'video_description'),).filter(subcategory=subcategory, search=SearchQuery(search_keywords))
                 context_dict['videos'] = video_list
 
     if extra_context is not None:
@@ -487,7 +508,7 @@ def book_comment(request, category_name_slug, subcategory_name_slug, pk, templat
     context_dict['form'] = form
     if extra_context is not None:
         context_dict.update(extra_context)
-    
+
     return render(request, template, context_dict)
 
 class EditBookComment(UpdateView):

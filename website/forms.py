@@ -148,3 +148,11 @@ class DateFilterForm(forms.Form):
         label='',
         widget=forms.Select(attrs={'onchange': 'form.submit();', 'class': 'form-control-sm custom-select',}),
         choices=CHOICES)
+
+class SearchForm(forms.Form):
+
+    search_box = forms.CharField(
+        label='',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ' Search for...'})
+    )

@@ -26,3 +26,13 @@ $(function() {
         //window.localStorage.removeItem("lastTab");
     }
 });
+
+//show & hide search bar
+function ShowSearch() {
+    var x = document.getElementById('SearchFormDiv');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
