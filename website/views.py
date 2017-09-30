@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from website.models import Category, SubCategory, WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment, VideoRecommendation, VideoComment
-from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm, VideoForm, VideoCommentForm, DateFilterForm, SearchForm
+from website.forms import WebsiteForm, WebsiteCommentForm, BookForm, BookCommentForm, VideoForm, VideoCommentForm, DateFilterForm, SearchForm, ReportForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
@@ -15,6 +15,7 @@ from datetime import date
 from itertools import chain
 from operator import attrgetter
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.core.mail import send_mail
 
 #for amazon book info
 import os
@@ -123,7 +124,6 @@ def subcategory(request, category_name_slug, subcategory_name_slug, template='we
             if search_keywords != '':
 
                 #add weighting to gear more towards title?
-
                 website_list = WebsiteRecommendation.objects.annotate(search=SearchVector('title', 'description'),).filter(subcategory=subcategory, search=SearchQuery(search_keywords))
                 context_dict['websites'] = website_list
                 book_list = BookRecommendation.objects.annotate(search=SearchVector('title', 'book_description'),).filter(subcategory=subcategory, search=SearchQuery(search_keywords))
@@ -767,3 +767,78 @@ class DeleteVideoComment(DeleteView):
         subcategory_slug = self.object.video.subcategory.slug
         pk = self.object.video.pk
         return reverse('video_comment', kwargs={'category_name_slug': category_slug, 'subcategory_name_slug': subcategory_slug, 'pk': pk})
+
+@login_required
+def report_website_recommendation(request, category_name_slug, subcategory_name_slug, pk):
+    context_dict = {}
+    user = request.user
+    category = Category.objects.get(slug=category_name_slug)
+    context_dict['category'] = category
+    subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
+    context_dict['subcategory'] = subcategory
+    website = get_object_or_404(WebsiteRecommendation, id=pk)
+    context_dict['website'] = website
+    form = ReportForm()
+    context_dict['form'] = form
+
+    if request.method == 'GET':
+        report_form = ReportForm(request.GET)
+        if report_form.is_valid():
+            report_message = (report_form.cleaned_data['message_box'])
+            email_message = 'Reported by: ' + str(user) + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(website.website_author) + '\nTitle: ' + str(website.title) + '\nIssue reported: ' + report_message
+            send_mail('Noobhub recommendation report!', email_message, 'noobhubio@gmail.com', ['oliver@rotherfields.co.uk'], fail_silently=False,)
+            return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
+
+
+
+    return render(request, 'website/report_website_recommendation.html', context_dict)
+
+@login_required
+def report_book_recommendation(request, category_name_slug, subcategory_name_slug, pk):
+    context_dict = {}
+    user = request.user
+    category = Category.objects.get(slug=category_name_slug)
+    context_dict['category'] = category
+    subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
+    context_dict['subcategory'] = subcategory
+    book = get_object_or_404(BookRecommendation, id=pk)
+    context_dict['book'] = book
+    form = ReportForm()
+    context_dict['form'] = form
+
+    if request.method == 'GET':
+        report_form = ReportForm(request.GET)
+        if report_form.is_valid():
+            report_message = (report_form.cleaned_data['message_box'])
+            email_message = 'Reported by: ' + str(user) + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(book.recommended_by) + '\nTitle: ' + str(book.title) + '\nIssue reported: ' + report_message
+            send_mail('Noobhub recommendation report!', email_message, 'noobhubio@gmail.com', ['oliver@rotherfields.co.uk'], fail_silently=False,)
+            return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
+
+
+
+    return render(request, 'website/report_book_recommendation.html', context_dict)
+
+@login_required
+def report_video_recommendation(request, category_name_slug, subcategory_name_slug, pk):
+    context_dict = {}
+    user = request.user
+    category = Category.objects.get(slug=category_name_slug)
+    context_dict['category'] = category
+    subcategory = SubCategory.objects.get(slug=subcategory_name_slug, category=category)
+    context_dict['subcategory'] = subcategory
+    video = get_object_or_404(VideoRecommendation, id=pk)
+    context_dict['video'] = video
+    form = ReportForm()
+    context_dict['form'] = form
+
+    if request.method == 'GET':
+        report_form = ReportForm(request.GET)
+        if report_form.is_valid():
+            report_message = (report_form.cleaned_data['message_box'])
+            email_message = 'Reported by: ' + str(user) + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(video.recommended_by) + '\nTitle: ' + str(video.title) + '\nIssue reported: ' + report_message
+            send_mail('Noobhub recommendation report!', email_message, 'noobhubio@gmail.com', ['oliver@rotherfields.co.uk'], fail_silently=False,)
+            return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
+
+
+
+    return render(request, 'website/report_video_recommendation.html', context_dict)

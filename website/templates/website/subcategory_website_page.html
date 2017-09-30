@@ -28,7 +28,7 @@
               <a class="dropdown-item" href="{% url 'delete_website' website.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
             {% endif %}
             {% endif %}
-            <a class="dropdown-item" href="#"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+            <a class="dropdown-item" href="{% url 'report_website_recommendation' category.slug subcategory.slug website.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
           </div>
           </div>
         </div>

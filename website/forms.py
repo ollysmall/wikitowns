@@ -156,3 +156,11 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ' Search for...'})
     )
+
+class ReportForm(forms.Form):
+
+    message_box = forms.CharField(
+        label='',
+        required=True,
+        widget=forms.Textarea(attrs={'rows':4, 'cols':30, 'class': 'form-control', 'placeholder': 'Please let us know of any issues with this recommendation...'})
+    )

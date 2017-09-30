@@ -31,4 +31,7 @@ urlpatterns = [
     url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/video_comments/$', views.video_comment, name='video_comment'),
     url(r'^delete_video_comment/(?P<pk>\d+)/$', login_required(views.DeleteVideoComment.as_view()), name='delete_video_comment'),
     url(r'^edit_video_comment/(?P<pk>\d+)/$', login_required(views.EditVideoComment.as_view()), name='edit_video_comment'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/report_website_recommendation/$', views.report_website_recommendation, name='report_website_recommendation'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/report_book_recommendation/$', views.report_book_recommendation, name='report_book_recommendation'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/report_video_recommendation/$', views.report_video_recommendation, name='report_video_recommendation'),
 ]
