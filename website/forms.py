@@ -1,11 +1,12 @@
 from django import forms
 from website.models import WebsiteRecommendation, WebsiteComment, BookRecommendation, BookComment, VideoRecommendation, VideoComment
-from registration.forms import RegistrationForm
+from registration.forms import RegistrationFormUniqueEmail
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm
 
 from urllib.parse import urlparse, parse_qs
 
-#this allows bootstrap classes to be used on the registration form
-class MyCustomRegistrationForm(RegistrationForm):
+#this allows bootstrap classes to be used on the registration form & change the registration to only accept unique emails
+class MyCustomRegistrationForm(RegistrationFormUniqueEmail):
 
     def __init__(self, *args, **kwargs):
         super(MyCustomRegistrationForm, self).__init__(*args, **kwargs)
@@ -13,6 +14,31 @@ class MyCustomRegistrationForm(RegistrationForm):
         self.fields['email'].widget = forms.EmailInput(attrs={'class': 'form-control'})
         self.fields['password1'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
         self.fields['password2'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+
+#customised to insert bootstrap classes into widgets
+class CustomSetPasswordForm(SetPasswordForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CustomSetPasswordForm, self).__init__(*args, **kwargs)
+        self.fields['new_password1'].widget = forms.PasswordInput(attrs={'class': 'form-control', 'autofocus':'autofocus'})
+        self.fields['new_password2'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+
+#customised to insert bootstrap classes into widgets
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CustomPasswordChangeForm, self).__init__(*args, **kwargs)
+        self.fields['old_password'].widget = forms.PasswordInput(attrs={'class': 'form-control', 'autofocus':'autofocus'})
+        self.fields['new_password1'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+        self.fields['new_password2'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+
+#customised to insert bootstrap classes into widgets
+class CustomPasswordResetForm(PasswordResetForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CustomPasswordResetForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget = forms.EmailInput(attrs={'class': 'form-control', 'autofocus':'autofocus'})
+
 
 class WebsiteForm(forms.ModelForm):
 

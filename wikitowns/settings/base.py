@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['ollysmall.pythonanywhere.com', '127.0.0.1'] #change if product
 # Application definition
 
 INSTALLED_APPS = [
+    'website',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storages',
-    'website',
     'registration',
     'isbn_field',
     'el_pagination',
@@ -155,3 +155,4 @@ EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ['EMAIL_HOST_USER']

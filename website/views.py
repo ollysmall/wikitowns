@@ -785,7 +785,7 @@ def report_website_recommendation(request, category_name_slug, subcategory_name_
         report_form = ReportForm(request.GET)
         if report_form.is_valid():
             report_message = (report_form.cleaned_data['message_box'])
-            email_message = 'Reported by: ' + str(user) + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(website.website_author) + '\nTitle: ' + str(website.title) + '\nIssue reported: ' + report_message
+            email_message = 'Reported by: ' + str(user) + '\nType: Website' + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(website.website_author) + '\nTitle: ' + str(website.title) + '\nIssue reported: ' + report_message
             send_mail('Noobhub recommendation report!', email_message, 'noobhubio@gmail.com', ['oliver@rotherfields.co.uk'], fail_silently=False,)
             return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
 
@@ -810,7 +810,7 @@ def report_book_recommendation(request, category_name_slug, subcategory_name_slu
         report_form = ReportForm(request.GET)
         if report_form.is_valid():
             report_message = (report_form.cleaned_data['message_box'])
-            email_message = 'Reported by: ' + str(user) + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(book.recommended_by) + '\nTitle: ' + str(book.title) + '\nIssue reported: ' + report_message
+            email_message = 'Reported by: ' + str(user) + '\nType: Book' + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(book.recommended_by) + '\nTitle: ' + str(book.title) + '\nIssue reported: ' + report_message
             send_mail('Noobhub recommendation report!', email_message, 'noobhubio@gmail.com', ['oliver@rotherfields.co.uk'], fail_silently=False,)
             return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
 
@@ -835,7 +835,7 @@ def report_video_recommendation(request, category_name_slug, subcategory_name_sl
         report_form = ReportForm(request.GET)
         if report_form.is_valid():
             report_message = (report_form.cleaned_data['message_box'])
-            email_message = 'Reported by: ' + str(user) + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(video.recommended_by) + '\nTitle: ' + str(video.title) + '\nIssue reported: ' + report_message
+            email_message = 'Reported by: ' + str(user) + '\nType: Video' + '\nCategory: ' + str(category) +'\nSubcategory: ' + str(subcategory) + '\nRecommended by ' + str(video.recommended_by) + '\nTitle: ' + str(video.title) + '\nIssue reported: ' + report_message
             send_mail('Noobhub recommendation report!', email_message, 'noobhubio@gmail.com', ['oliver@rotherfields.co.uk'], fail_silently=False,)
             return redirect('subcategory', category_name_slug=category.slug, subcategory_name_slug=subcategory.slug)
 

@@ -28,10 +28,13 @@
         <label for="inputPassword" class="sr-only">Password</label>
         <p><input type="password" id="id_password" class="form-control" name="password" placeholder="Password" required></p>
 
-        <button class="btn btn-success" type="submit" value="Submit" />Sign in</button>
+        <button class="btn btn-success btn-block" type="submit" value="Submit" />Sign in</button>
         <input type="hidden" name="next" value="{{ next }}" />
 
-        <small class="pull-right">Not a member? <a href="{% url 'registration_register' %}">Register here</a>!</small>
+        <p></p>
+
+        <p><small><a href="{% url 'registration_register' %}">Sign up here!</a></small>
+        <small class="pull-right"><a href="{% url 'auth_password_reset' %}">Forgotten your password?</a></small></p>
       </form>
 
       </div>

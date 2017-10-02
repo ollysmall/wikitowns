@@ -12,8 +12,16 @@
   <div class="bottom-padding">
 
   <h1 class="display-4 text-center" style="color:white;">{{ profile_user }}</h1>
-
   <p></p>
+  {% if user.is_authenticated %}
+  {% if profile_user.pk == user.pk %}
+
+    <div class="small text-center">
+    <a class="text-center" style="color:white;" href="{% url 'auth_password_change' %}">Change Password</a>
+    </div>
+  {% endif %}
+  {% endif %}
+
   </div>
 
   <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
