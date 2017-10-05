@@ -16,6 +16,8 @@ from itertools import chain
 from operator import attrgetter
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.mail import send_mail
+from urllib.request import urlopen, Request
+
 
 #for amazon book info
 import os
@@ -149,15 +151,33 @@ class CreateWebsiteRecommendation(CreateView):
         # Update the kwargs with the user_id
         kwargs['category'] = Category.objects.get(slug=self.kwargs["category_name_slug"])
         kwargs['subcategory'] = SubCategory.objects.get(slug=self.kwargs["subcategory_name_slug"])
-        print(kwargs)
         return kwargs
-
-
 
     def form_valid(self, form):
         form.instance.category = Category.objects.get(slug=self.kwargs["category_name_slug"])
         form.instance.subcategory = SubCategory.objects.get(slug=self.kwargs["subcategory_name_slug"])
         form.instance.website_author = self.request.user
+
+        website_url = (form.cleaned_data['url'])
+        try:
+            #headers are used as some websites dont let you use urlopen on them
+            webpage = urlopen(Request(website_url, headers={'User-Agent': 'Mozilla'})).read()
+            soup = BeautifulSoup(webpage, "lxml")
+            og_image_url = soup.find("meta", property="og:image", content=True)
+            image_url = og_image_url["content"]
+            print(image_url)
+
+            try:
+                check_if_url_works = urlopen(Request(image_url, headers={'User-Agent': 'Mozilla'})).read()
+                form.instance.image_url = image_url
+                print('Website image found!')
+            except:
+                print('An image url was found but did not work')
+        except:
+            print("No image found")
+
+
+
         return super(CreateWebsiteRecommendation, self).form_valid(form)
 
     def get_success_url(self):

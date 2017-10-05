@@ -37,8 +37,9 @@ class WebsiteRecommendation(models.Model):
     category = models.ForeignKey(Category)
     subcategory = models.ForeignKey(SubCategory)
     title = models.CharField(max_length=128)
-    description = models.CharField(max_length=300) #this may need changing
+    description = models.CharField(max_length=300) #length may need changing
     url = models.URLField()
+    image_url = models.URLField(null=True) 
     created_date = models.DateTimeField(
             default=timezone.now)
     upvote = models.ManyToManyField(User, related_name='website_upvote')
