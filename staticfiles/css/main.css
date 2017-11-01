@@ -146,4 +146,73 @@ i:hover {
   margin-top:20px;
 }
 
+.website_img {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+}
+
+/* sm */
+@media (min-width: 768px) {
+    .website_img {
+        max-height: 300px;
+    }
+}
+/* md */
+@media (min-width: 992px) {
+    .website_img {
+        max-height: 250px;
+    }
+}
+/* lg */
+@media (min-width: 1200px) {
+    .website_img {
+        max-height: 250px;
+
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    .youtube_image_div {
+        margin-bottom: -15%;
+    }
+}
+
+@media (max-width: 768px) {
+    .video_info_padding {
+        margin-left: 20px;
+    }
+}
+
+.youtube_image {
+  object-fit: cover; /* Do not scale the image */
+  object-position: center; /* Center the image within the element */
+  width: 100%;
+  height: 72%; /*purely this that effects gap*/
+
+}
+
+/* sm */
+@media (min-width: 768px) {
+    .youtube_image {
+        height: auto;
+        max-height: 140px;
+    }
+}
+/* md */
+@media (min-width: 992px) {
+    .youtube_image {
+        max-height: 143px;
+    }
+}
+/* lg */
+@media (min-width: 1200px) {
+    .youtube_image {
+        max-height: 143px;
+
+    }
 }
