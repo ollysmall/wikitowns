@@ -174,17 +174,15 @@ i:hover {
     }
 }
 
-
-
-@media (max-width: 768px) {
-    .youtube_image_div {
-        margin-bottom: -15%;
-    }
+.youtube_image_div {
+  overflow: hidden;
 }
 
-@media (max-width: 768px) {
+
+@media (max-width: 767px) {
     .video_info_padding {
         margin-left: 20px;
+        margin-top: 10px;
     }
 }
 
@@ -192,27 +190,6 @@ i:hover {
   object-fit: cover; /* Do not scale the image */
   object-position: center; /* Center the image within the element */
   width: 100%;
-  height: 72%; /*purely this that effects gap*/
+  margin: -10% 0;
 
-}
-
-/* sm */
-@media (min-width: 768px) {
-    .youtube_image {
-        height: auto;
-        max-height: 140px;
-    }
-}
-/* md */
-@media (min-width: 992px) {
-    .youtube_image {
-        max-height: 143px;
-    }
-}
-/* lg */
-@media (min-width: 1200px) {
-    .youtube_image {
-        max-height: 143px;
-
-    }
 }
