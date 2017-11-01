@@ -172,8 +172,10 @@ class CreateWebsiteRecommendation(CreateView):
                 form.instance.image_url = image_url
                 print('Website image found!')
             except:
+                form.instance.image_url = None
                 print('An image url was found but did not work')
         except:
+            form.instance.image_url = None
             print("No image found")
 
 

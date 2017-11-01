@@ -32,25 +32,24 @@
         </div>
 
         <div class="row">
-        <div class="col-6 col-md-4 text-center">
-
+        <div class="col-12 col-md-5 text-center youtube_image_div">
         <a href="{{ video.video_url }}">
-        <img class="img-fluid" src="{{ video.video_image_url }}"/>
+        <img class="img-fluid youtube_image" src="{{ video.video_image_url }}"/>
         </a>
         </div>
 
-        <div class"col-6 col-md-8">
+        <div class"col-12 col-md-7">
 
-        <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+        <p class="card-text video_info_padding"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
 
-        <p class="card-text">
+        <p class="card-text video_info_padding">
           <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
             <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
           </a>
         </p>
 
 
-          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#video_desc{{ video.id }}" aria-expanded="false" aria-controls="video_desc{{ video.id }}">
+          <button class="video_info_padding btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#video_desc{{ video.id }}" aria-expanded="false" aria-controls="video_desc{{ video.id }}">
           View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
           </button>
 

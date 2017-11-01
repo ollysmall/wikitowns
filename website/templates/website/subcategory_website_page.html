@@ -34,9 +34,28 @@
         </div>
       </div>
 
+       {% if website.image_url == None %}
 
         <p class="card-text">{{ website.description }}</p>
+
+
+       {% else %}
+
+
+        <div class="text-center">
+          <a href="{{ website.url }}">
+          <img class="website_img" src="{{ website.image_url }}"/>
+          </a>
+        </div>
         <p></p>
+
+        <p class="card-text">{{ website.description }}</p>
+
+      {% endif %}
+
+      <p></p>
+
+
 
           <a class="card-text" href="{% url 'user_profile' website.website_author %}" style="color: black;">
             <small class="text-muted">{{ website.website_author }} · {{ website.created_date|timesince|upto:',' }} ago</small>

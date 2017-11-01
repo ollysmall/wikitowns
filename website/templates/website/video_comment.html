@@ -39,13 +39,13 @@
 
 
       <div class="row">
-      <div class="col-5 col-md-4 text-center">
+      <div class="col-12 col-md-5 text-center youtube_image_div">
       <a href="{{ video.video_url }}">
-      <img src="{{ video.video_image_url }}" width = 100% height = "auto"  />
+      <img class="img-fluid youtube_image" src="{{ video.video_image_url }}"/>
       </a>
 
       </div>
-      <div class="col-7 col-md-8">
+      <div class="col-12 col-md-7">
 
 
       <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
@@ -57,11 +57,11 @@
       </p>
 
 
-      <p>
+      
         <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
-        View description <i class="fa fa-caret-down" aria-hidden="true"></i>
+        View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
         </button>
-      </p>
+
       </div>
       </div>
 

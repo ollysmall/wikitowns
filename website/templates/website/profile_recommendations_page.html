@@ -34,14 +34,31 @@
       </div>
     </div>
 
+    {% if recommendation.image_url == None %}
 
-      <p class="card-text">{{ recommendation.description }}</p>
+     <p class="card-text">{{ recommendation.description }}</p>
+
+
+    {% else %}
+
+
+     <div class="text-center">
+       <a href="{{ recommendation.url }}">
+       <img class="website_img" src="{{ recommendation.image_url }}"/>
+       </a>
+     </div>
+     <p></p>
+
+     <p class="card-text">{{ recommendation.description }}</p>
+
+   {% endif %}
+
       <p></p>
-      <p class="card-text">
-        <a href="{% url 'user_profile' recommendation.website_author %}" style="color: black;">
+  
+        <a class="card-text" href="{% url 'user_profile' recommendation.website_author %}" style="color: black;">
           <small class="text-muted">{{ recommendation.website_author }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
         </a>
-      </p>
+
     </div>
 
     <div class="card-footer text-muted">
@@ -207,7 +224,7 @@
 
       <div class="card-block">
 
-        <div class="row card-title">
+        <div class="row">
           <div class="col-10">
             <a href="{{ recommendation.video_url }}" style="color: black;">
             <h4 class="card-title">{{ recommendation.title }}</h4>
@@ -232,13 +249,13 @@
 
 
         <div class="row">
-        <div class="col-6 col-md-4 text-center">
+        <div class="col-12 col-md-5 text-center youtube_image_div">
         <a href="{{ recommendation.video_url }}">
-        <img src="{{ recommendation.video_image_url }}" width = 100% height = "auto"  />
+        <img class="img-fluid youtube_image" src="{{ recommendation.video_image_url }}"/>
         </a>
 
         </div>
-        <div class="col-6 col-md-8">
+        <div class="col-12 col-md-7">
 
 
         <p class="card-text"><small><strong>Published:</strong> {{ recommendation.video_publish_date|date }}</small></p>
@@ -249,12 +266,10 @@
           </a>
         </p>
 
-
-        <p>
           <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#videobookmark{{ recommendation.id }}" aria-expanded="false" aria-controls="videobookmark{{ recommendation.id }}">
-          View description <i class="fa fa-caret-down" aria-hidden="true"></i>
+          View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
           </button>
-        </p>
+
         </div>
         </div>
 

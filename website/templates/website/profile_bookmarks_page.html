@@ -35,8 +35,23 @@
       </div>
     </div>
 
+    {% if bookmark.image_url == None %}
 
-      <p class="card-text">{{ bookmark.description }}</p>
+     <p class="card-text">{{ bookmark.description }}</p>
+
+    {% else %}
+
+     <div class="text-center">
+       <a href="{{ bookmark.url }}">
+       <img class="website_img" src="{{ bookmark.image_url }}"/>
+       </a>
+     </div>
+     <p></p>
+
+     <p class="card-text">{{ bookmark.description }}</p>
+
+   {% endif %}
+
       <p></p>
       <p class="card-text">
         <a href="{% url 'user_profile' bookmark.website_author %}" style="color: black;">
@@ -208,7 +223,7 @@
 
       <div class="card-block">
 
-        <div class="row card-title">
+        <div class="row">
           <div class="col-10">
             <a href="{{ bookmark.video_url }}" style="color: black;">
             <h4 class="card-title">{{ bookmark.title }}</h4>
@@ -233,13 +248,13 @@
 
 
         <div class="row">
-        <div class="col-6 col-md-4 text-center">
+        <div class="col-12 col-md-5 text-center youtube_image_div">
         <a href="{{ bookmark.video_url }}">
-        <img src="{{ bookmark.video_image_url }}" width = 100% height = "auto"  />
+        <img class="img-fluid youtube_image" src="{{ bookmark.video_image_url }}"/>
         </a>
 
         </div>
-        <div class="col-6 col-md-8">
+        <div class="col-12 col-md-7">
 
 
         <p class="card-text"><small><strong>Published:</strong> {{ bookmark.video_publish_date|date }}</small></p>
@@ -250,14 +265,12 @@
           </a>
         </p>
 
-
-        <p>
           <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookmarkers{{ bookmark.id }}" aria-expanded="false" aria-controls="bookmarkers{{ bookmark.id }}">
-          View description <i class="fa fa-caret-down" aria-hidden="true"></i>
+          View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
           </button>
-        </p>
+
         </div>
-        </div>
+      </div>
 
         <div class="card-text collapse" id="bookmarkers{{ bookmark.id }}">
         <p></p>
