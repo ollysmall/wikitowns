@@ -23,31 +23,6 @@
   </div>
   </div>
 
-  <div class="container text-center top-padding bottom-padding">
-
-    <div class="row">
-    <div class="col">
-      <img src="{% static "website/book.png" %}"  class="img-fluid" alt="Responsive image"/>
-      <p></p>
-      <h5>Books</h5>
-    </div>
-    <div class="col">
-      <img src="{% static "website/web.png" %}"  class="img-fluid" alt="Responsive image"/>
-      <p></p>
-      <h5>Websites</h5>
-    </div>
-    <div class="col">
-      <img src="{% static "website/video.png" %}"  class="img-fluid" alt="Responsive image"/>
-      <p></p>
-      <h5>Videos</h5>
-    </div>
-  </div>
-
-  </div>
-
-
-
-
     <div>
     <img src="{% static "website/programming.jpg" %}"  class="projectcoverimage img-fluid" alt="Responsive image"/>
   </div>
@@ -63,18 +38,15 @@
 
     <div class="row">
 
-
-
-
   {% if categories %}
     {% for category in categories %}
+    <div class="col-12">
 
-    <div class="col-6 col-sm-4 col-md-3 top-buffer mx-auto" >
       <a href="{% url 'category' category.slug %}">
 
-      {% if category.category_img %}
-        <img src="{{ category.category_img.url }}" class="img-fluid rounded grow" alt="Category image"/>
-      {% endif %}
+        <div class="container top-buffer category-card grow">
+            <h1 style="color:#F7B141;">{{ category.name }}</h1>
+       </div>
 
       </a>
     </div>

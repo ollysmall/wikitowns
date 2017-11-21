@@ -40,7 +40,7 @@
 
         <div class"col-12 col-md-7">
 
-        <p class="card-text video_info_padding"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+        <p class="card-text video_info_padding video_info_top_margin"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
 
         <p class="card-text video_info_padding">
           <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">

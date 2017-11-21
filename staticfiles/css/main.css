@@ -25,13 +25,13 @@ img.category-shadow {
 }
 .rec-shadow {
   -webkit-box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
--moz-box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
-box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
+  -moz-box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
+  box-shadow: 0px 7px 22px -2px  rgba(194,194,194,1);
 }
 
 /* button zoom on hover over */
 .grow { transition: all .2s ease-in-out; }
-.grow:hover { transform: scale(1.1); }
+.grow:hover { transform: scale(1.03); }
 
 a, a:link, a:hover {
   text-decoration: none;
@@ -114,15 +114,38 @@ i:hover {
   border-top: 1px solid #F7B141;
 }
 
+.category-card-top-buffer { margin-top:15px; }
+
 .category-card {
-  height: 100px;
-  padding: 30px;
-  background-color: #ffb3ba;
+  max-width: 500px;
+  height: 60px;
+  border-bottom: 1px solid #D3D3D3;
+  display: flex;
+  justify-content: left; /* align horizontal */
+  align-items: center; /* align vertical */
+  margin: auto;
+}
+
+@media (min-width: 768px) {
+    .category-card {
+      justify-content: center; /* align horizontal */
+    }
+}
+
+.index-category-button {
+  border: 0;
+  border-radius: 10px;
+  max-width: 400px;
+  height: 60px;
   display: flex;
   justify-content: center; /* align horizontal */
   align-items: center; /* align vertical */
+  margin: auto;
+  margin-top: 15px;
+  background-color: white;
 
 }
+
 
 /* style for form errors */
 .errorlist {
@@ -182,6 +205,11 @@ i:hover {
 @media (max-width: 767px) {
     .video_info_padding {
         margin-left: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .video_info_top_margin {
         margin-top: 10px;
     }
 }
@@ -191,5 +219,22 @@ i:hover {
   object-position: center; /* Center the image within the element */
   width: 100%;
   margin: -10% 0;
+}
 
+/* remove standard border from bootstrap mobile nav */
+.navbar-toggler {
+  border: none;
+}
+
+.arrow_down {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -1px;
+  margin-left: 2px;
+  margin-right: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #ccc;
 }

@@ -48,7 +48,7 @@
       <div class="col-12 col-md-7">
 
 
-      <p class="card-text"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
+      <p class="card-text video_info_top_margin"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
 
       <p class="card-text">
         <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
@@ -57,7 +57,7 @@
       </p>
 
 
-      
+
         <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
         View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
         </button>

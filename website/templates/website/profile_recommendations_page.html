@@ -54,7 +54,7 @@
    {% endif %}
 
       <p></p>
-  
+
         <a class="card-text" href="{% url 'user_profile' recommendation.website_author %}" style="color: black;">
           <small class="text-muted">{{ recommendation.website_author }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
         </a>
@@ -122,8 +122,8 @@
 
         </div>
           <div class="col-2">
-            <div class="dropdown pull-right"
-            <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
+            <div class="dropdown pull-right">
+            <i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
               {% if user.is_authenticated %}
@@ -258,7 +258,7 @@
         <div class="col-12 col-md-7">
 
 
-        <p class="card-text"><small><strong>Published:</strong> {{ recommendation.video_publish_date|date }}</small></p>
+        <p class="card-text video_info_top_margin"><small><strong>Published:</strong> {{ recommendation.video_publish_date|date }}</small></p>
 
         <p class="card-text">
           <a href="{% url 'user_profile' recommendation.recommended_by %}" style="color: black;">

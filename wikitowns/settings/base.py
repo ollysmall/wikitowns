@@ -14,10 +14,11 @@ import os
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+                           os.path.dirname(
+                           os.path.abspath(__file__))))
 
-#PROJECT_ROOT = os.path.dirname(BASE_DIR)
-
+# PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -28,8 +29,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ollysmall.pythonanywhere.com', '127.0.0.1'] #change if production
-
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
@@ -79,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wikitowns.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
@@ -93,7 +92,6 @@ DATABASES = {
         'PORT': os.environ['DATABASE_PORT'],
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -128,7 +126,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-#PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
@@ -141,7 +139,7 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-#registration-redux settings
+# registration-redux settings
 REGISTRATION_OPEN = True        # If True, users can register
 ACCOUNT_ACTIVATION_DAYS = 7     # One-week activation window; you may, of course, use a different value.
 REGISTRATION_AUTO_LOGIN = True  # If True, the user will be automatically logged in.
@@ -149,7 +147,7 @@ LOGIN_REDIRECT_URL = '/'  # The page you want users to arrive at after they succ
 LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,
                                 # and are trying to access pages requiring authentication
 
-#email settings used to report bad user posts
+# email settings used to report bad user posts
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']

@@ -1,44 +1,39 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
-
-{% block title %}noobhub - category {% endblock %}
+{% block title %}
+  noobhub - category
+{% endblock %}
 
 {% block body_block %}
 
-
-
   {% if category %}
-
-  <div class="top-padding bottom-padding test-this">
-
-  <h1 class="display-4 text-center" style="color:white;">{{ category_name }}</h1>
-
-</div>
-
-<div class="container bottom-padding">
-
-
-    {% if subcategory %}
-
-      <div class="row">
-
-      {% for subcategory in subcategory %}
-          <div class="col-sm-6 col-md-6 col-lg-4 container grow card-top-buffer">
-          <a href="{% url 'subcategory' category.slug subcategory.slug %}" class="card text-center category-card"><h4 style="color: white;">{{ subcategory.name }}</h4></a>
-          </div>
-      {% endfor %}
-
-      </div>
-
-    {% else %}
-      <strong>No subcategory currently in category.</strong>
-    {% endif %}
-
+    <div class="top-padding bottom-padding test-this">
+      <h1 class="display-4 text-center" style="color:white;">
+          {{ category_name }}
+      </h1>
+    </div>
+    <div class="container bottom-padding category-card-top-buffer">
+      {% if subcategory %}
+        <div class="row">
+          {% for subcategory in subcategory %}
+            <div class="col-12 container grow">
+              <a href="{% url 'subcategory' category.slug subcategory.slug %}"
+                 class="category-card">
+                <h4 style="color:#F7B141;">{{ subcategory.name }}</h4>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <strong>No subcategory currently in category.</strong>
+      {% endif %}
+     </div>
   {% else %}
-    The specified category {{ category_name }} does not exist!
+    <div class="container top-padding bottom-padding">
+      <h4 class="text-center">The specified category {{ category_name }} does not exist!</h4>
+    </div>
   {% endif %}
 
-</div>
+
 
 {% endblock %}
