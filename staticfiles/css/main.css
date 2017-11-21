@@ -118,12 +118,13 @@ i:hover {
 
 .category-card {
   max-width: 500px;
-  height: 60px;
+  height: auto;
   border-bottom: 1px solid #D3D3D3;
   display: flex;
   justify-content: left; /* align horizontal */
   align-items: center; /* align vertical */
   margin: auto;
+  padding-top: 10px;
 }
 
 @media (min-width: 768px) {
