@@ -1,195 +1,151 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
-
 {% load noobhub_filters %}
 
-{% block title %}noobhub - category {% endblock %}
+{% block title %}
+  noobhub - category
+{% endblock %}
 
 {% block body_block %}
 
-<div class="top-padding test-this">
-  <div class="bottom-padding">
+  <div class="top-padding test-this">
+    <div class="bottom-padding">
+      {% if subcategory %}
+        <h1 class="display-4 text-center" style="color:white;">{{ subcategory_name }}</h1>
+        <p></p>
+    </div>
 
-  {% if subcategory %}
+    <!-- Nav tabs -->
+    <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#websites" role="tab" >Websites</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#books" role="tab" >Books</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" style="color:white;" onclick="ShowSearch()"><i class="fa fa-search" aria-hidden="true"></i></a>
+      </li>
+    </ul>
 
-  <h1 class="display-4 text-center" style="color:white;">{{ subcategory_name }}</h1>
-
-  <p></p>
+    <p></p>
   </div>
-
-
-  <!-- Nav tabs -->
-  <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#websites" role="tab" >Websites</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#books" role="tab" >Books</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" style="color:white;" onclick="ShowSearch()"><i class="fa fa-search" aria-hidden="true"></i></a>
-    </li>
-  </ul>
-  <p></p>
-
-</div>
-
-<div class="container" style="max-width: 730px;">
-
-<div id="SearchFormDiv" style="display: none">
+  <div class="container" style="max-width: 730px;">
+    <div id="SearchFormDiv" style="display: none">
 
       <form enctype="multipart/form-data" id="SearchForm" method="get" class="input-group">
         {{ search_form.search_box }}
-
         <span class="input-group-btn">
           <button class="btn btn-secondary" type="submit">Go!</button>
         </span>
-
       </form>
 
-    <p></p>
-</div>
-
-<!-- Tab panes -->
-  <div class="tab-content">
-    <!-- removed show and active from class below -->
-    <div class="tab-pane fade" id="websites" role="tabpanel">
-
-      <div class="row">
-
-        <div  class="col">
-          <a class="btn btn-outline-info btn-sm" href="{% url 'create_website' category.slug subcategory.slug %}">New website</a>
-        </div>
-
-        <div class="col">
-          <form class="pull-right" enctype="multipart/form-data" id="DateFilterForm" action="{% url 'subcategory' category.slug subcategory.slug %}" method="get">
-            {{ form.as_p }}
-          </form>
-        </div>
-
-      </div>
-
-      {% if websites %}
-
-        <div class="bottom-padding">
-
-          {% if search_keywords %}
-              Websites matching your search - "{{ search_keywords }}"
-          {% endif %}
-
-        <div class="endless_page_template">
-
-        {% include "website/subcategory_website_page.html" %}
-
-        </div>
-
-        </div>
-
-      {% else %}
-          {% if search_keywords %}
-              <strong>No websites matched your search - "{{ search_keywords }}"</strong>
-          {% else %}
-              <strong>No websites have been recommended yet. Why not recommend one now!</strong>
-          {% endif %}
-      {% endif %}
-
+      <p></p>
     </div>
 
-
-    <div class="tab-pane fade" id="books" role="tabpanel">
-
-      <div class="row">
-
-        <div class="col">
-          <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_book' category.slug subcategory.slug %}">New Book</a></p>
-        </div>
-
-        <div class="col ">
-          <form class="pull-right" enctype="multipart/form-data" id="DateFilterForm" action="{% url 'subcategory' category.slug subcategory.slug %}" method="get">
-            {{ form.as_p }}
-          </form>
-        </div>
-
-      </div>
-
-      <div class="bottom-padding">
-
-      {% if books %}
-
-      {% if search_keywords %}
-          Books matching your search - "{{ search_keywords }}"
-      {% endif %}
-
-      <div class="endless_page_template">
-
-      {% include "website/subcategory_book_page.html" %}
-
-      </div>
-
-      {% else %}
-          {% if search_keywords %}
-              <strong>No books matched your search - "{{ search_keywords }}"</strong>
-          {% else %}
-              <strong>No books have been recommended yet. Why not recommend one now!</strong>
-          {% endif %}
-      {% endif %}
-
-    </div>
-    </div>
-
-    <div class="tab-pane fade" id="videos" role="tabpanel">
-
-      <div class="row">
-
-        <div class="col">
-          <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_video' category.slug subcategory.slug %}">New Video</a></p>
-        </div>
-
-        <div class="col ">
-          <form class="pull-right" enctype="multipart/form-data" id="DateFilterForm" action="{% url 'subcategory' category.slug subcategory.slug %}" method="get">
-            {{ form.as_p }}
-          </form>
-        </div>
-      </div>
-
-      {% if videos %}
-
-        <div class="bottom-padding">
-
-          {% if search_keywords %}
-              Videos matching your search - "{{ search_keywords }}"
-          {% endif %}
-
-          <div class="endless_page_template">
-
-          {% include "website/subcategory_video_page.html" %}
-
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- removed show and active from class below -->
+      <div class="tab-pane fade" id="websites" role="tabpanel">
+        <div class="row">
+          <div  class="col">
+            <a class="btn btn-outline-info btn-sm" href="{% url 'create_website' category.slug subcategory.slug %}">New website</a>
           </div>
-
+          <div class="col">
+            <form class="pull-right" enctype="multipart/form-data" id="DateFilterForm" action="{% url 'subcategory' category.slug subcategory.slug %}" method="get">
+              {{ form.as_p }}
+            </form>
+          </div>
         </div>
 
-      {% else %}
-        {% if search_keywords %}
-            <strong>No videos matched your search - "{{ search_keywords }}"</strong>
+        {% if websites %}
+          <div class="bottom-padding">
+            {% if search_keywords %}
+              Websites matching your search - "{{ search_keywords }}"
+            {% endif %}
+            <div class="endless_page_template">
+              {% include "website/subcategory_website_page.html" %}
+            </div>
+          </div>
         {% else %}
-            <strong>No videos have been recommended yet. Why not recommend one now!</strong>
+          {% if search_keywords %}
+            <strong>No websites matched your search - "{{ search_keywords }}"</strong>
+          {% else %}
+            <strong>No websites have been recommended yet. Why not recommend one now!</strong>
+          {% endif %}
         {% endif %}
-      {% endif %}
+      </div>
 
+      <div class="tab-pane fade" id="books" role="tabpanel">
+        <div class="row">
+          <div class="col">
+            <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_book' category.slug subcategory.slug %}">New Book</a></p>
+          </div>
+          <div class="col ">
+            <form class="pull-right" enctype="multipart/form-data" id="DateFilterForm" action="{% url 'subcategory' category.slug subcategory.slug %}" method="get">
+              {{ form.as_p }}
+            </form>
+          </div>
+        </div>
 
+        <div class="bottom-padding">
+          {% if books %}
+            {% if search_keywords %}
+              Books matching your search - "{{ search_keywords }}"
+            {% endif %}
+            <div class="endless_page_template">
+              {% include "website/subcategory_book_page.html" %}
+            </div>
+          {% else %}
+            {% if search_keywords %}
+              <strong>No books matched your search - "{{ search_keywords }}"</strong>
+            {% else %}
+              <strong>No books have been recommended yet. Why not recommend one now!</strong>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="videos" role="tabpanel">
+        <div class="row">
+          <div class="col">
+            <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_video' category.slug subcategory.slug %}">New Video</a></p>
+          </div>
+          <div class="col ">
+            <form class="pull-right" enctype="multipart/form-data" id="DateFilterForm" action="{% url 'subcategory' category.slug subcategory.slug %}" method="get">
+              {{ form.as_p }}
+            </form>
+          </div>
+        </div>
+
+        {% if videos %}
+          <div class="bottom-padding">
+            {% if search_keywords %}
+              Videos matching your search - "{{ search_keywords }}"
+            {% endif %}
+            <div class="endless_page_template">
+              {% include "website/subcategory_video_page.html" %}
+            </div>
+          </div>
+        {% else %}
+          {% if search_keywords %}
+            <strong>No videos matched your search - "{{ search_keywords }}"</strong>
+          {% else %}
+            <strong>No videos have been recommended yet. Why not recommend one now!</strong>
+          {% endif %}
+        {% endif %}
+      </div>
     </div>
+
+    {% else %}
+      <div class="container text-center">
+        <b>The specified subcategory does not exist!</b>
+      </div>
+    {% endif %}
 
   </div>
-
-  {% else %}
-    The specified category {{ subcategory_name }} does not exist!
-  {% endif %}
-
-</div>
-
 
 {% endblock %}

@@ -14,7 +14,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.contrib import messages
-from datetime import date
+from datetime import date, datetime
 from itertools import chain
 from operator import attrgetter
 from django.contrib.postgres.search import (SearchQuery, SearchRank,
@@ -47,7 +47,7 @@ def category(request, category_name_slug):
         subcategory = (SubCategory.objects
                                   .filter(category=category)
                                   .order_by('name'))
-        context_dict['subcategory'] = subcategory
+        context_dict['subcategories'] = subcategory
         context_dict['category'] = category
     except Category.DoesNotExist:
         pass
@@ -104,6 +104,9 @@ def subcategory(request, category_name_slug, subcategory_name_slug,
         context_dict['videos'] = video_list
 
     except SubCategory.DoesNotExist:
+        pass
+
+    except Category.DoesNotExist:
         pass
 
     if request.method == 'GET':
@@ -241,14 +244,13 @@ class CreateWebsiteRecommendation(CreateView):
     def get_form_kwargs(self):
         kwargs = super(CreateWebsiteRecommendation, self).get_form_kwargs()
         kwargs['category'] = (
-            Category
-            .objects
-            .get(slug=self.kwargs["category_name_slug"])
+            get_object_or_404(Category, slug=self.kwargs["category_name_slug"])
         )
         kwargs['subcategory'] = (
-            SubCategory
-            .objects
-            .get(slug=self.kwargs["subcategory_name_slug"])
+            get_object_or_404(SubCategory,
+                              slug=self.kwargs["subcategory_name_slug"],
+                              category=kwargs['category']
+                              )
         )
         return kwargs
 
@@ -297,7 +299,7 @@ class DeleteWebsiteRecommendation(DeleteView):
     template_name = 'website/delete_website.html'
 
     def get_object(self, queryset=None):
-        obj = WebsiteRecommendation.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(WebsiteRecommendation, pk=self.kwargs['pk'])
         if obj.website_author != self.request.user:
             raise Http404
         return obj
@@ -349,7 +351,6 @@ def profile_page(request, username, template='website/profile.html',
 
 
 @login_required
-# Is @require_POST needed? - I think the if statement below makes it redundant
 @require_POST
 def upvote_website(request):
     if request.method == 'POST':
@@ -394,8 +395,9 @@ def bookmark_website(request):
             website.bookmark.remove(user)
         else:
             website.bookmark.add(user)
-    # this should be changed - it doesnt need to respond with total votes
-    return HttpResponse(website.total_votes)
+    # status 204 = The server successfully processed the request and is not
+    # returning any content
+    return HttpResponse(status=204)
 
 
 @page_template('website/website_comment_page.html')
@@ -404,10 +406,10 @@ def website_comment(request, category_name_slug, subcategory_name_slug, pk,
                     extra_context=None):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     website = get_object_or_404(WebsiteRecommendation, id=pk)
     context_dict['website'] = website
@@ -442,7 +444,7 @@ class EditWebsiteComment(UpdateView):
     template_name = 'website/edit_website_comment.html'
 
     def get_object(self, queryset=None):
-        obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(WebsiteComment, pk=self.kwargs['pk'])
         if obj.author != self.request.user:
             raise Http404
         return obj
@@ -462,7 +464,7 @@ class DeleteWebsiteComment(DeleteView):
     template_name = 'website/delete_website_comment.html'
 
     def get_object(self, queryset=None):
-        obj = WebsiteComment.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(WebsiteComment, pk=self.kwargs['pk'])
         if obj.author != self.request.user:
             raise Http404
         return obj
@@ -482,10 +484,10 @@ def create_book_recommendation(request, category_name_slug,
                                subcategory_name_slug):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     form = BookForm(category=category, subcategory=subcategory)
 
@@ -505,32 +507,33 @@ def create_book_recommendation(request, category_name_slug,
         if form.is_valid():
             isbn = (form.cleaned_data['isbn'])
             book = form.save(commit=False)
-            results = amazon.ItemLookup(ItemId=isbn, ResponseGroup="Medium",
-                                        SearchIndex="Books", IdType="ISBN")
 
-            book.book_publish_date = results.find('PublicationDate').string
-            # review line below - dont think it is a good way of doing it
-            book.book_image_url = results.find('LargeImage').text[:-6]
-            book.recommended_by = user
-            book.category = category
-            book.subcategory = subcategory
-            book.title = results.find('Title').string
-            book.book_author = results.find('Author').string
-            book.book_description = results.find('Content').string
-            book.book_url = results.find('DetailPageURL').string
-            book.save()
-            return redirect('subcategory', category_name_slug=category.slug,
-                            subcategory_name_slug=subcategory.slug)
-        else:
-            # Do I need the context dict and return render parts?
-            # got a service unavailable message whilst requesting amazon info
-            # need fallback for when this error occurs
-            print(form.errors)
-            context_dict['form'] = form
-            return render(request, 'website/create_book.html', context_dict)
-    else:
-        context_dict['form'] = form
-        return render(request, 'website/create_book.html', context_dict)
+            try:
+                results = amazon.ItemLookup(ItemId=isbn, ResponseGroup="Medium",
+                                            SearchIndex="Books", IdType="ISBN")
+
+                book.book_publish_date = results.find('PublicationDate').string
+                # review line below - dont think it is a good way of doing it
+                book.book_image_url = results.find('LargeImage').text[:-6]
+                book.recommended_by = user
+                book.category = category
+                book.subcategory = subcategory
+                book.title = results.find('Title').string
+                book.book_author = results.find('Author').string
+                book.book_description = results.find('Content').string
+                book.book_url = results.find('DetailPageURL').string
+                book.save()
+                return redirect('subcategory', category_name_slug=category.slug,
+                                subcategory_name_slug=subcategory.slug)
+            except:
+                messages.error(request, ("Something went wrong, please try "
+                                         "again. If this error keeps showing "
+                                         "then there may be an issue with "
+                                         "the book you are trying to "
+                                         "recommend."))
+
+    context_dict['form'] = form
+    return render(request, 'website/create_book.html', context_dict)
 
 
 class DeleteBookRecommendation(DeleteView):
@@ -538,7 +541,7 @@ class DeleteBookRecommendation(DeleteView):
     template_name = 'website/delete_book.html'
 
     def get_object(self, queryset=None):
-        obj = BookRecommendation.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(BookRecommendation, pk=self.kwargs['pk'])
         if obj.recommended_by != self.request.user:
             raise Http404
         return obj
@@ -552,7 +555,6 @@ class DeleteBookRecommendation(DeleteView):
 
 
 @login_required
-# Is @require_POST needed? - I think the if statement below makes it redundant
 @require_POST
 def upvote_book(request):
     if request.method == 'POST':
@@ -571,7 +573,6 @@ def upvote_book(request):
 
 
 @login_required
-# Is @require_POST needed? - I think the if statement below makes it redundant
 @require_POST
 def downvote_book(request):
     if request.method == 'POST':
@@ -591,7 +592,6 @@ def downvote_book(request):
 
 @login_required
 @require_POST
-# does this need to be ajax?
 def bookmark_book(request):
     if request.method == 'POST':
         user = request.user
@@ -602,8 +602,9 @@ def bookmark_book(request):
             book.bookmark.remove(user)
         else:
             book.bookmark.add(user)
-    # this should be changed - it doesnt need to respond with total votes
-    return HttpResponse(book.total_votes)
+    # status 204 = The server successfully processed the request and is not
+    # returning any content
+    return HttpResponse(status=204)
 
 
 @page_template('website/book_comment_page.html')
@@ -611,10 +612,10 @@ def book_comment(request, category_name_slug, subcategory_name_slug, pk,
                  template='website/book_comment.html', extra_context=None):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     book = get_object_or_404(BookRecommendation, id=pk)
     context_dict['book'] = book
@@ -651,7 +652,7 @@ class EditBookComment(UpdateView):
     template_name = 'website/edit_book_comment.html'
 
     def get_object(self, queryset=None):
-        obj = BookComment.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(BookComment, pk=self.kwargs['pk'])
         if obj.author != self.request.user:
             raise Http404
         return obj
@@ -671,7 +672,7 @@ class DeleteBookComment(DeleteView):
     template_name = 'website/delete_book_comment.html'
 
     def get_object(self, queryset=None):
-        obj = BookComment.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(BookComment, pk=self.kwargs['pk'])
         if obj.author != self.request.user:
             raise Http404
         return obj
@@ -691,10 +692,10 @@ def create_video_recommendation(request, category_name_slug,
                                 subcategory_name_slug):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     form = VideoForm(category=category, subcategory=subcategory)
 
@@ -704,62 +705,72 @@ def create_video_recommendation(request, category_name_slug,
         form = VideoForm(request.POST, category=category,
                          subcategory=subcategory)
         if form.is_valid():
-            url = (form.cleaned_data['video_url'])
-            video = form.save(commit=False)
-            if url.startswith(('youtu', 'www')):
-                url = 'http://' + url
-            query = urlparse(url)
-            if 'youtube' in query.hostname:
-                if query.path == '/watch':
-                    video_id = parse_qs(query.query)['v'][0]
-                elif query.path.startswith(('/embed/', '/v/')):
-                    video_id = query.path.split('/')[2]
-            elif 'youtu.be' in query.hostname:
-                video_id = query.path[1:]
-            else:
-                # change this to say - the video you supplied was not youtube
-                raise ValueError
+            try:
+                url = (form.cleaned_data['video_url'])
+                video = form.save(commit=False)
+                if url.startswith(('youtu', 'www')):
+                    url = 'http://' + url
+                query = urlparse(url)
+                if 'youtube' in query.hostname:
+                    if query.path == '/watch':
+                        video_id = parse_qs(query.query)['v'][0]
+                    elif query.path.startswith(('/embed/', '/v/')):
+                        video_id = query.path.split('/')[2]
+                elif 'youtu.be' in query.hostname:
+                    video_id = query.path[1:]
+                else:
+                    raise ValueError
 
-            DEVELOPER_KEY = os.environ['YOUTUBE_DEVELOPER_KEY']
-            YOUTUBE_API_SERVICE_NAME = "youtube"
-            YOUTUBE_API_VERSION = "v3"
+                DEVELOPER_KEY = os.environ['YOUTUBE_DEVELOPER_KEY']
+                YOUTUBE_API_SERVICE_NAME = "youtube"
+                YOUTUBE_API_VERSION = "v3"
 
-            youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-                            developerKey=DEVELOPER_KEY)
+                youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+                                developerKey=DEVELOPER_KEY)
 
-            search_response = youtube.videos().list(
-              id=video_id,
-              part='snippet'
-            ).execute()
+                search_response = youtube.videos().list(
+                  id=video_id,
+                  part='snippet'
+                ).execute()
 
-            # check that a video has been found by seing if the results
-            # returned is greater than 0
-            if search_response["pageInfo"]["totalResults"] > 0:
-                for item in search_response["items"]:
-                    title = item["snippet"]["title"]
-                    description = item["snippet"]["description"]
-                    thumbnail = (item["snippet"]["thumbnails"]["standard"]
-                                 ["url"])
-                    publish_date = item["snippet"]["publishedAt"]
+                # check that a video has been found by seing if the results
+                # returned is greater than 0
+                if search_response["pageInfo"]["totalResults"] > 0:
+                    for item in search_response["items"]:
+                        title = item["snippet"]["title"]
+                        description = item["snippet"]["description"]
+                        # some videos do not have the standard thumbnail,
+                        # get high quality thumbnail if the standard one
+                        # is not available.
+                        try:
+                            thumbnail = (item["snippet"]["thumbnails"]
+                                         ["standard"]["url"])
+                        except:
+                            thumbnail = (item["snippet"]["thumbnails"]["high"]
+                                         ["url"])
 
-                video.category = category
-                video.subcategory = subcategory
-                video.title = title
-                video.recommended_by = user
-                video.video_description = description
-                video.video_publish_date = publish_date
-                video.video_image_url = thumbnail
-                video.video_id = video_id
-                video.save()
-                return redirect('subcategory',
-                                category_name_slug=category.slug,
-                                subcategory_name_slug=subcategory.slug)
-            else:
-                messages.error(request, ("The Video does not seem to exist! "
-                                         "Please check the URL and try "
-                                         "again."))
-        else:
-            print(form.errors)
+                        publish_date = item["snippet"]["publishedAt"]
+
+                    video.category = category
+                    video.subcategory = subcategory
+                    video.title = title
+                    video.recommended_by = user
+                    video.video_description = description
+                    video.video_publish_date = publish_date
+                    video.video_image_url = thumbnail
+                    video.video_id = video_id
+                    video.save()
+                    return redirect('subcategory',
+                                    category_name_slug=category.slug,
+                                    subcategory_name_slug=subcategory.slug)
+                else:
+                    messages.error(request, ("The Video does not seem to "
+                                             "exist! Please check the URL and "
+                                             "try again."))
+            except:
+                messages.error(request, ("Something went wrong, please check "
+                                         "the URL and try again."))
+
     context_dict['form'] = form
     return render(request, 'website/create_video.html', context_dict)
 
@@ -769,7 +780,7 @@ class DeleteVideoRecommendation(DeleteView):
     template_name = 'website/delete_video.html'
 
     def get_object(self, queryset=None):
-        obj = VideoRecommendation.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(VideoRecommendation, pk=self.kwargs['pk'])
         if obj.recommended_by != self.request.user:
             raise Http404
         return obj
@@ -783,7 +794,6 @@ class DeleteVideoRecommendation(DeleteView):
 
 
 @login_required
-# Is @require_POST needed - I think the if statement below makes it redundant
 @require_POST
 def upvote_video(request):
     if request.method == 'POST':
@@ -821,7 +831,7 @@ def downvote_video(request):
 
 @login_required
 @require_POST
-def bookmark_video(request):  # does this need to be ajax?
+def bookmark_video(request):
     if request.method == 'POST':
         user = request.user
         videoid = request.POST.get('videoid')
@@ -830,8 +840,9 @@ def bookmark_video(request):  # does this need to be ajax?
             video.bookmark.remove(user)
         else:
             video.bookmark.add(user)
-    # this should be changed - it doesnt need to respond with total votes
-    return HttpResponse(video.total_votes)
+    # status 204 = The server successfully processed the request and is not
+    # returning any content
+    return HttpResponse(status=204)
 
 
 @page_template('website/video_comment_page.html')
@@ -839,10 +850,10 @@ def video_comment(request, category_name_slug, subcategory_name_slug, pk,
                   template='website/video_comment.html', extra_context=None):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     video = get_object_or_404(VideoRecommendation, id=pk)
     context_dict['video'] = video
@@ -878,7 +889,7 @@ class EditVideoComment(UpdateView):
     template_name = 'website/edit_video_comment.html'
 
     def get_object(self, queryset=None):
-        obj = VideoComment.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(VideoComment, pk=self.kwargs['pk'])
         if obj.author != self.request.user:
             raise Http404
         return obj
@@ -898,7 +909,7 @@ class DeleteVideoComment(DeleteView):
     template_name = 'website/delete_video_comment.html'
 
     def get_object(self, queryset=None):
-        obj = VideoComment.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(VideoComment, pk=self.kwargs['pk'])
         if obj.author != self.request.user:
             raise Http404
         return obj
@@ -918,10 +929,10 @@ def report_website_recommendation(request, category_name_slug,
                                   subcategory_name_slug, pk):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     website = get_object_or_404(WebsiteRecommendation, id=pk)
     context_dict['website'] = website
@@ -955,10 +966,10 @@ def report_book_recommendation(request, category_name_slug,
                                subcategory_name_slug, pk):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     book = get_object_or_404(BookRecommendation, id=pk)
     context_dict['book'] = book
@@ -991,10 +1002,10 @@ def report_video_recommendation(request, category_name_slug,
                                 subcategory_name_slug, pk):
     context_dict = {}
     user = request.user
-    category = Category.objects.get(slug=category_name_slug)
+    category = get_object_or_404(Category, slug=category_name_slug)
     context_dict['category'] = category
-    subcategory = SubCategory.objects.get(slug=subcategory_name_slug,
-                                          category=category)
+    subcategory = get_object_or_404(SubCategory, slug=subcategory_name_slug,
+                                    category=category)
     context_dict['subcategory'] = subcategory
     video = get_object_or_404(VideoRecommendation, id=pk)
     context_dict['video'] = video

@@ -1,65 +1,53 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
 
-{% block title %}noobhub{% endblock %}
+{% block title %}
+  noobhub
+{% endblock %}
 
 {% block body_block %}
+
   <div class="test-this" >
-  <div class="container">
-    <div class="top-padding">
-    <h1 class="display-3 text-center" style="color:white;">noobhub</h1>
+    <div class="container">
+      <div class="top-padding">
+        <h1 class="display-3 text-center" style="color:white;">noobhub</h1>
+      </div>
+      <div class=" container top-padding bottom-padding text-center">
+        <h2 style="color:white;">A place to share and discover coding resources.</h2>
+        <p></p>
+        <h5 class="top-buffer" style="color:white;">Learn faster by seeing resources recommended and ranked by other users.</h5>
+      </div>
     </div>
-
-    <div class=" container top-padding bottom-padding text-center">
-    <h2 style="color:white;">A place to share and discover coding resources.</h2>
-
-    <p></p>
-
-      <h5 class="top-buffer" style="color:white;">Learn faster by seeing resources recommended and ranked by other users.</h5>
-
-    </div>
-
-  </div>
   </div>
 
-    <div>
+  <div>
     <img src="{% static "website/programming.jpg" %}"  class="projectcoverimage img-fluid" alt="Responsive image"/>
   </div>
 
-
-    <div class="container top-padding">
-    <p class="lead text-center">Get recommended a variety of content from books to tutorial videos on the subject you want to learn. noobhub helps you learn about related content that you may not have known to search for.</p>
-    </div>
-
-
-
-  <div class="container bottom-padding">
-
-    <div class="row">
-
-  {% if categories %}
-    {% for category in categories %}
-    <div class="col-12">
-
-      <a href="{% url 'category' category.slug %}">
-
-        <div class="container top-buffer category-card grow">
-            <h1 style="color:#F7B141;">{{ category.name }}</h1>
-       </div>
-
-      </a>
-    </div>
-
-    {% endfor %}
+  <div class="container top-padding">
+    <p class="lead text-center">
+      Get recommended a variety of content from books to tutorial videos on the subject you want to learn. noobhub helps you learn about related content that you may not have known to search for.
+    </p>
   </div>
 
+  <div class="container bottom-padding">
+    <div class="row">
 
-</div>
+      {% if categories %}
+        {% for category in categories %}
+          <div class="col-12">
+            <a href="{% url 'category' category.slug %}">
+              <div class="container top-buffer category-card grow">
+                <h1 style="color:#F7B141;">{{ category.name }}</h1>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <strong>There are no categories listed.</strong>
+      {% endif %}
 
-  {% else %}
-    <strong>There are no categories listed.</strong>
-  {% endif %}
+    </div>
   </div>
 
 {% endblock %}

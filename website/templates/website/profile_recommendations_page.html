@@ -6,329 +6,287 @@
 {% for recommendation in recommendations_list %}
 
   {% if recommendation|classname == 'WebsiteRecommendation' %}
+    <div class="card card-top-buffer card-link-text rec-shadow">
+      <div class="card-block">
+        <div class="row">
 
-  <div class="card card-top-buffer card-link-text rec-shadow">
+          <div class="col-10">
+            <a href="{{ recommendation.url }}" style="color: black;">
+              <h4 class="card-title">{{ recommendation.title }}</h4>
+            </a>
+          </div>
 
-    <div class="card-block">
+          <div class="col-2">
+            <div class="dropdown pull-right">
+              <i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                {% if user.is_authenticated %}
+                  {% if recommendation.website_author.pk == user.pk %}
+                    <a class="dropdown-item" href="{% url 'delete_website' recommendation.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
+                  {% endif %}
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'report_website_recommendation' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+              </div>
+            </div>
+          </div>
 
-      <div class="row">
-      <div class="col-10">
-
-      <a href="{{ recommendation.url }}" style="color: black;">
-      <h4 class="card-title">{{ recommendation.title }}</h4>
-      </a>
-    </div>
-      <div class="col-2">
-        <div class="dropdown pull-right"
-        <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
-
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-          {% if user.is_authenticated %}
-          {% if recommendation.website_author.pk == user.pk %}
-            <a class="dropdown-item" href="{% url 'delete_website' recommendation.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
-          {% endif %}
-          {% endif %}
-        <a class="dropdown-item" href="{% url 'report_website_recommendation' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
         </div>
+
+        {% if recommendation.image_url == None %}
+          <p class="card-text">{{ recommendation.description }}</p>
+        {% else %}
+          <div class="text-center">
+            <a href="{{ recommendation.url }}">
+              <img class="website_img" src="{{ recommendation.image_url }}"/>
+            </a>
+          </div>
+          <p></p>
+          <p class="card-text">{{ recommendation.description }}</p>
+        {% endif %}
+
+        <p></p>
+        <p class="card-text">
+          <a href="{% url 'user_profile' recommendation.website_author %}" style="color: black;">
+            <small class="text-muted">{{ recommendation.website_author }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
+          </a>
+        </p>
+      </div>
+
+      <div class="card-footer text-muted">
+        <div class="website-footer-top-boarder">
+
+          {% if user in recommendation.upvote.all %}
+            <i class="fa fa-arrow-up upvote_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-arrow-up upvote_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% endif %}
+
+          <small class="vote_total" data-websiteid="{{ recommendation.id }}">{{ recommendation.total_votes }}&nbsp;</small>
+
+          {% if user in recommendation.downvote.all %}
+            <i class="fa fa-arrow-down downvote_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
+          {% else %}
+            <i class="fa fa-arrow-down downvote_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
+          {% endif %}
+
+          <a href="{% url 'category' recommendation.category.slug %}">
+            <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
+          </a>
+          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
+            <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
+          </a>
+
+          {% if user in recommendation.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% endif %}
+
+          {% if recommendation.comments.count > 0 %}
+            <small class="pull-right">{{ recommendation.comments.count }}&nbsp;</small>
+          {% endif %}
+
+          <a href="{% url 'website_comment' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}" class="text-muted">
+            <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+          </a>
+
         </div>
       </div>
     </div>
-
-    {% if recommendation.image_url == None %}
-
-     <p class="card-text">{{ recommendation.description }}</p>
-
-
-    {% else %}
-
-
-     <div class="text-center">
-       <a href="{{ recommendation.url }}">
-       <img class="website_img" src="{{ recommendation.image_url }}"/>
-       </a>
-     </div>
-     <p></p>
-
-     <p class="card-text">{{ recommendation.description }}</p>
-
-   {% endif %}
-
-      <p></p>
-
-        <a class="card-text" href="{% url 'user_profile' recommendation.website_author %}" style="color: black;">
-          <small class="text-muted">{{ recommendation.website_author }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
-        </a>
-
-    </div>
-
-    <div class="card-footer text-muted">
-      <div class="website-footer-top-boarder">
-
-
-      {% if user in recommendation.upvote.all %}
-        <i class="fa fa-arrow-up upvote_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
-      {% else %}
-        <i class="fa fa-arrow-up upvote_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
-      {% endif %}
-
-      <small class="vote_total" data-websiteid="{{ recommendation.id }}">{{ recommendation.total_votes }}&nbsp;</small>
-
-      {% if user in recommendation.downvote.all %}
-      <i class="fa fa-arrow-down downvote_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
-      {% else %}
-      <i class="fa fa-arrow-down downvote_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
-      {% endif %}
-
-      <a href="{% url 'category' recommendation.category.slug %}">
-      <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
-      </a>
-      <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
-      <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
-      </a>
-
-      {% if user in recommendation.bookmark.all %}
-      <i class="fa fa-bookmark-o pull-right bookmark_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
-      {% else %}
-      <i class="fa fa-bookmark-o pull-right bookmark_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
-      {% endif %}
-
-      {% if recommendation.comments.count > 0 %}
-        <small class="pull-right">{{ recommendation.comments.count }}&nbsp;</small>
-      {% endif %}
-
-      <a href="{% url 'website_comment' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}" class="text-muted">
-        <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
-      </a>
-
-
-      </div>
-    </div>
-
-  </div>
 
   {% elif recommendation|classname == 'BookRecommendation' %}
-
     <div class="card card-top-buffer card-link-text rec-shadow">
-
       <div class="card-block">
-
         <div class="row card-title">
 
           <div class="col-10">
+            <a href="{{ recommendation.book_url }}" style="color: black;">
+              <h4 class="card-title">{{ recommendation.title }}</h4>
+            </a>
+          </div>
 
-          <a href="{{ recommendation.book_url }}" style="color: black;">
-          <h4 class="card-title">{{ recommendation.title }}</h4>
-          </a>
-
-        </div>
           <div class="col-2">
             <div class="dropdown pull-right">
-            <i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-              {% if user.is_authenticated %}
-              {% if recommendation.recommended_by.pk == user.pk %}
-                <a class="dropdown-item" href="{% url 'delete_book' recommendation.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
-              {% endif %}
-              {% endif %}
-            <a class="dropdown-item" href="{% url 'report_book_recommendation' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
-            </div>
+              <i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                {% if user.is_authenticated %}
+                  {% if recommendation.recommended_by.pk == user.pk %}
+                    <a class="dropdown-item" href="{% url 'delete_book' recommendation.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
+                  {% endif %}
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'report_book_recommendation' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+              </div>
             </div>
           </div>
+
         </div>
-
-
         <div class="row">
-        <div class="col-5 col-md-3 text-center">
-        <a href="{{ recommendation.book_url }}">
-        <img src="{{ recommendation.book_image_url }}" width = 100% height = "auto"  />
-        </a>
 
-        </div>
+          <div class="col-5 col-md-3 text-center">
+            <a href="{{ recommendation.book_url }}">
+              <img src="{{ recommendation.book_image_url }}" width = 100% height = "auto"  />
+            </a>
+          </div>
 
-        <div class="col-7 col-md-9">
-
-        <p class="card-text"><small><strong>Author:</strong> {{ recommendation.book_author }}</small></p>
-
-        <p class="card-text"><small><strong>Published:</strong> {{ recommendation.book_publish_date }}</small></p>
-
-        <p class="card-text">
-          <a href="{% url 'user_profile' recommendation.recommended_by %}" style="color: black;">
-            <small class="text-muted">{{ recommendation.recommended_by }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
-          </a>
-        </p>
-
-        <p>
-          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookbookmark{{ recommendation.id }}" aria-expanded="false" aria-controls="bookbookmark{{ recommendation.id }}">
-          View description <i class="fa fa-caret-down" aria-hidden="true"></i>
-          </button>
-        </p>
-        </div>
+          <div class="col-7 col-md-9">
+            <p class="card-text"><small><strong>Author:</strong> {{ recommendation.book_author }}</small></p>
+            <p class="card-text"><small><strong>Published:</strong> {{ recommendation.book_publish_date }}</small></p>
+            <p class="card-text">
+              <a href="{% url 'user_profile' recommendation.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ recommendation.recommended_by }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+            <p>
+              <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#bookbookmark{{ recommendation.id }}" aria-expanded="false" aria-controls="bookbookmark{{ recommendation.id }}">
+                View description <i class="fa fa-caret-down" aria-hidden="true"></i>
+              </button>
+            </p>
+          </div>
         </div>
 
         <div class="card-text collapse" id="bookbookmark{{ recommendation.id }}">
-        <p></p>
-        {{ recommendation.book_description|safe }}
+          <p></p>
+          {{ recommendation.book_description|safe }}
         </div>
-
       </div>
 
-          <div class="card-footer text-muted">
-            <div class="book-footer-top-boarder">
+      <div class="card-footer text-muted">
+        <div class="book-footer-top-boarder">
 
-            {% if user in recommendation.upvote.all %}
-              <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% else %}
-              <i class="fa fa-arrow-up upvote_book" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% endif %}
+          {% if user in recommendation.upvote.all %}
+            <i class="fa fa-arrow-up upvote_book clicked-button" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-arrow-up upvote_book" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% endif %}
 
-            <small class="vote_total" data-bookid="{{ recommendation.id }}">{{ recommendation.total_votes }}&nbsp;</small>
+          <small class="vote_total" data-bookid="{{ recommendation.id }}">{{ recommendation.total_votes }}&nbsp;</small>
 
-            {% if user in recommendation.downvote.all %}
+          {% if user in recommendation.downvote.all %}
             <i class="fa fa-arrow-down downvote_book clicked-button" data-bookid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
-            {% else %}
+          {% else %}
             <i class="fa fa-arrow-down downvote_book" data-bookid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
-            {% endif %}
+          {% endif %}
 
-            <a href="{% url 'category' recommendation.category.slug %}">
+          <a href="{% url 'category' recommendation.category.slug %}">
             <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
-            </a>
-            <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
+          </a>
+          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
             <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
-            </a>
+          </a>
 
-            {% if user in recommendation.bookmark.all %}
+          {% if user in recommendation.bookmark.all %}
             <i class="fa fa-bookmark-o pull-right bookmark_book clicked-button" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% else %}
+          {% else %}
             <i class="fa fa-bookmark-o pull-right bookmark_book" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% endif %}
+          {% endif %}
 
-            {% if recommendation.book_comments.count > 0 %}
-              <small class="pull-right">{{ recommendation.book_comments.count }}&nbsp;</small>
-            {% endif %}
+          {% if recommendation.book_comments.count > 0 %}
+            <small class="pull-right">{{ recommendation.book_comments.count }}&nbsp;</small>
+          {% endif %}
 
-            <a href="{% url 'book_comment' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}" class="text-muted">
-              <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
-            </a>
-
-            </div>
-          </div>
-
-
+          <a href="{% url 'book_comment' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}" class="text-muted">
+            <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+          </a>
 
         </div>
+      </div>
+    </div>
 
   {% elif recommendation|classname == 'VideoRecommendation' %}
-
     <div class="card card-top-buffer card-link-text rec-shadow">
-
       <div class="card-block">
-
         <div class="row">
+
           <div class="col-10">
             <a href="{{ recommendation.video_url }}" style="color: black;">
-            <h4 class="card-title">{{ recommendation.title }}</h4>
+              <h4 class="card-title">{{ recommendation.title }}</h4>
             </a>
           </div>
+
           <div class="col-2">
-          <div class="dropdown pull-right"
-          <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
-
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-            {% if user.is_authenticated %}
-            {% if recommendation.recommended_by.pk == user.pk %}
-              <a class="dropdown-item" href="{% url 'delete_video' recommendation.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
-            {% endif %}
-            {% endif %}
-          <a class="dropdown-item" href="{% url 'report_video_recommendation' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
-          </div>
-          </div>
-        </div>
-        </div>
-
-
-
-        <div class="row">
-        <div class="col-12 col-md-5 text-center youtube_image_div">
-        <a href="{{ recommendation.video_url }}">
-        <img class="img-fluid youtube_image" src="{{ recommendation.video_image_url }}"/>
-        </a>
-
-        </div>
-        <div class="col-12 col-md-7">
-
-
-        <p class="card-text video_info_top_margin"><small><strong>Published:</strong> {{ recommendation.video_publish_date|date }}</small></p>
-
-        <p class="card-text">
-          <a href="{% url 'user_profile' recommendation.recommended_by %}" style="color: black;">
-            <small class="text-muted">{{ recommendation.recommended_by }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
-          </a>
-        </p>
-
-          <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#videobookmark{{ recommendation.id }}" aria-expanded="false" aria-controls="videobookmark{{ recommendation.id }}">
-          View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
-          </button>
-
-        </div>
-        </div>
-
-        <div class="card-text collapse" id="videobookmark{{ recommendation.id }}">
-        <p></p>
-        {{ recommendation.video_description| linebreaks }}
-        </div>
-
-      </div>
-
-          <div class="card-footer text-muted">
-            <div class="video-footer-top-boarder">
-
-            {% if user in recommendation.upvote.all %}
-              <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% else %}
-              <i class="fa fa-arrow-up upvote_video" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% endif %}
-
-            <small class="vote_total" data-videoid="{{ recommendation.id }}">{{ recommendation.total_votes }}&nbsp;</small>
-
-            {% if user in recommendation.downvote.all %}
-            <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
-            {% else %}
-            <i class="fa fa-arrow-down downvote_video" data-videoid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
-            {% endif %}
-
-            <a href="{% url 'category' recommendation.category.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
-            </a>
-            <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
-            </a>
-
-            {% if user in recommendation.bookmark.all %}
-            <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% else %}
-            <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
-            {% endif %}
-
-            {% if recommendation.video_comments.count > 0 %}
-              <small class="pull-right">{{ recommendation.video_comments.count }}&nbsp;</small>
-            {% endif %}
-
-            <a href="{% url 'video_comment' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}" class="text-muted">
-              <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
-            </a>
+            <div class="dropdown pull-right">
+              <i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                {% if user.is_authenticated %}
+                  {% if recommendation.recommended_by.pk == user.pk %}
+                    <a class="dropdown-item" href="{% url 'delete_video' recommendation.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
+                  {% endif %}
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'report_video_recommendation' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+              </div>
             </div>
           </div>
 
+        </div>
+        <div class="row">
 
+          <div class="col-12 col-md-5 text-center youtube_image_div">
+            <a href="{{ recommendation.video_url }}">
+              <img class="img-fluid youtube_image" src="{{ recommendation.video_image_url }}"/>
+            </a>
+          </div>
+
+          <div class="col-12 col-md-7">
+            <p class="card-text video_info_top_margin"><small><strong>Published:</strong> {{ recommendation.video_publish_date|date }}</small></p>
+            <p class="card-text">
+              <a href="{% url 'user_profile' recommendation.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ recommendation.recommended_by }} · {{ recommendation.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+            <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#videobookmark{{ recommendation.id }}" aria-expanded="false" aria-controls="videobookmark{{ recommendation.id }}">
+              View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
+            </button>
+          </div>
 
         </div>
+        <div class="card-text collapse" id="videobookmark{{ recommendation.id }}">
+          <p></p>
+          {{ recommendation.video_description| linebreaks }}
+        </div>
+      </div>
 
+      <div class="card-footer text-muted">
+        <div class="video-footer-top-boarder">
 
+          {% if user in recommendation.upvote.all %}
+            <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-arrow-up upvote_video" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% endif %}
 
+          <small class="vote_total" data-videoid="{{ recommendation.id }}">{{ recommendation.total_votes }}&nbsp;</small>
+
+          {% if user in recommendation.downvote.all %}
+            <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
+          {% else %}
+            <i class="fa fa-arrow-down downvote_video" data-videoid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
+          {% endif %}
+
+          <a href="{% url 'category' recommendation.category.slug %}">
+            <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
+          </a>
+          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
+            <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
+          </a>
+
+          {% if user in recommendation.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
+          {% endif %}
+
+          {% if recommendation.video_comments.count > 0 %}
+            <small class="pull-right">{{ recommendation.video_comments.count }}&nbsp;</small>
+          {% endif %}
+
+          <a href="{% url 'video_comment' recommendation.category.slug recommendation.subcategory.slug recommendation.pk %}" class="text-muted">
+            <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
+          </a>
+
+        </div>
+      </div>
+    </div>
   {% endif %}
-
-
 
 {% endfor %}
 

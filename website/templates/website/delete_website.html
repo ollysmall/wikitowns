@@ -1,29 +1,27 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
 
-{% block title %}noobhub{% endblock %}
+{% block title %}
+  noobhub
+{% endblock %}
 
 {% block body_block %}
 
-<div class="container bottom-padding top-padding">
+  <div class="container bottom-padding top-padding">
+    <div class="card card-top-buffer card-link-text rec-shadow login-width">
+      <div class="card-block">
+        <div>
+          <h3 class="card-title">Delete website recommendation</h3>
+          <p></p>
 
-  <div class="card card-top-buffer card-link-text rec-shadow login-width">
+          <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete this recommendation?</p>
+            <input class="btn btn-outline-danger" type="submit" value="Delete" />
+          </form>
 
-    <div class="card-block">
-
-      <div>
-        <h3 class="card-title">Delete website recommendation</h3>
-        <p></p>
-
-              <form method="post">{% csrf_token %}
-              <p>Are you sure you want to delete this recommendation?</p>
-              <input class="btn btn-outline-danger" type="submit" value="Delete" />
-              </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 
 {% endblock %}

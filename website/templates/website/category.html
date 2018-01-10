@@ -1,5 +1,6 @@
 {% extends 'website/base.html' %}
 {% load static %}
+
 {% block title %}
   noobhub - category
 {% endblock %}
@@ -13,9 +14,9 @@
       </h1>
     </div>
     <div class="container bottom-padding category-card-top-buffer">
-      {% if subcategory %}
+      {% if subcategories %}
         <div class="row">
-          {% for subcategory in subcategory %}
+          {% for subcategory in subcategories %}
             <div class="col-12 container grow">
               <a href="{% url 'subcategory' category.slug subcategory.slug %}"
                  class="category-card">
@@ -27,10 +28,10 @@
       {% else %}
         <strong>No subcategory currently in category.</strong>
       {% endif %}
-     </div>
+    </div>
   {% else %}
     <div class="container top-padding bottom-padding">
-      <h4 class="text-center">The specified category {{ category_name }} does not exist!</h4>
+      <h4 class="text-center">The specified category does not exist!</h4>
     </div>
   {% endif %}
 

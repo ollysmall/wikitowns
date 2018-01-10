@@ -82,7 +82,6 @@ class WebsiteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         self.subcategory = kwargs.pop('subcategory')
-        print(self.category)
         super(WebsiteForm, self).__init__(*args, **kwargs)
 
     def clean_url(self):
@@ -99,7 +98,7 @@ class WebsiteForm(forms.ModelForm):
 
 class WebsiteCommentForm(forms.ModelForm):
 
-    text = forms.CharField(label='', widget=forms.Textarea(
+    text = forms.CharField(max_length=1000, label='', widget=forms.Textarea(
         attrs={'cols': 30,
                'rows': 2,
                'class': 'comment-textbox, form-control',
@@ -145,7 +144,7 @@ class BookForm(forms.ModelForm):
 
 class BookCommentForm(forms.ModelForm):
 
-    text = forms.CharField(label='', widget=forms.Textarea(
+    text = forms.CharField(max_length=1000, label='', widget=forms.Textarea(
         attrs={'cols': 30,
                'rows': 2,
                'class': 'comment-textbox, form-control',
@@ -201,7 +200,6 @@ class VideoForm(forms.ModelForm):
                     "Please make sure the link includes the correct video ID "
                     "number!")
         else:
-            print(query)
             raise forms.ValidationError(
                 "Please make sure the video you are recommending is from "
                 "YouTube!")
@@ -217,7 +215,7 @@ class VideoForm(forms.ModelForm):
 
 class VideoCommentForm(forms.ModelForm):
 
-    text = forms.CharField(label='', widget=forms.Textarea(
+    text = forms.CharField(max_length=1000, label='', widget=forms.Textarea(
         attrs={'cols': 30,
                'rows': 2,
                'class': 'comment-textbox, form-control',

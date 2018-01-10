@@ -7,15 +7,17 @@
   <hr>
   <div class="card-text">
     <a href="{% url 'user_profile' comment.author %}">
-    <strong>{{ comment.author }}</strong></a>
+      <strong>{{ comment.author }}</strong>
+    </a>
     &nbsp; {{ comment.text }}
-    <p><small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small>
-    {% if user.is_authenticated %}
-    {% if comment.author.pk == user.pk %}
-      <a class="text-muted" href="{% url 'delete_video_comment' comment.pk %}"><small>&nbsp;·&nbsp; Delete &nbsp;·&nbsp;</small></a>
-      <a class="text-muted" href="{% url 'edit_video_comment' comment.pk %}"><small>Edit</small></a>
-    {% endif %}
-    {% endif %}
+    <p>
+      <small class="text-muted">{{ comment.created_date|timesince|upto:',' }} ago</small>
+      {% if user.is_authenticated %}
+        {% if comment.author.pk == user.pk %}
+          <a class="text-muted" href="{% url 'delete_video_comment' comment.pk %}"><small>&nbsp;·&nbsp; Delete &nbsp;·&nbsp;</small></a>
+          <a class="text-muted" href="{% url 'edit_video_comment' comment.pk %}"><small>Edit</small></a>
+        {% endif %}
+      {% endif %}
     </p>
   </div>
 

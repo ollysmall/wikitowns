@@ -1,147 +1,128 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
 
 {% load noobhub_filters %}
 
-{% block title %}noobhub - comments {% endblock %}
+{% block title %}
+  noobhub - comments
+{% endblock %}
 
 {% block body_block %}
 
-<div class="container bottom-padding">
+  <div class="container bottom-padding">
+    <div class="card card-top-buffer card-link-text rec-shadow">
+      <div class="card-block">
+        <div class="row card-title">
 
-  <div class="card card-top-buffer card-link-text rec-shadow">
+          <div class="col-10">
+            <a href="{{ video.video_url }}" style="color: black;">
+              <h4 class="card-title">{{ video.title }}</h4>
+            </a>
+          </div>
 
-    <div class="card-block">
+          <div class="col-2">
+            <div class="dropdown pull-right">
+              <i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                {% if user.is_authenticated %}
+                  {% if video.recommended_by.pk == user.pk %}
+                    <a class="dropdown-item" href="{% url 'delete_video' video.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
+                  {% endif %}
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'report_video_recommendation' category.slug subcategory.slug video.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
+              </div>
+            </div>
+          </div>
 
-      <div class="row card-title">
-        <div class="col-10">
-          <a href="{{ video.video_url }}" style="color: black;">
-          <h4 class="card-title">{{ video.title }}</h4>
+        </div>
+        <div class="row">
+
+          <div class="col-12 col-md-5 text-center youtube_image_div">
+            <a href="{{ video.video_url }}">
+              <img class="img-fluid youtube_image" src="{{ video.video_image_url }}"/>
+            </a>
+          </div>
+
+          <div class="col-12 col-md-7">
+            <p class="card-text video_info_top_margin">
+              <small><strong>Published:</strong> {{ video.video_publish_date|date }}</small>
+            </p>
+            <p class="card-text">
+              <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
+                <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
+              </a>
+            </p>
+            <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
+              View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
+            </button>
+          </div>
+
+        </div>
+        <div class="card-text collapse" id="{{ video.id }}">
+          <p></p>
+          {{ video.video_description| linebreaks }}
+        </div>
+      </div>
+
+      <div class="card-footer text-muted">
+        <div class="video-footer-top-boarder">
+
+          {% if user in video.upvote.all %}
+            <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-arrow-up upvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+          {% endif %}
+
+          <small class="vote_total" data-videoid="{{ video.id }}">{{ video.total_votes }}&nbsp;</small>
+
+          {% if user in video.downvote.all %}
+            <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-arrow-down downvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+          {% endif %}
+
+          {% if user in video.bookmark.all %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
+          {% endif %}
+
+          {% if video.video_comments.count > 0 %}
+            <small class="pull-right">{{ video.video_comments.count }}&nbsp;</small>
+          {% endif %}
+
+          <a href="{% url 'video_comment' category.slug subcategory.slug video.pk %}" class="text-muted">
+            <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
           </a>
         </div>
-        <div class="col-2">
-        <div class="dropdown pull-right"
-        <small><i class="fa fa-ellipsis-h pull-right text-muted dropdown-toggle" aria-hidden="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></small>
-
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-          {% if user.is_authenticated %}
-          {% if video.recommended_by.pk == user.pk %}
-            <a class="dropdown-item" href="{% url 'delete_video' video.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete</a>
-          {% endif %}
-          {% endif %}
-        <a class="dropdown-item" href="{% url 'report_video_recommendation' category.slug subcategory.slug video.pk %}"><i class="fa fa-flag-o" aria-hidden="true"></i>&nbsp;&nbsp;Report</a>
-        </div>
-        </div>
-      </div>
-      </div>
-
-
-
-      <div class="row">
-      <div class="col-12 col-md-5 text-center youtube_image_div">
-      <a href="{{ video.video_url }}">
-      <img class="img-fluid youtube_image" src="{{ video.video_image_url }}"/>
-      </a>
-
-      </div>
-      <div class="col-12 col-md-7">
-
-
-      <p class="card-text video_info_top_margin"><small><strong>Published:</strong> {{ video.video_publish_date|date }}</small></p>
-
-      <p class="card-text">
-        <a href="{% url 'user_profile' video.recommended_by %}" style="color: black;">
-          <small class="text-muted">{{ video.recommended_by }} · {{ video.created_date|timesince|upto:',' }} ago</small>
-        </a>
-      </p>
-
-
-
-        <button class="btn btn-outline-info btn-sm SeeMore description-button" type="button" data-toggle="collapse" data-target="#{{ video.id }}" aria-expanded="false" aria-controls="{{ video.id }}">
-        View description&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
-        </button>
-
-      </div>
-      </div>
-
-      <div class="card-text collapse" id="{{ video.id }}">
-      <p></p>
-      {{ video.video_description| linebreaks }}
-      </div>
-
-    </div>
-
-    <div class="card-footer text-muted">
-      <div class="video-footer-top-boarder">
-
-      {% if user in video.upvote.all %}
-        <i class="fa fa-arrow-up upvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
-      {% else %}
-        <i class="fa fa-arrow-up upvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
-      {% endif %}
-
-      <small class="vote_total" data-videoid="{{ video.id }}">{{ video.total_votes }}&nbsp;</small>
-
-      {% if user in video.downvote.all %}
-      <i class="fa fa-arrow-down downvote_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
-      {% else %}
-      <i class="fa fa-arrow-down downvote_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
-      {% endif %}
-
-      {% if user in video.bookmark.all %}
-      <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ video.id }}" aria-hidden="true"></i>
-      {% else %}
-      <i class="fa fa-bookmark-o pull-right bookmark_video" data-videoid="{{ video.id }}" aria-hidden="true"></i>
-      {% endif %}
-
-      {% if video.video_comments.count > 0 %}
-        <small class="pull-right">{{ video.video_comments.count }}&nbsp;</small>
-      {% endif %}
-
-      <a href="{% url 'video_comment' category.slug subcategory.slug video.pk %}" class="text-muted">
-        <i class="fa fa-commenting-o pull-right" aria-hidden="true">&nbsp;</i>
-      </a>
       </div>
     </div>
 
+    <div class="card card-top-buffer rec-shadow">
+      <div class="card-block">
+        {% if user.is_authenticated %}
+          <div class="bottom-padding">
+            <form enctype="multipart/form-data" id="VideoCommentForm" method="post">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <input class="btn btn-primary btn-sm pull-right" type="submit" name="submit" value="Post" />
+            </form>
+          </div>
+        {% endif %}
 
+        <strong>Comments</strong>
 
+        {% if comments %}
+          <div class="endless_page_template">
+            {% include "website/video_comment_page.html" %}
+          </div>
+        {% else %}
+          <hr>
+          <small>No comments have been made yet.</small>
+        {% endif %}
+
+      </div>
+    </div>
   </div>
-
-
-
-<div class="card card-top-buffer rec-shadow">
-  <div class="card-block">
-
-    {% if user.is_authenticated %}
-    <div class="bottom-padding">
-      <form enctype="multipart/form-data" id="VideoCommentForm" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input class="btn btn-primary btn-sm pull-right" type="submit" name="submit" value="Post" />
-      </form>
-    </div>
-    {% endif %}
-
-<strong>Comments</strong>
-
-{% if comments %}
-
-  <div class="endless_page_template">
-
-  {% include "website/video_comment_page.html" %}
-
-  </div>
-
-{% else %}
-<hr>
-<small>No comments have been made yet.</small>
-{% endif %}
-
-</div>
-</div>
-
-</div>
 
 {% endblock %}

@@ -1,42 +1,36 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
 
-{% block title %}noobhub{% endblock %}
+{% block title %}
+  noobhub
+{% endblock %}
 
 {% block body_block %}
 
-<div class="container bottom-padding top-padding">
+  <div class="container bottom-padding top-padding">
+    <div class="card card-top-buffer card-link-text rec-shadow login-width">
+      <div class="card-block">
+        <h3 class="card-title">Recommend a YouTube video</h3>
+        <p></p>
+        <p>Please enter the URL of the YouTube video you would like to recommend.</p>
+        <div>
+          <form enctype="multipart/form-data" id="VideoForm" method="post">
+            {% csrf_token %}
 
-  <div class="card card-top-buffer card-link-text rec-shadow login-width">
-
-    <div class="card-block">
-
-      <h3 class="card-title">Recommend a YouTube video</h3>
-      <p></p>
-
-      <p>Please enter the URL of the YouTube video you would like to recommend.</p>
-
-      <div>
-        <form enctype="multipart/form-data" id="VideoForm" method="post">
-          {% csrf_token %}
-
-          {% if messages %}
-                {% for message in messages %}
-                    <p style="color: red;">{{ message }}</p>
-                {% endfor %}
+            {% if messages %}
+              {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+              {% endfor %}
             {% endif %}
 
-          {{ form.as_p }}
+            {{ form.as_p }}
 
-          <input class="btn btn-outline-success" type="submit" name="submit" value="Submit" />
-        </form>
-
-      </div>
-
+            <input class="btn btn-outline-success" type="submit" name="submit" value="Submit" />
+          </form>
+        </div>
       </div>
     </div>
-</div>
+  </div>
 
 
 {% endblock %}

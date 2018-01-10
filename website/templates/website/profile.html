@@ -1,88 +1,69 @@
 {% extends 'website/base.html' %}
-
 {% load static %}
-
 {% load noobhub_filters %}
 
-{% block title %}noobhub{% endblock %}
+{% block title %}
+  noobhub
+{% endblock %}
 
 {% block body_block %}
 
-<div class="top-padding test-this">
-  <div class="bottom-padding">
-
-  <h1 class="display-4 text-center" style="color:white;">{{ profile_user }}</h1>
-  <p></p>
-  {% if user.is_authenticated %}
-  {% if profile_user.pk == user.pk %}
-
-    <div class="small text-center">
-    <a class="text-center" style="color:white;" href="{% url 'auth_password_change' %}">Change Password</a>
+  <div class="top-padding test-this">
+    <div class="bottom-padding">
+      <h1 class="display-4 text-center" style="color:white;">{{ profile_user }}</h1>
+      <p></p>
+      {% if user.is_authenticated %}
+        {% if profile_user.pk == user.pk %}
+          <div class="small text-center">
+            <a class="text-center" style="color:white;" href="{% url 'auth_password_change' %}">Change Password</a>
+          </div>
+        {% endif %}
+      {% endif %}
     </div>
-  {% endif %}
-  {% endif %}
 
-  </div>
-
-  <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#bookmarks" role="tab" href="#">Bookmarks</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#recommendations" role="tab">Recommendations</a>
-  </li>
-  </ul>
-  <p></p>
+    <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#bookmarks" role="tab" href="#">Bookmarks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#recommendations" role="tab">Recommendations</a>
+      </li>
+    </ul>
+    <p></p>
 
   </div>
 
   <div class="container">
+    <!-- Tab panes -->
+    <div class="tab-content">
 
-  <!-- Tab panes -->
-  <div class="tab-content">
-  <div class="tab-pane" id="recommendations" role="tabpanel">
+      <div class="tab-pane" id="recommendations" role="tabpanel">
+        <p></p>
+        <div class="bottom-padding">
+          {% if recommendations_list %}
+            <div class="endless_page_template">
+              {% include "website/profile_recommendations_page.html" %}
+            </div>
+          {% else %}
+            No recommendations have been made yet.
+          {% endif %}
+        </div>
+      </div>
 
-  <p></p>
-  <div class="bottom-padding">
-
-
-
-  {% if recommendations_list %}
-
-    <div class="endless_page_template">
-
-      {% include "website/profile_recommendations_page.html" %}
-
-    </div>
-
-  {% else %}
-    No recommendations have been made yet.
-  {% endif %}
-</div>
-
-</div>
-
-<div class="tab-pane" id="bookmarks" role="tabpanel">
-
-  <div class="bottom-padding">
-
-  <p></p>
-
-  {% if bookmark_list %}
-
-    <div class="endless_page_template">
-
-    {% include "website/profile_bookmarks_page.html" %}
+      <div class="tab-pane" id="bookmarks" role="tabpanel">
+        <div class="bottom-padding">
+          <p></p>
+          {% if bookmark_list %}
+          <div class="endless_page_template">
+            {% include "website/profile_bookmarks_page.html" %}
+          </div>
+          {% else %}
+            No bookmarks have been made yet.
+          {% endif %}
+        </div>
+      </div>
 
     </div>
-
-  {% else %}
-    No bookmarks have been made yet.
-  {% endif %}
-</div>
   </div>
-
-</div>
-</div>
 
 {% endblock %}
