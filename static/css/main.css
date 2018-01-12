@@ -3,7 +3,36 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-.test-this {background-color: #00d1b2; }
+html, body {
+  height: 100%;
+}
+
+#wrapper {
+  min-height: 100%;
+  position: relative;
+}
+
+#header {
+}
+
+#content {
+  padding-bottom: 70px;
+}
+
+#footer {
+  height: 70px;
+  width: 100%;
+  color: #aebdc1;
+  background-color: #fafafa;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+
+
+.title-background {background-color: #00d1b2; }
 
 .top-buffer { margin-top:20px; }
 
@@ -101,7 +130,7 @@ i:hover {
 
 .book-footer-top-boarder {
   padding: .45rem;
-  border-top: 1px solid 	#31c1fa;
+  border-top: 1px solid #31c1fa;
 }
 
 .video-footer-top-boarder {
@@ -144,16 +173,13 @@ i:hover {
   margin: auto;
   margin-top: 15px;
   background-color: white;
-
 }
-
 
 /* style for form errors */
 .errorlist {
   list-style-type: none;
   padding: 0;
   color: red;
-
 }
 
 /* customise select list for date filter */
@@ -161,7 +187,6 @@ i:hover {
   -webkit-appearance: none;
   background: #fff url("../website/arrow.png") no-repeat right 0.5rem center;
   background-size: 10%;
-
 }
 
 /* loading sign container for endless scroll pagination */
@@ -194,14 +219,12 @@ i:hover {
 @media (min-width: 1200px) {
     .website_img {
         max-height: 250px;
-
     }
 }
 
 .youtube_image_div {
   overflow: hidden;
 }
-
 
 @media (max-width: 767px) {
     .video_info_padding {

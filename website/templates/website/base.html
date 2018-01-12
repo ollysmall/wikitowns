@@ -3,6 +3,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112382954-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-112382954-1');
+    </script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -36,42 +46,53 @@
   </head>
 
   <body>
+    <div id="wrapper">
+      <div id="header">
+        <nav class="navbar navbar-toggleable-md navbar-light fixed-top bg-faded" style="background-color: #ffffff;">
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'index' %}">noobhub</a>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories
+                  <span class="arrow_down"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
 
-    <nav class="navbar navbar-toggleable-md navbar-light fixed-top bg-faded" style="background-color: #ffffff;">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class="navbar-brand" href="{% url 'index' %}">noobhub</a>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories
-              <span class="arrow_down"></span>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                  {% if categories %}
+                    {% for category in categories %}
+                      <a class="dropdown-item" href="{% url 'category' category.slug %}">{{ category.name }}</a>
+                    {% endfor %}
+                  {% else %}
+                    <strong>There are no categories present.</strong>
+                  {% endif %}
 
-              {% if categories %}
-                {% for category in categories %}
-                  <a class="dropdown-item" href="{% url 'category' category.slug %}">{{ category.name }}</a>
-                {% endfor %}
+                </div>
+              </li>
+              {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/">Logout</a></li>
               {% else %}
-                <strong>There are no categories present.</strong>
+                <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Sign up</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
               {% endif %}
-
-            </div>
-          </li>
-          {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/">Logout</a></li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Sign up</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
-          {% endif %}
-        </ul>
+            </ul>
+          </div>
+        </nav>
       </div>
-    </nav>
-    <div>
-      {% block body_block %}{% endblock %}
+      <div id="content">
+        {% block body_block %}{% endblock %}
+      </div>
+      <div class"container">
+      <div id="footer">
+        <div class="container">
+          <small>© {% now "Y" %} Oliver Small</small><br>
+          <small>Contact: oliver@rotherfields.co.uk</small>
+      </div>
+      </div>
+    </div>
     </div>
 
 
