@@ -146,7 +146,7 @@ i:hover {
 .category-card-top-buffer { margin-top:15px; }
 
 .category-card {
-  max-width: 500px;
+  max-width: 350px;
   height: auto;
   border-bottom: 1px solid #D3D3D3;
   display: flex;

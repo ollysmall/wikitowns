@@ -1,7 +1,7 @@
 from django.contrib import admin
 from website.models import (Category, SubCategory, WebsiteRecommendation,
                             WebsiteComment, BookRecommendation, BookComment,
-                            VideoRecommendation)
+                            VideoRecommendation, VideoComment)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -18,3 +18,4 @@ admin.site.register(WebsiteComment)
 admin.site.register(BookRecommendation)
 admin.site.register(BookComment)
 admin.site.register(VideoRecommendation)
+admin.site.register(VideoComment)
