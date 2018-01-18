@@ -8,10 +8,10 @@
 
 {% block body_block %}
 
-  <div class="top-padding title-background">
-    <div class="bottom-padding">
-      <h1 class="display-4 text-center" style="color:white;">{{ profile_user }}</h1>
-      <p></p>
+  <div class="title-background">
+    <div class=" title_top-padding">
+      <h1 class="display-4 text-center " style="color:white;">{{ profile_user }}</h1>
+
       {% if user.is_authenticated %}
         {% if profile_user.pk == user.pk %}
           <div class="small text-center">
@@ -20,7 +20,8 @@
         {% endif %}
       {% endif %}
     </div>
-
+  </div>
+  <div class="profile-tabs-margin">
     <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
       <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#bookmarks" role="tab" href="#">Bookmarks</a>
@@ -30,8 +31,9 @@
       </li>
     </ul>
     <p></p>
-
   </div>
+
+
 
   <div class="container">
     <!-- Tab panes -->

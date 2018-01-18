@@ -8,31 +8,33 @@
 
 {% block body_block %}
 
-  <div class="top-padding title-background">
-    <div class="bottom-padding">
+  <div class="title-background">
+    <div>
       {% if subcategory %}
-        <h1 class="display-4 text-center" style="color:white;">{{ subcategory_name }}</h1>
+        <h1 class="display-4 title_top-padding text-center" style="color:white;">{{ subcategory_name }}</h1>
         <p></p>
     </div>
+  </div>
 
     <!-- Nav tabs -->
-    <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#websites" role="tab" >Websites</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#books" role="tab" >Books</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" style="color:white;" onclick="ShowSearch()"><i class="fa fa-search" aria-hidden="true"></i></a>
-      </li>
-    </ul>
-
+    <div class="profile-tabs-margin">
+      <ul class="nav justify-content-center nav-tabs" role="tablist" id="myTab">
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#websites" role="tab" >Websites</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#books" role="tab" >Books</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#videos" role="tab">Videos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="color:white;" onclick="ShowSearch()"><i class="fa fa-search" aria-hidden="true"></i></a>
+        </li>
+      </ul>
+    </div>
     <p></p>
-  </div>
+
   <div class="container" style="max-width: 730px;">
     <div id="SearchFormDiv" style="display: none">
 
@@ -50,7 +52,7 @@
     <div class="tab-content">
       <!-- removed show and active from class below -->
       <div class="tab-pane fade" id="websites" role="tabpanel">
-        <div class="row">
+        <div class="row button-bottom-margin">
           <div  class="col">
             <a class="btn btn-outline-info btn-sm" href="{% url 'create_website' category.slug subcategory.slug %}">New website</a>
           </div>
@@ -64,6 +66,7 @@
         {% if websites %}
           <div class="bottom-padding">
             {% if search_keywords %}
+              <p></p>
               Websites matching your search - "{{ search_keywords }}"
             {% endif %}
             <div class="endless_page_template">
@@ -72,15 +75,17 @@
           </div>
         {% else %}
           {% if search_keywords %}
+            <p></p>
             <strong>No websites matched your search - "{{ search_keywords }}"</strong>
           {% else %}
+            <p></p>
             <strong>No websites have been recommended yet. Why not recommend one now!</strong>
           {% endif %}
         {% endif %}
       </div>
 
       <div class="tab-pane fade" id="books" role="tabpanel">
-        <div class="row">
+        <div class="row button-bottom-margin">
           <div class="col">
             <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_book' category.slug subcategory.slug %}">New Book</a></p>
           </div>
@@ -94,6 +99,7 @@
         <div class="bottom-padding">
           {% if books %}
             {% if search_keywords %}
+              <p></p>
               Books matching your search - "{{ search_keywords }}"
             {% endif %}
             <div class="endless_page_template">
@@ -101,8 +107,10 @@
             </div>
           {% else %}
             {% if search_keywords %}
+              <p></p>
               <strong>No books matched your search - "{{ search_keywords }}"</strong>
             {% else %}
+              <p></p>
               <strong>No books have been recommended yet. Why not recommend one now!</strong>
             {% endif %}
           {% endif %}
@@ -110,7 +118,7 @@
       </div>
 
       <div class="tab-pane fade" id="videos" role="tabpanel">
-        <div class="row">
+        <div class="row button-bottom-margin">
           <div class="col">
             <p><a class="btn btn-outline-info btn-sm" href="{% url 'create_video' category.slug subcategory.slug %}">New Video</a></p>
           </div>
@@ -124,6 +132,7 @@
         {% if videos %}
           <div class="bottom-padding">
             {% if search_keywords %}
+              <p></p>
               Videos matching your search - "{{ search_keywords }}"
             {% endif %}
             <div class="endless_page_template">
@@ -132,8 +141,10 @@
           </div>
         {% else %}
           {% if search_keywords %}
+            <p></p>
             <strong>No videos matched your search - "{{ search_keywords }}"</strong>
           {% else %}
+            <p></p>
             <strong>No videos have been recommended yet. Why not recommend one now!</strong>
           {% endif %}
         {% endif %}
@@ -141,8 +152,9 @@
     </div>
 
     {% else %}
-      <div class="container text-center">
-        <b>The specified subcategory does not exist!</b>
+      <div class="container text-center top-padding" style="color:white;">
+        <p></p>
+        <h2><b>The specified subcategory does not exist!</b></h2>
       </div>
     {% endif %}
 

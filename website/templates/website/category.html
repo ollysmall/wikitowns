@@ -8,8 +8,8 @@
 {% block body_block %}
 
   {% if category %}
-    <div class="top-padding bottom-padding title-background">
-      <h1 class="display-4 text-center" style="color:white;">
+    <div class="title-background">
+      <h1 class="display-4 title-text" style="color:white;">
           {{ category_name }}
       </h1>
     </div>
@@ -17,10 +17,10 @@
       {% if subcategories %}
         <div class="row">
           {% for subcategory in subcategories %}
-            <div class="col-12 container grow">
+            <div class="col-12 container ">
               <a href="{% url 'subcategory' category.slug subcategory.slug %}"
                  class="category-card">
-                <h3 style="color:#F7B141;">{{ subcategory.name }}</h3>
+                <h3 class="category-text grow">{{ subcategory.name }}</h3>
               </a>
             </div>
           {% endfor %}

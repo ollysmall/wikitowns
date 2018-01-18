@@ -7,7 +7,7 @@
 
   {% if recommendation|classname == 'WebsiteRecommendation' %}
     <div class="card card-top-buffer card-link-text rec-shadow">
-      <div class="card-block">
+      <div class="card-block card-block-bottom-padding">
         <div class="row">
 
           <div class="col-10">
@@ -53,6 +53,14 @@
       </div>
 
       <div class="card-footer text-muted">
+        <div class="badge-bottom-padding">
+          <a href="{% url 'category' recommendation.category.slug %}">
+            <span class="badge badge-pill badge-info"><small>{{ recommendation.category }}</small></span>
+          </a>
+          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
+            <span class="badge badge-pill badge-info"><small>{{ recommendation.subcategory }}</small></span>
+          </a>
+        </div>
         <div class="website-footer-top-boarder">
 
           {% if user in recommendation.upvote.all %}
@@ -68,13 +76,6 @@
           {% else %}
             <i class="fa fa-arrow-down downvote_website" data-websiteid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
           {% endif %}
-
-          <a href="{% url 'category' recommendation.category.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
-          </a>
-          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
-          </a>
 
           {% if user in recommendation.bookmark.all %}
             <i class="fa fa-bookmark-o pull-right bookmark_website clicked-button" data-websiteid="{{ recommendation.id }}" aria-hidden="true"></i>
@@ -96,7 +97,7 @@
 
   {% elif recommendation|classname == 'BookRecommendation' %}
     <div class="card card-top-buffer card-link-text rec-shadow">
-      <div class="card-block">
+      <div class="card-block card-block-bottom-padding">
         <div class="row card-title">
 
           <div class="col-10">
@@ -151,6 +152,14 @@
       </div>
 
       <div class="card-footer text-muted">
+        <div class="badge-bottom-padding">
+          <a href="{% url 'category' recommendation.category.slug %}">
+            <span class="badge badge-pill badge-info"><small>{{ recommendation.category }}</small></span>
+          </a>
+          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
+            <span class="badge badge-pill badge-info"><small>{{ recommendation.subcategory }}</small></span>
+          </a>
+        </div>
         <div class="book-footer-top-boarder">
 
           {% if user in recommendation.upvote.all %}
@@ -166,13 +175,6 @@
           {% else %}
             <i class="fa fa-arrow-down downvote_book" data-bookid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
           {% endif %}
-
-          <a href="{% url 'category' recommendation.category.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
-          </a>
-          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
-          </a>
 
           {% if user in recommendation.bookmark.all %}
             <i class="fa fa-bookmark-o pull-right bookmark_book clicked-button" data-bookid="{{ recommendation.id }}" aria-hidden="true"></i>
@@ -194,7 +196,7 @@
 
   {% elif recommendation|classname == 'VideoRecommendation' %}
     <div class="card card-top-buffer card-link-text rec-shadow">
-      <div class="card-block">
+      <div class="card-block card-block-bottom-padding">
         <div class="row">
 
           <div class="col-10">
@@ -246,6 +248,14 @@
       </div>
 
       <div class="card-footer text-muted">
+        <div class="badge-bottom-padding">
+          <a href="{% url 'category' recommendation.category.slug %}">
+            <span class="badge badge-pill badge-info"><small>{{ recommendation.category }}</small></span>
+          </a>
+          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
+            <span class="badge badge-pill badge-info"><small>{{ recommendation.subcategory }}</small></span>
+          </a>
+        </div>
         <div class="video-footer-top-boarder">
 
           {% if user in recommendation.upvote.all %}
@@ -261,13 +271,6 @@
           {% else %}
             <i class="fa fa-arrow-down downvote_video" data-videoid="{{ recommendation.id }}" aria-hidden="true">&nbsp;</i>
           {% endif %}
-
-          <a href="{% url 'category' recommendation.category.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.category }}</span>
-          </a>
-          <a href="{% url 'subcategory' recommendation.category.slug recommendation.subcategory.slug %}">
-            <span class="badge badge-pill badge-info">{{ recommendation.subcategory }}</span>
-          </a>
 
           {% if user in recommendation.bookmark.all %}
             <i class="fa fa-bookmark-o pull-right bookmark_video clicked-button" data-videoid="{{ recommendation.id }}" aria-hidden="true"></i>
