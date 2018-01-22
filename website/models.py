@@ -22,6 +22,8 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category)
     name = models.CharField(max_length=128)
     slug = models.SlugField()
+    created_date = models.DateTimeField(
+            default=timezone.now)
 
     class Meta:
         unique_together = (("category", "name"),)

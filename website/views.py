@@ -46,7 +46,7 @@ def category(request, category_name_slug):
         context_dict['category_name'] = category.name
         subcategory = (SubCategory.objects
                                   .filter(category=category)
-                                  .order_by('name'))
+                                  .order_by('created_date'))
         context_dict['subcategories'] = subcategory
         context_dict['category'] = category
     except Category.DoesNotExist:
