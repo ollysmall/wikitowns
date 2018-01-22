@@ -265,7 +265,7 @@ class BookRecommendationModelTest(TestCase):
     def test_title_max_length(self):
         book = BookRecommendation.objects.get(title='test title')
         max_length = book._meta.get_field('title').max_length
-        self.assertEquals(max_length, 128)
+        self.assertEquals(max_length, 500)
 
     def test_book_author_max_length(self):
         book = BookRecommendation.objects.get(title='test title')

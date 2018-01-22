@@ -130,8 +130,8 @@
           </div>
 
           <div class="col-7 col-md-9">
-            <p class="card-text"><small><strong>Author:</strong> {{ bookmark.book_author }}</small></p>
-            <p class="card-text"><small><strong>Published:</strong> {{ bookmark.book_publish_date }}</small></p>
+            <p class="card-text"><small><strong>Author: </strong> {{ bookmark.book_author }}</small></p>
+            <p class="card-text"><small><strong>Published: </strong> {{ bookmark.book_publish_date.year }}</small></p>
             <p class="card-text">
               <a href="{% url 'user_profile' bookmark.recommended_by %}" style="color: black;">
                 <small class="text-muted">{{ bookmark.recommended_by }} · {{ bookmark.created_date|timesince|upto:',' }} ago</small>

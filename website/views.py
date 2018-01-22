@@ -511,8 +511,11 @@ def create_book_recommendation(request, category_name_slug,
             try:
                 results = amazon.ItemLookup(ItemId=isbn, ResponseGroup="Medium",
                                             SearchIndex="Books", IdType="ISBN")
-
-                book.book_publish_date = results.find('PublicationDate').string
+                date_published = results.find('PublicationDate').string
+                # some amazon books only return the year and not the full date
+                if len(date_published) == 4:
+                    date_published = "%s-01-01" % date_published
+                book.book_publish_date = date_published
                 # review line below - dont think it is a good way of doing it
                 book.book_image_url = results.find('LargeImage').text[:-6]
                 book.recommended_by = user

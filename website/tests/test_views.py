@@ -1911,15 +1911,17 @@ class CreateBookRecommendationViewTests(TransactionTestCase):
 
     def test_problematic_amazon_listing(self):
         # test amazon book which only gives the publication
-        # year and not the full date. This will fail.
+        # year and not the full date. The view should assign the missing day
+        # and month to 1st January to allow it to save.
         login = self.client.login(username='testuser1', password='12345')
         test_category1 = Category.objects.get(name='python')
         test_subcategory1 = SubCategory.objects.get(name='django')
         url = reverse('create_book', args=(test_category1.slug,
                                               test_subcategory1.slug))
-        resp = self.client.post(url, {'isbn': '1408884534'})
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "Something went wrong, please try again.")
+        resp = self.client.post(url, {'isbn': '1430224150'})
+        self.assertEqual(resp.status_code, 302)
+        book = BookRecommendation.objects.get(title='Dive into Python 3')
+        self.assertEqual(book.book_publish_date, date(2009, 1, 1))
 
     def test_successful_retrieval_of_book_info_from_amazon(self):
         login = self.client.login(username='testuser1', password='12345')

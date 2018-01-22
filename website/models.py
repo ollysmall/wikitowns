@@ -74,7 +74,7 @@ class WebsiteComment(models.Model):
 
 class BookRecommendation(models.Model):
     isbn = ISBNField()
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=500)
     recommended_by = models.ForeignKey(User)
     category = models.ForeignKey(Category)
     subcategory = models.ForeignKey(SubCategory)
