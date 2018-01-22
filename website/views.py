@@ -1034,3 +1034,6 @@ def report_video_recommendation(request, category_name_slug,
 
     return render(request, 'website/report_video_recommendation.html',
                   context_dict)
+
+def icons(request):
+    return render(request, 'website/icons.html')

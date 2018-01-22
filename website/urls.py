@@ -80,4 +80,5 @@ urlpatterns = [
         r'(?P<subcategory_name_slug>[\w\-]+)/(?P<pk>\d+)/'
         r'report_video_recommendation/$', views.report_video_recommendation,
         name='report_video_recommendation'),
+    url(r'^icons/$', views.icons, name='icons'),
 ]
