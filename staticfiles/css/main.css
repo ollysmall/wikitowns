@@ -16,11 +16,11 @@ html, body {
 }
 
 #content {
-  padding-bottom: 70px;
+  padding-bottom: 85px;
 }
 
 #footer {
-  height: 70px;
+  height: 85px;
   width: 100%;
   color: #aebdc1;
   background-color: #fafafa;
@@ -29,6 +29,14 @@ html, body {
   bottom: 0;
   margin-bottom: 10px;
   line-height: 1.8;
+}
+
+#footer a {
+  color: #aebdc1;
+}
+
+#footer a:hover {
+  color: #EB6E6E;
 }
 
 .index-title-background {
