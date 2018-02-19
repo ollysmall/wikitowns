@@ -40,86 +40,113 @@ html, body {
 }
 
 .index-title-background {
-  background-color: #1DB0BC;
-  background-image: url("/static/website/noobhub_pattern.png");
-  background-repeat: repeat-x|repeat-y;
-  background-size: contain;
-  background-position: center center;
-  height: 600px;
+  background-color: #1496DC;
+  min-height: 500px;
+}
+
+.index-logo {
+  max-width: 300px;
+  width:100%;
+  margin-top: 50px;
+}
+
+.logo-slogan {
+  max-width: 300px;
+  margin-top: 50px;
+}
+
+.index-desk{
+  max-width: 500px;
+  width:100%;
+  margin-top: 59px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 3px;
+}
+
+.index-desk img {
+  max-width: 100%;
+  height: auto;
 }
 
 .index-title-background h1 { font-weight: 800; }
 
-.index-title {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 600px;
-}
-
-.index-info-1{
+.index-info{
   background-color: #ffffff;
-  height: 300px;
+  padding-top: 30px;
+  padding-bottom: 50px;
   width: 100%
 }
 
-@media (max-width: 767px) {
-    .index-info-1 {
-      height: 400px;
-      padding-top: 55px;
-    }
-}
-
-.index-info1-content {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 300px;
-}
-
-@media (max-width: 767px) {
-    .index-info1-content {
-      height: 175px;
-    }
-}
-
-.center img {
+.index-info-content img {
+  padding-top: 30px;
+  padding-bottom: 20px;
+  max-width: 160px;
+  width: 100%;
+  height: auto;
   display:block;
   margin-left:auto;
   margin-right:auto;
 }
 
-.index-info-2{
-  background-color: #ff8b94;
-  height: 300px;
-  width: 100%
+.index-info-title {
+  color: #1496DC;
+}
+
+.index-info-text {
+  padding-top: 10px;
+  max-width: 300px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 @media (max-width: 767px) {
-    .index-info-2 {
-      padding-top: 55px;
-      height: 400px;
+    .index-info-text-border {
+      border-bottom: 1.2px solid #FFC864;
+      padding-bottom: 20px;
     }
-}
-
-.index-info-3{
-  background-color: #31698a;
-  height: 300px;
-  width: 100%
 }
 
 @media (max-width: 767px) {
-    .index-info-3 {
-      padding-top: 55px;
-      height: 400px;
+    .index-info-bookmark {
+      margin-top: -20px;
     }
+}
+
+.index-sign-up{
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background-color: #54CBD3;
+  background-image: url("/static/website/noobhub_pattern_opacity_1024.jpg");
+  background-repeat: repeat-x repeat-y;
+  background-size: 55%;
+  background-position: center center;
+}
+
+.btn-sign-up-index{
+  background-color: #FFC864;
+  border: none;
+  color: white;
+}
+
+.btn-sign-up-index:hover {
+  transform: scale(1.03);
+  background-color: #F08380;
+}
+
+.index-categories-title {
+  padding-top: 40px;
+  padding-bottom: 20px;
+  color: #1496DC;
 }
 
 .title-background {
   background-color: #1DB0BC;
-  background-image: url("/static/website/noobhub_pattern.png");
-  background-repeat: repeat-x;
-  background-size: contain;
+  background-image: url("/static/website/noobhub_pattern_opacity_1024.jpg");
+  background-repeat: repeat-x repeat-y;
+  background-size: 55%;
   background-position: center center;
   height: 250px;
   margin-bottom:20px;
@@ -170,14 +197,14 @@ img.category-shadow {
 }
 
 .category-text {
-  color: #161515;
+  color: #383838;
 }
 
 /* button zoom on hover over */
 .grow { transition: all .2s ease-in-out; }
 .grow:hover {
   transform: scale(1.03);
-  color: #EB6E6E;
+  color: #F08380;
 }
 
 a, a:link, a:hover {
@@ -261,17 +288,17 @@ i:hover {
 
 .book-footer-top-boarder {
   padding: .45rem;
-  border-top: 1px solid #31c1fa;
+  border-top: 1px solid #1496DC;
 }
 
 .video-footer-top-boarder {
   padding: .45rem;
-  border-top: 1px solid #f45494;
+  border-top: 1px solid #F08380;
 }
 
 .website-footer-top-boarder {
   padding: .45rem;
-  border-top: 1px solid #F7B141;
+  border-top: 1px solid #FFC864;
 }
 
 .category-card-top-buffer { margin-top:15px; }
@@ -279,9 +306,9 @@ i:hover {
 .category-card {
   max-width: 350px;
   height: auto;
-  border-bottom: 1px solid #D3D3D3;
+  border-bottom: 1px solid #e4e4e4;
   display: flex;
-  justify-content: left; /* align horizontal */
+  justify-content: center; /* align horizontal */
   align-items: center; /* align vertical */
   margin: auto;
   padding-top: 10px;

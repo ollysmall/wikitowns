@@ -8,60 +8,64 @@
 {% block body_block %}
 
   <div class="index-title-background">
-    <div class="container index-title">
-      <div class="top-padding">
-        <h1 class="display-3 text-center" style="color:white;">noobhub</h1>
-      </div>
+    <div class="container">
       <div class=" container text-center">
-        <h2 style="color:white;">A place to share and discover coding resources.</h2>
+        <img src="{% static "website/Noobhub-web_LOGO.png" %}" class="index-logo" alt="noobhub logo"/>
+      </div>
+      <div class=" container text-center logo-slogan">
+        <h5 style="color:white;">A place to share and discover coding resources</h5>
       </div>
     </div>
-  </div>
-  <div class="index-info-1 container ">
-    <div class="row">
-      <div class="col-md-2">
-      </div>
-      <div class="col-12 col-md-4 push-md-4 index-info1-content center">
-        <img src="{% static "website/programming.png" %}" style="width:200px" alt="web.img"/>
-      </div>
-      <div class="col-12 col-md-4 pull-md-4 text-center index-info1-content">
-        <h3>Find websites, books and videos others found useful whilst learning to code.<h3>
-      </div>
-      <div class="col-md-2">
-      </div>
+    <div>
+      <img src="{% static "website/Noobhub-web_DESK.png" %}" class="index-desk" alt="desk drawing"/>
     </div>
   </div>
-  <div class="index-info-2 container">
+
+
+  <div class="index-info container ">
     <div class="row">
-      <div class="col-md-2">
+      <div class="col-12 col-md-4 index-info-content text-center">
+        <img src="{% static "website/Noobhub-web_LEARN.png" %}" alt="web.img"/>
+        <h3 class="index-info-title">learn</h3>
+        <h5 class="index-info-text index-info-text-border">Learn to code with websites, books and videos recommended by our community.<h5>
       </div>
-      <div class="col-12 col-md-4 index-info1-content center">
-        <img src="{% static "website/chevron.png" %}" style="width:200px" alt="web.img"/>
+      <div class="col-12 col-md-4 index-info-content text-center">
+        <img src="{% static "website/Noobhub-web_SHARE.png" %}" alt="web.img"/>
+        <h3 class="index-info-title">share</h3>
+        <h5 class="index-info-text index-info-text-border">Share and rank content to help other users to find the best resources.<h5>
       </div>
-      <div class="col-12 col-md-4 text-center index-info1-content">
-        <h3 style="color:white;">Ranking helps users identify the most useful content.<h3>
-      </div>
-      <div class="col-md-2">
-      </div>
-    </div>
-  </div>
-  <div class="index-info-3 container">
-    <div class="row">
-      <div class="col-md-2">
-      </div>
-      <div class="col-12 col-md-4 push-md-4 index-info1-content center">
-        <img src="{% static "website/bookmark.png" %}" style="width:200px" alt="web.img"/>
-      </div>
-      <div class="col-12 col-md-4 pull-md-4 text-center index-info1-content">
-        <h3 style="color:white;">Bookmark your favourite content and view other users bookmark lists.<h3>
-      </div>
-      <div class="col-md-2">
+      <div class="col-12 col-md-4 index-info-content text-center index-info-bookmark">
+        <img src="{% static "website/Noobhub-web_BOOKMARK.png" %}" alt="web.img"/>
+        <h3 class="index-info-title">bookmark</h3>
+        <h5 class="index-info-text">Save your favourite websites, books and videos or view other users favourites.<h5>
       </div>
     </div>
   </div>
 
-  <div class="container top-padding bottom-padding">
+  <div class="index-sign-up">
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-12 col-md-3">
+        </div>
+        <div class="col-12 col-md-6">
+          <a href="{% url 'registration_register' %}" role="button" class="btn btn-primary btn-lg btn-block btn-sign-up-index">Sign up now!</a>
+        </div>
+        <div class="col-12 col-md-3">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="container bottom-padding">
     <div class="row">
+
+      <div class="col-12 text-center index-categories-title">
+        <h1>Get started</h1>
+        <p></p>
+        <h5 style='color:grey;'><small>Select the category you would like to find or share content about.</small></h5>
+      </div>
 
       {% if categories %}
         {% for category in categories %}
