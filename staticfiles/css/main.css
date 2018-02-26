@@ -40,6 +40,10 @@ html, body {
   color: #EB6E6E;
 }
 
+body#index{background-color: white;}
+
+body#category{background-color: white;}
+
 .index-title-background {
   background-color: #1496DC;
   min-height: 500px;
@@ -75,7 +79,8 @@ html, body {
   background-color: #ffffff;
   padding-top: 30px;
   padding-bottom: 50px;
-  width: 100%
+  width: 100%;
+  max-width: 1200px;
 }
 
 .index-info-content img {
@@ -95,10 +100,11 @@ html, body {
 
 .index-info-text {
   padding-top: 10px;
-  max-width: 300px;
+  max-width: 290px;
   display:block;
   margin-left:auto;
   margin-right:auto;
+  color: grey;
 }
 
 @media (max-width: 767px) {
@@ -146,8 +152,6 @@ html, body {
 .category-list-background{
   background-color: white;
 }
-
-body#category{background-color: white;}
 
 .index-categories-title {
   padding-top: 40px;
@@ -341,9 +345,9 @@ i:hover {
   align-items: center;
   -webkit-box-pack: center;
   justify-content: center;
-  transition: box-shadow 1s 1s,background-color 1s 1s,-webkit-transform 1s 1s;
-  transition: box-shadow 1s 1s,background-color 1s 1s,transform 1s 1s;
-  transition: box-shadow 1s 1s,background-color 1s 1s,transform 1s 1s,-webkit-transform 1s 1s;
+  transition: box-shadow 0.5s 0.5s,background-color 0.5s 0.5s,-webkit-transform 0.5s 0.5s;
+  transition: box-shadow 0.5s 0.5s,background-color 0.5s 0.5s,transform 0.5s 0.5s;
+  transition: box-shadow 0.5s 0.5s,background-color 0.5s 0.5s,transform 0.5s 0.5s,-webkit-transform 0.5s 0.5s;
   box-shadow: none;
   will-change: box-shadow,background-color,transform;
 }
