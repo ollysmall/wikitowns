@@ -8,32 +8,42 @@
 {% block body_block %}
 
   {% if category %}
-    <div class="title-background">
+    <div class="subcategory-title-background">
       <h1 class="display-4 title-text" style="color:white;">
           {{ category_name }}
       </h1>
     </div>
-    <div class="container bottom-padding category-card-top-buffer">
-      {% if subcategories %}
-        <div class="row">
-          {% for subcategory in subcategories %}
-            <div class="col-12 container ">
-              <a href="{% url 'subcategory' category.slug subcategory.slug %}"
-                 class="category-card">
-                <h3 class="category-text grow">{{ subcategory.name }}</h3>
-              </a>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <strong>No subcategory currently in category.</strong>
-      {% endif %}
-    </div>
-  {% else %}
-    <div class="container top-padding bottom-padding">
-      <h4 class="text-center">The specified category does not exist!</h4>
-    </div>
-  {% endif %}
+    <div class="category-list-background">
+      <div class="container subcategory-list">
+        {% if subcategories %}
+          <div class="row">
+            {% for subcategory in subcategories %}
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="{% url 'subcategory' category.slug subcategory.slug %}">
+                  <div class="category-card container">
+                      <div class="col-4 category-image">
+                        {% if subcategory.subcategory_img %}
+                        <img src="{{ subcategory.subcategory_img.url }}" alt="subcategory logo"/>
+                        {% endif %}
+                      </div>
+                      <div class="col-8 category-text">
+                        <h4>{{ subcategory.name }}</h4>
+                      </div>
+                  </div>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <strong>No subcategory currently in category.</strong>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="container top-padding bottom-padding">
+        <h4 class="text-center">The specified category does not exist!</h4>
+      </div>
+    {% endif %}
+  </div>
 
 
 

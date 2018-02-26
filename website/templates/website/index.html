@@ -22,7 +22,7 @@
   </div>
 
 
-  <div class="index-info container ">
+  <div class="index-info container">
     <div class="row">
       <div class="col-12 col-md-4 index-info-content text-center">
         <img src="{% static "website/Noobhub-web_LEARN.png" %}" alt="web.img"/>
@@ -48,6 +48,9 @@
         <div class="col-12 col-md-3">
         </div>
         <div class="col-12 col-md-6">
+          <div class="index-sign-up-text">
+            <h4>Sign up to share and bookmark resources.</h4>
+          </div>
           <a href="{% url 'registration_register' %}" role="button" class="btn btn-primary btn-lg btn-block btn-sign-up-index">Sign up now!</a>
         </div>
         <div class="col-12 col-md-3">
@@ -56,32 +59,41 @@
     </div>
   </div>
 
-
-
-  <div class="container bottom-padding">
-    <div class="row">
-
-      <div class="col-12 text-center index-categories-title">
-        <h1>Get started</h1>
-        <p></p>
-        <h5 style='color:grey;'><small>Select the category you would like to find or share content about.</small></h5>
+  <div class="category-list-background">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center index-categories-title">
+          <h1>Get started</h1>
+          <p></p>
+          <h5 style='color:grey;'><small>Select the category you would like to find or share content about.</small></h5>
+        </div>
       </div>
 
-      {% if categories %}
-        {% for category in categories %}
-          <div class="col-12">
-            <a href="{% url 'category' category.slug %}">
-              <div class="container top-buffer category-card">
-                <h2 class="grow category-text">{{ category.name }}</h2>
-              </div>
-            </a>
-          </div>
-        {% endfor %}
-      {% else %}
-        <strong>There are no categories listed.</strong>
-      {% endif %}
+      <div class="container bottom-padding">
+      <div class="row">
 
+        {% if categories %}
+          {% for category in categories %}
+            <div class="col-12 col-md-6 col-lg-4">
+              <a href="{% url 'category' category.slug %}">
+                <div class="category-card container">
+                    <div class="col-4 category-image">
+                      <img src="{{ category.category_img.url }}" alt="Language logo"/>
+                    </div>
+                    <div class="col-8 category-text">
+                      <h3>{{ category.name }}</h3>
+                    </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        {% else %}
+          <strong>There are no categories listed.</strong>
+        {% endif %}
+
+      </div>
     </div>
-  </div>
+    </div>
+</div>
 
 {% endblock %}

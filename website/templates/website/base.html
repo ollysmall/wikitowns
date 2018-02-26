@@ -15,8 +15,11 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="A place to share and discover coding resources.">
+    <meta name="description" content="A place to share and discover the best coding resources.">
+    <meta name="keywords" content="HTML,CSS,coding,JavaScript,python,ruby,resources,java,django,learn,tutorials,best,books,videos,php,swift,flask,node,react,angular,beginners">
     <meta name="author" content="Oliver Small">
+
+    <!-- favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static '/favicons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static '/favicons/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static '/favicons/favicon-16x16.png' %}">
@@ -26,6 +29,19 @@
     <meta name="application-name" content="noobhub">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+
+    <!-- facebook meta tags -->
+    <meta property="og:title" content="noobhub" />
+    <meta property="og:description" content="A place to share and discover the best coding resources." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://www.noobhub.io/" />
+    <meta property="og:image" content="{% static "website/noobhub-fb.png" %}" />
+
+    <!-- twitter meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="noobhub">
+    <meta name="twitter:description" content="A place to share and discover the best coding resources.">
+    <meta name="twitter:image" content="{% static "website/noobhub-twit.png" %}">
 
     <title>{% block title %}noobhub{% endblock %}</title>
 
@@ -42,18 +58,10 @@
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,800" rel="stylesheet">
 
-    <!-- google adsense -->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-1836151323110779",
-        enable_page_level_ads: true
-      });
-    </script>
-
   </head>
 
-  <body>
+  <!-- sets the body id to the url name -->
+  <body id="{{ request.resolver_match.url_name }}">
     <div id="wrapper">
       <div id="header">
         <nav class="navbar navbar-toggleable-md navbar-light fixed-top bg-faded" style="background-color: #ffffff;">
@@ -94,15 +102,14 @@
         {% block body_block %}{% endblock %}
       </div>
       <div class"container">
-      <div id="footer">
-        <div class="container">
-          <small>© {% now "Y" %} Oliver Small</small><br>
-          <a href="mailto:oliver@rotherfields.co.uk"><small>Contact: oliver@rotherfields.co.uk</small></a><br>
-          <a href="{% url 'icons' %}"><small>Icons by Flaticon</small></a>
-
+        <div id="footer">
+          <div class="container">
+            <small>© {% now "Y" %} Oliver Small</small><br>
+            <a href="mailto:oliver@rotherfields.co.uk"><small>Contact: oliver@rotherfields.co.uk</small></a><br>
+            <a href="{% url 'icons' %}"><small>Icons by Flaticon</small></a>
+          </div>
+        </div>
       </div>
-      </div>
-    </div>
     </div>
 
 
@@ -116,17 +123,13 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
 
-
-    <!-- Jquery - maybe download and put in static instead of link - removed jquery 1-->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-
     <!-- main javascript -->
     <script src="{% static "js/noobhub.js" %}"></script>
 
     <!-- Ajax -->
     <script src="{% static "js/noobhub-ajax.js" %}"></script>
 
-    <!-- unlimited scroll - should be placed in individual pages? -->
+    <!-- unlimited scroll -->
     <script src="{% static 'el-pagination/js/el-pagination.js' %}"></script>
     <script>$.endlessPaginate({paginateOnScroll: true, paginateOnScrollMargin: 100});</script>
 

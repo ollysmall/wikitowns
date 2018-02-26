@@ -22,6 +22,8 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category)
     name = models.CharField(max_length=128)
     slug = models.SlugField()
+    subcategory_img = models.ImageField(upload_to='subcategory_images',
+                                        blank=True)
     created_date = models.DateTimeField(
             default=timezone.now)
 
