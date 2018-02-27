@@ -8,7 +8,8 @@ from isbn_field import ISBNField
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField()
-    category_img = models.ImageField(upload_to='category_images', blank=True)
+    category_img = models.ImageField(upload_to='category_images', blank=True,
+                                     null=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -23,7 +24,7 @@ class SubCategory(models.Model):
     name = models.CharField(max_length=128)
     slug = models.SlugField()
     subcategory_img = models.ImageField(upload_to='subcategory_images',
-                                        blank=True)
+                                        blank=True, null=True)
     created_date = models.DateTimeField(
             default=timezone.now)
 

@@ -29,7 +29,10 @@ class IndexViewTests(TestCase):
         # create 9 categories to test against
         number_of_categories = 9
         for category_num in range(number_of_categories):
-            Category.objects.create(name='category %s' % category_num,)
+            Category.objects.create(
+                name='category %s' % category_num,
+                category_img='www.test%s.com' % category_num
+            )
 
         resp = self.client.get(reverse('index'))
         self.assertEqual(resp.status_code, 200)

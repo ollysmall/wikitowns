@@ -60,6 +60,11 @@ class SubcategoryModelTest(TestCase):
         field_label = subcategory._meta.get_field('category').verbose_name
         self.assertEquals(field_label,'category')
 
+    def test_subcategory_img_label(self):
+        subcategory = SubCategory.objects.get(name='Test Subcategory')
+        field_label = subcategory._meta.get_field('subcategory_img').verbose_name
+        self.assertEquals(field_label,'subcategory img')
+
     def test_calling_subcategory_returns_its_name(self):
         subcategory = SubCategory.objects.get(name='Test Subcategory')
         name = subcategory.name
