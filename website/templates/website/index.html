@@ -78,9 +78,9 @@
               <a href="{% url 'category' category.slug %}">
                 <div class="category-card container">
                     <div class="col-4 category-image">
-                      {% if category.category_img %}
+
                         <img src="{{ category.category_img.url }}" alt="Language logo"/>
-                      {% endif %}
+                      
                     </div>
                     <div class="col-8 category-text">
                       <h3>{{ category.name }}</h3>
