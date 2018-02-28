@@ -30,7 +30,7 @@
         </div>
 
       </div>
-      {% if website.image_url == None %}
+      {% if website.image_url == None or website.image_url == '' %}
         <p class="card-text">{{ website.description }}</p>
       {% else %}
         <div class="text-center">
