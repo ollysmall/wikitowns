@@ -46,12 +46,15 @@ class WebsiteRecommendation(models.Model):
     title = models.CharField(max_length=128)
     description = models.CharField(max_length=300)  # length may need changing
     url = models.URLField()
-    image_url = models.URLField(null=True)
+    image_url = models.URLField(null=True, blank=True)
     created_date = models.DateTimeField(
             default=timezone.now)
-    upvote = models.ManyToManyField(User, related_name='website_upvote')
-    downvote = models.ManyToManyField(User, related_name='website_downvote')
-    bookmark = models.ManyToManyField(User, related_name='bookmark')
+    upvote = models.ManyToManyField(User, related_name='website_upvote',
+                                    blank=True)
+    downvote = models.ManyToManyField(User, related_name='website_downvote',
+                                      blank=True)
+    bookmark = models.ManyToManyField(User, related_name='bookmark',
+                                      blank=True)
 
     @property
     def total_votes(self):
