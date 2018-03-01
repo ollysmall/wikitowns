@@ -28,8 +28,8 @@ The ranking system ensures users see the best content first and the bookmarks le
 
 ## Built with
 
-* [Django](https://www.djangoproject.com/) - Backend framework 
-* [Bootstrap](https://getbootstrap.com/) - Frontend framework
+* [Django](https://www.djangoproject.com/) - Back end framework 
+* [Bootstrap](https://getbootstrap.com/) - Front end framework
 * [Heroku](https://www.heroku.com/home) - Platform as a Service
 * [Amazon S3](https://aws.amazon.com/s3) - Storage and serving of Media files 
 * [PostgreSQL](https://www.postgresql.org/) - Database
