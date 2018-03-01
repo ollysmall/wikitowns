@@ -33,6 +33,12 @@ The ranking system ensures users see the best content first and the bookmarks le
 * [Heroku](https://www.heroku.com/home) - Platform as a Service
 * [Amazon S3](https://aws.amazon.com/s3) - Storage and serving of Media files 
 * [PostgreSQL](https://www.postgresql.org/) - Database
+* [Bottlenose](https://github.com/lionheart/bottlenose) - Python wrapper over the Amazon Product Advertising API
+* [Django isbn field](https://github.com/secnot/django-isbn-field) - Provides django model field to store and validate ISBN numbers.
+* [Django registration redux](https://django-registration-redux.readthedocs.io/en/latest/) - User registration
+* [Django el pagination](https://github.com/shtalinberg/django-el-pagination) - Endless pagination
+* [Beautiful soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) - Pull data out of XML files
+* [Boto 3](https://boto3.readthedocs.io/en/latest/) - Amazon S3 integration
 
 ## API Reference
 
@@ -45,15 +51,9 @@ Oliver Small - You can reach me at oliver@rotherfields.co.uk
 
 ## Acknowledgments
 
-* [Bottlenose](https://github.com/lionheart/bottlenose) - Python wrapper over the Amazon Product Advertising API
-* [Django isbn field](https://github.com/secnot/django-isbn-field) - Provides django model field to store and validate ISBN numbers.
+* [Robert Wheal](http://robertwheal.co.uk/) - Logo design and icon editing
 * [Flaticon](https://www.flaticon.com) - Website icons
 * [Font Awesome](https://fontawesome.com/) - Website icons
-* [Django registration redux](https://django-registration-redux.readthedocs.io/en/latest/) - User registration
-* [Django el pagination](https://github.com/shtalinberg/django-el-pagination) - Endless pagination
-* [Beautiful soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) - Pull data out of XML files
-* [Boto 3](https://boto3.readthedocs.io/en/latest/) - Amazon S3 integration
-* [Robert Wheel](http://robertwheal.co.uk/) - Logo design and icon editing
 
 ## License
 
