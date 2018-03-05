@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^user/(?P<username>\w+)/$', views.profile_page, name='user_profile'),
+    url(r'^user/(?P<username>[\w.@+-]+)/$', views.profile_page, name='user_profile'),
     url(r'^category/(?P<category_name_slug>[\w\-]+)/$', views.category,
         name='category'),
     url(r'^category/(?P<category_name_slug>[\w\-]+)/'

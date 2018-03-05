@@ -10,9 +10,8 @@
 
   <div class="title-background">
     <div>
-      {% if subcategory %}
-        <h1 class="display-4 title_top-padding text-center" style="color:white;">{{ subcategory_name }}</h1>
-        <p></p>
+      <h1 class="display-4 title_top-padding text-center" style="color:white;">{{ subcategory_name }}</h1>
+      <p></p>
     </div>
   </div>
 
@@ -150,14 +149,6 @@
         {% endif %}
       </div>
     </div>
-
-    {% else %}
-      <div class="container text-center top-padding" style="color:white;">
-        <p></p>
-        <h2><b>The specified subcategory does not exist!</b></h2>
-      </div>
-    {% endif %}
-
   </div>
 
 {% endblock %}

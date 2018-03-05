@@ -17,7 +17,9 @@ class MyCustomRegistrationForm(RegistrationFormUniqueEmail):
         self.fields['username'].widget = forms.TextInput(
             attrs={'class': 'form-control',
                    'autofocus': 'autofocus',
-                   'maxlength': 30})
+                   'maxlength': 30,
+                   'autocorrect': 'off',
+                   'autocapitalize': 'none'})
         self.fields['email'].widget = forms.EmailInput(
             attrs={'class': 'form-control'})
         self.fields['password1'].widget = forms.PasswordInput(

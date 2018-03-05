@@ -95,7 +95,7 @@ body#category{background-color: white;}
 }
 
 .index-info-title {
-  color: #1496DC;
+  color: #F08380;
 }
 
 .index-info-text {
@@ -345,9 +345,9 @@ i:hover {
   align-items: center;
   -webkit-box-pack: center;
   justify-content: center;
-  transition: box-shadow 0.5s 0.5s,background-color 0.5s 0.5s,-webkit-transform 0.5s 0.5s;
-  transition: box-shadow 0.5s 0.5s,background-color 0.5s 0.5s,transform 0.5s 0.5s;
-  transition: box-shadow 0.5s 0.5s,background-color 0.5s 0.5s,transform 0.5s 0.5s,-webkit-transform 0.5s 0.5s;
+  transition: box-shadow 1s,background-color 1s,-webkit-transform 1s;
+  transition: box-shadow 1s,background-color 1s,transform 1s;
+  transition: box-shadow 1s,background-color 1s,transform 1s,-webkit-transform 1s;
   box-shadow: none;
   will-change: box-shadow,background-color,transform;
 }

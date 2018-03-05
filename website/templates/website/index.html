@@ -21,43 +21,48 @@
     </div>
   </div>
 
+  {% if user.is_authenticated %}
 
-  <div class="container index-info">
-    <div class="row">
-      <div class="col-12 col-md-4 index-info-content text-center">
-        <img src="{% static "website/Noobhub-web_LEARN.png" %}" alt="web.img"/>
-        <h3 class="index-info-title">Learn</h3>
-        <h5 class="index-info-text index-info-text-border">Learn to code with websites, books and videos recommended by our community.<h5>
-      </div>
-      <div class="col-12 col-md-4 index-info-content text-center">
-        <img src="{% static "website/Noobhub-web_SHARE.png" %}" alt="web.img"/>
-        <h3 class="index-info-title">Share</h3>
-        <h5 class="index-info-text index-info-text-border">Share and rank content to help other users to find the best resources.<h5>
-      </div>
-      <div class="col-12 col-md-4 index-info-content text-center index-info-bookmark">
-        <img src="{% static "website/Noobhub-web_BOOKMARK.png" %}" alt="web.img"/>
-        <h3 class="index-info-title">Bookmark</h3>
-        <h5 class="index-info-text">Save your favourite websites, books and videos or view other users favourites.<h5>
-      </div>
-    </div>
-  </div>
+  {% else %}
 
-  <div class="index-sign-up">
-    <div class="container text-center">
+    <div class="container index-info">
       <div class="row">
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-4 index-info-content text-center">
+          <img src="{% static "website/Noobhub-web_LEARN.png" %}" alt="web.img"/>
+          <h3 class="index-info-title">Learn</h3>
+          <h5 class="index-info-text index-info-text-border">Learn to code with websites, books and videos recommended by our community.<h5>
         </div>
-        <div class="col-12 col-md-6">
-          <div class="index-sign-up-text">
-            <h4>Sign up to share and bookmark resources.</h4>
-          </div>
-          <a href="{% url 'registration_register' %}" role="button" class="btn btn-primary btn-lg btn-block btn-sign-up-index">Sign up now!</a>
+        <div class="col-12 col-md-4 index-info-content text-center">
+          <img src="{% static "website/Noobhub-web_SHARE.png" %}" alt="web.img"/>
+          <h3 class="index-info-title">Share</h3>
+          <h5 class="index-info-text index-info-text-border">Share and rank content to help other users to find the best resources.<h5>
         </div>
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-4 index-info-content text-center index-info-bookmark">
+          <img src="{% static "website/Noobhub-web_BOOKMARK.png" %}" alt="web.img"/>
+          <h3 class="index-info-title">Bookmark</h3>
+          <h5 class="index-info-text">Save your favourite websites, books and videos or view other users' favourites.<h5>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="index-sign-up">
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-12 col-md-3">
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="index-sign-up-text">
+              <h4>Sign up to share and bookmark resources.</h4>
+            </div>
+            <a href="{% url 'registration_register' %}" role="button" class="btn btn-primary btn-lg btn-block btn-sign-up-index">Sign up now!</a>
+          </div>
+          <div class="col-12 col-md-3">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endif %}
 
   <div class="category-list-background">
     <div class="container">

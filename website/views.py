@@ -50,7 +50,7 @@ def category(request, category_name_slug):
         context_dict['subcategories'] = subcategory
         context_dict['category'] = category
     except Category.DoesNotExist:
-        pass
+        raise Http404
     return render(request, 'website/category.html', context_dict)
 
 
@@ -104,10 +104,10 @@ def subcategory(request, category_name_slug, subcategory_name_slug,
         context_dict['videos'] = video_list
 
     except SubCategory.DoesNotExist:
-        pass
+        raise Http404
 
     except Category.DoesNotExist:
-        pass
+        raise Http404
 
     if request.method == 'GET':
         form = DateFilterForm(request.GET)

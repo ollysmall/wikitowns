@@ -23,7 +23,7 @@
         {% csrf_token %}
 
         <label for="inputUsername" class="sr-only">Username</label>
-        <p><input type="text" id="id_username" class="form-control" name="username" placeholder="Username" required autofocus></p>
+        <p><input type="text" id="id_username" class="form-control" name="username" placeholder="Username" required autofocus autocorrect="off" autocapitalize="none"></p>
 
         <label for="inputPassword" class="sr-only">Password</label>
         <p><input type="password" id="id_password" class="form-control" name="password" placeholder="Password" required></p>
