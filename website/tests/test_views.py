@@ -84,8 +84,7 @@ class CategoryViewTests(TestCase):
         # error message should be shown if it does not exist.
         url = reverse('category', args=('test',))
         resp = self.client.get(url)
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "The specified category does not exist!")
+        self.assertEqual(resp.status_code, 404)
 
     def test_lists_all_categories(self):
         # test categories context is being passed
@@ -471,16 +470,14 @@ class SubCategoryViewTests(TestCase):
         # error message should be shown if it does not exist.
         url = reverse('subcategory', args=('python', 'test',))
         resp = self.client.get(url)
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "The specified subcategory does not exist!")
+        self.assertEqual(resp.status_code, 404)
 
     def test_subcategory_url_with_category_that_does_not_exist(self):
         # if a category is manually typed into the url an appropriate
         # error message should be shown if it does not exist.
         url = reverse('subcategory', args=('test', 'django',))
         resp = self.client.get(url)
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "The specified subcategory does not exist!")
+        self.assertEqual(resp.status_code, 404)
 
     def test_lists_all_websites_in_subcategory(self):
         # test websites context is being passed
@@ -1921,10 +1918,11 @@ class CreateBookRecommendationViewTests(TransactionTestCase):
         test_subcategory1 = SubCategory.objects.get(name='django')
         url = reverse('create_book', args=(test_category1.slug,
                                               test_subcategory1.slug))
-        resp = self.client.post(url, {'isbn': '1430224150'})
+        resp = self.client.post(url, {'isbn': '1408884534'})
         self.assertEqual(resp.status_code, 302)
-        book = BookRecommendation.objects.get(title='Dive into Python 3')
-        self.assertEqual(book.book_publish_date, date(2009, 1, 1))
+        book = BookRecommendation.objects.get(title='Kid Normal: Tom Fletcher '
+                                              'Book Club 2017 title')
+        self.assertEqual(book.book_publish_date, date(2017, 1, 1))
 
     def test_successful_retrieval_of_book_info_from_amazon(self):
         login = self.client.login(username='testuser1', password='12345')
