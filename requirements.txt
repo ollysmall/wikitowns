@@ -19,10 +19,10 @@ lxml==3.7.3
 oauth2client==4.0.0
 olefile==0.44
 Pillow==4.0.0
-psycopg2==2.6.2
+psycopg2==2.8.4
 pyasn1==0.2.3
 pyasn1-modules==0.0.8
-python-dateutil==2.8.4
+python-dateutil==2.6.0
 python-stdnum==1.6
 PyYAML==3.12
 rsa==3.4.2
