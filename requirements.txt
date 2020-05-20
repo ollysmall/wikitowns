@@ -13,7 +13,7 @@ django-storages==1.5.2
 docutils==0.13.1
 google-api-python-client==1.6.2
 gunicorn==19.6.0
-httplib2==0.10.3
+httplib2==0.18.0
 jmespath==0.9.1
 lxml==3.7.3
 oauth2client==4.0.0
