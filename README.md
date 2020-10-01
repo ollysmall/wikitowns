@@ -9,7 +9,7 @@ www.noobhub.io is a website to allow people to find, share, rank and bookmark co
 ## Why?
 
 Whilst learning to code I often found myself spending quite a lot of time trying to find the best resources to learn from. 
-noobhub aims to help solve this by allowing people to share resources they found useful in order to make it easy for others to find.
+Noobhub aims to help solve this by allowing people to share resources they found useful in order to make it easy for others to find.
 The ranking system ensures users see the best content first and the bookmarks let them quickly find their favourite content again.
 
 ## Features
