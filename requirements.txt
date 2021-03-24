@@ -25,7 +25,7 @@ pyasn1-modules==0.0.8
 python-dateutil==2.6.0
 python-stdnum==1.6
 PyYAML==3.12
-rsa==3.4.2
+rsa==4.1
 s3transfer==0.1.10
 six==1.10.0
 uritemplate==3.0.0
