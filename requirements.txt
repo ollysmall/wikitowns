@@ -15,7 +15,7 @@ google-api-python-client==1.6.2
 gunicorn==19.6.0
 httplib2==0.10.3
 jmespath==0.9.1
-lxml==3.7.3
+lxml==4.6.3
 oauth2client==4.0.0
 olefile==0.44
 Pillow==4.0.0
